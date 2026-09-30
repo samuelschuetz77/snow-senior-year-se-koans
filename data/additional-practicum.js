@@ -68,7 +68,7 @@
   ]);
 
   add('5', [
-    q('A test oracle supplies the expected result for a particular ', 'case', '.', 'Without a trustworthy expectation, observing an output cannot tell whether behavior is correct. The oracle may come from requirements or independent calculation.'),
+    q('A test oracle supplies the expected result for a particular ', 'case', '.', 'Without a trustworthy expectation, observing an output cannot tell whether behavior is correct. The oracle may come from requirements or independent calculation.', { accepts: ['test case'] }),
     q('A fault can exist in code without causing a visible ', 'failure', '.', 'The affected path may not execute, or conditions may mask the defect. Tests need inputs that expose the faulty behavior.'),
     q('A boundary test probes values just inside and outside an allowed ', 'range', '.', 'Rules often change at thresholds. Adjacent values help reveal inclusive versus exclusive comparisons and off-by-one errors.'),
     q('Coverage reports execution, not the quality of ', 'assertions', '.', 'A test may visit every line while checking the wrong outcome. Inspect whether assertions can detect plausible mistakes.'),
