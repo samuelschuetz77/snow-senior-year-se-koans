@@ -132,7 +132,7 @@
         q('CircuitSat’s satisfying input is a yes ', 'certificate', '.', { accepts: ['witness', 'proof'] }),
         q('In co-NP, efficiently checkable certificates establish ', 'no', ' answers.', { blankChars: 3 }),
         q('Every problem in P is also in NP because a verifier can rerun the ', 'solver', '.', { accepts: ['algorithm'] }),
-        q('Whether P equals NP remains an ', 'open', ' question.', { accepts: ['unanswered', 'unresolved', 'unsolved'] })
+        q('Whether P equals NP is still ', 'unknown', '.', { accepts: ['open', 'unproven', 'unanswered', 'unresolved', 'unsolved', 'unkown', 'unsaswered'] })
       ]),
       set('jea-12-3', 'JEA 12.3 · Hardness and Reductions', 'Sep 23', 'Erickson, Algorithms §12.3; reduction direction reinforced from §12.5', [
         q('An NP-hard problem is at least as hard as every problem in ', 'NP', '.'),
