@@ -61,6 +61,23 @@ if (!course) {
   let advanceTimer;
   const normalize = value => value.trim().toLocaleLowerCase().replace(/[.!?]+$/, '');
 
+  function fitInput(input, text = input.value) {
+    const maxWidth = Math.max(80, Math.min(sentence.clientWidth - 8, window.innerWidth - 48));
+    const baseWidth = Number(input.dataset.baseWidth);
+    const baseFontSize = Number(input.dataset.baseFontSize);
+    const style = getComputedStyle(input);
+    const canvas = fitInput.canvas ??= document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = `${style.fontWeight} ${baseFontSize}px ${style.fontFamily}`;
+    const textWidth = context.measureText(text).width;
+    const targetWidth = Math.max(baseWidth, textWidth + 20);
+    const fontSize = targetWidth > maxWidth
+      ? Math.max(12, baseFontSize * (maxWidth - 20) / Math.max(textWidth, 1))
+      : baseFontSize;
+    input.style.fontSize = `${fontSize}px`;
+    input.style.width = `${Math.min(maxWidth, Math.max(baseWidth, textWidth * fontSize / baseFontSize + 20))}px`;
+  }
+
   function render() {
     advancing = false;
     enterCount = 0;
@@ -83,6 +100,9 @@ if (!course) {
     input.spellcheck = false;
     if (koan.blankChars) input.style.width = `${koan.blankChars}ch`;
     sentence.replaceChildren(document.createTextNode(koan.before), input, document.createTextNode(koan.after));
+    input.dataset.baseWidth = String(input.getBoundingClientRect().width);
+    input.dataset.baseFontSize = String(parseFloat(getComputedStyle(input).fontSize));
+    fitInput(input);
     input.focus();
   }
 
@@ -110,7 +130,9 @@ if (!course) {
   }
 
   form.addEventListener('input', () => {
-    sentence.querySelector('input').classList.remove('wrong', 'revealed');
+    const input = sentence.querySelector('input');
+    input.classList.remove('wrong', 'revealed');
+    fitInput(input);
     feedback.textContent = '';
     check();
   });
@@ -125,8 +147,8 @@ if (!course) {
       input.value = '';
       input.classList.remove('wrong');
       input.classList.add('revealed');
-      input.style.width = `${set.koans[index].answer.length + 1}ch`;
       input.placeholder = set.koans[index].answer;
+      fitInput(input, input.placeholder);
       explanation.textContent = set.koans[index].why;
       explanation.hidden = false;
       expound.textContent = set.koans[index].expound;
@@ -143,6 +165,10 @@ if (!course) {
     index = 0;
     localStorage.setItem(storageKey, '0');
     render();
+  });
+  window.addEventListener('resize', () => {
+    const input = sentence.querySelector('input');
+    if (input) fitInput(input, input.value || input.placeholder);
   });
   render();
 }
