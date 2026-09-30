@@ -2,6 +2,8 @@
 
 A small static study site for the published Fall 2026 reading lists in Advanced Algorithms, Software Practicum, Software Maintenance, and Frontend Development. Each reading opens one sentence at a time with one word missing. Correct answers advance automatically. Enter checks an answer; after five unsuccessful Enter presses on a koan, the missing word appears in the blank with an explanation below it. An optional Expound button then opens a roughly 100-word, self-contained source-context explanation. Restart begins the current reading again. Progress stays in the browser's local storage.
 
+The site currently has 95 reading sets with 20–30 questions each (1,914 questions total). Every set includes a code question. The brief explanations stay under 40 words, and Expound is available only after the five-Enter reveal.
+
 ## Coverage
 
 - Advanced Algorithms: the locally available JEA, induction, linear programming, Big O, and data structures readings, plus the public Q# and Microsoft QFT pages. JEA §§12.1–12.3 are included once even though the schedule assigns them again on November 16.
@@ -21,7 +23,7 @@ From this directory:
 python -m http.server 8765 --bind 127.0.0.1
 ```
 
-Open `http://127.0.0.1:8765/`. Run `node check-content.js` to verify structure, duplicate sentences, and the code-reference ratio.
+Open `http://127.0.0.1:8765/`. Run `node check-content.js` to verify question counts, explanations, duplicate sentences, and the code-question ratio in every set.
 
 ## Publishing
 

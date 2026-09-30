@@ -1356,4 +1356,143 @@
     'An OR requires only one true literal.',
     'The contradictory pair rules out false originals.'
   ]);
+  add('jea-12-8', [
+    q('A reduction maps arbitrary source instances into special target ', 'instances', '.', 'The proof need only analyze target outputs produced by this construction, not every conceivable input to the target problem.'),
+    q('The instance transformation must finish in polynomial ', 'time', '.', 'Otherwise composing it with a fast target solver might still leave an inefficient source solver. Output size must also be polynomial.'),
+    q('The forward proof maps a source yes certificate to a target yes ', 'certificate', '.', 'It shows no true source instance is lost. The construction must allow the target structure to represent the original witness.'),
+    q('The reverse proof maps a target yes certificate back to a source yes ', 'certificate', '.', 'It rules out false positives among constructed target instances. Gadget designs often fail at this harder direction.'),
+    q('Correctness needs both implications even though the transformation runs in one ', 'direction', '.', 'Instances go from source to target, while logical equivalence of yes answers is established both ways.'),
+    q('The reverse proof concerns only target instances in the transformation’s ', 'image', '.', 'Those instances have special structure. Exploiting it can simplify decoding compared with arbitrary target instances.'),
+    q('A construction that creates a target yes case from a source no case is ', 'incorrect', '.', 'The target solver would return yes when the source answer is no. The reverse implication must prevent that.'),
+    q('A construction that blocks a source yes witness creates a false ', 'negative', '.', 'The forward implication must show every source yes instance yields a target yes instance.'),
+    q('The transformed instance must obey the target problem’s formal input ', 'rules', '.', 'A malformed graph, formula, or threshold cannot be given to the hypothetical solver. Validity is part of the construction proof.'),
+    q('A certificate mapping explains why an original solution becomes a target ', 'solution', '.', 'For SAT, this may extend truth assignments to gadget variables. For graph problems, it may select corresponding vertices or edges.'),
+    q('The reverse certificate mapping decodes target structure into an original ', 'witness', '.', 'It demonstrates that the gadget cannot be satisfied by an unintended configuration with no source counterpart.'),
+    q('A polynomial target solver would decide the source through the constructed ', 'instance', '.', 'Transform, solve, and return the equivalent answer. This algorithmic composition is the formal hardness implication.'),
+    q('The construction and both proofs should be developed ', 'together', '.', 'An apparently convenient gadget may later resist reverse decoding. Designing with certificate mappings in mind avoids that trap.'),
+    q('A many-one reduction asks the target solver only ', 'once', '.', 'The source instance becomes one target instance whose yes-or-no answer matches. The formal method is simpler than an adaptive series of queries.'),
+    q('This assertion expresses the required yes-answer ', 'equivalence', '.', 'It is a proof obligation for every valid source input. The reducer also must run in polynomial time.', { code: 'is_yes_source(x) == is_yes_target(reduce(x))' })
+  ]);
+
+  add('jea-12-13', [
+    q('Set Cover asks for a small subfamily whose union covers the entire ', 'universe', '.', 'The decision version adds a size threshold. This source suits targets about selecting a few sets or facilities to cover requirements.'),
+    q('Hitting Set chooses elements that intersect every input ', 'set', '.', 'Its selected objects are elements rather than sets. The distinction can make one source fit a target’s resource model better.'),
+    q('Partition asks whether numbers can be split into two equal-sum ', 'groups', '.', 'Both groups must be disjoint and cover the input. The numeric balance structure suits allocation targets with equal loads.'),
+    q('3Partition asks for groups of exactly three numbers with equal ', 'sum', '.', 'Unlike ordinary Partition, this source remains hard under stronger numeric restrictions. It suits grouping into many small bins.'),
+    q('Longest Path requires a simple path so vertices are not ', 'repeated', '.', 'Without simplicity, a positive cycle could be traversed indefinitely. The no-repeat rule is central to the difficulty.'),
+    q('Steiner Tree connects specified terminal vertices using possibly additional ', 'vertices', '.', 'The optimization chooses a minimum-weight connecting subtree. It generalizes MST and two-terminal shortest path.'),
+    q('Max2Sat maximizes satisfied two-literal clauses, while ordinary 2Sat asks whether all can be ', 'satisfied', '.', 'The optimization is hard even though the all-clauses decision problem is polynomial. Variants matter greatly.'),
+    q('MaxCut seeks a partition with as many crossing ', 'edges', ' as possible.', 'The cut objective is maximized, unlike minimum cut in flow networks. Confusing the two leads to invalid source selection.'),
+    q('Exact three-dimensional matching selects disjoint triples covering the whole ', 'set', '.', 'The exact-cover structure is useful when a target chooses compatible three-part combinations without reuse.'),
+    q('1-in-3SAT requires exactly one true literal in every ', 'clause', '.', 'This stronger condition can match targets where one of several options must be selected, not merely at least one.'),
+    q('Not-All-Equal 3SAT requires both a true and a false literal in every ', 'clause', '.', 'It is distinct from ordinary satisfiability. Its balance condition may align better with symmetric target gadgets.'),
+    q('A planar source problem includes a graph-embedding ', 'restriction', '.', 'Using Planar3SAT can help when the target structure must be planar. The exact source definition matters to the reduction.'),
+    q('A weakly NP-hard numeric source can admit a pseudopolynomial ', 'algorithm', '.', 'For targets with bounded magnitudes, that distinction may matter. Strongly NP-hard sources can support stronger conclusions.'),
+    q('The right source is chosen for matching constraints, not just its famous ', 'name', '.', 'A close structural analogy can simplify gadgets and reverse decoding. A poorly matched source often makes proof harder.'),
+    q('A source variant must itself be known ', 'hard', '.', 'Reducing from a polynomially solvable variant does not establish hardness. Check thresholds, graph restrictions, and number encoding.'),
+    q('This threshold turns a covering optimization into a decision ', 'problem', '.', 'The question becomes whether at most k chosen sets cover all elements. That yes-or-no form is suitable for reductions.', { code: 'is_yes = exists_cover(family, universe, max_sets=k)' })
+  ]);
+
+  add('jea-12-14', [
+    q('A target with Boolean assignments often suggests a SAT ', 'source', '.', 'Variables and clause gadgets can encode local truth choices. The source is a heuristic, not a substitute for a complete proof.'),
+    q('A target assigning one of a few labels suggests graph ', 'coloring', '.', 'Colors naturally represent mutually exclusive labels. Edges can encode conflicts between assignments.'),
+    q('A target about ordering all objects can suggest Hamiltonian path or traveling ', 'salesman', '.', 'Those sources already contain sequence constraints. The reduction must still preserve the exact target objective and allowed inputs.'),
+    q('A small feasible subset may suggest Vertex ', 'Cover', '.', 'The source selects few vertices meeting every edge. Similar hit-every-constraint targets may admit simple gadgets.'),
+    q('A large compatible subset may suggest Independent Set or ', 'Clique', '.', 'These sources select many mutually nonconflicting or mutually connected vertices. Choose whichever relation matches the target.'),
+    q('Partition into many triples can suggest ', '3Partition', '.', 'That source carries fixed-size grouping and equal-sum constraints. It may fit scheduling or packing targets better than ordinary Partition.'),
+    q('A naturally occurring three-way constraint can suggest 3SAT or ', 'X3M', '.', 'The number three may align with clause or triple gadgets. The exact compatibility structure determines which is useful.'),
+    q('Reducing from an easy problem cannot establish target ', 'hardness', '.', 'A fast source solver says nothing about the target. Begin with a source already known to be NP-hard.'),
+    q('Structural fit can make the reverse certificate proof ', 'simpler', '.', 'Target solutions should decode naturally into source witnesses. A mismatched source may force complicated gadgets with unintended behaviors.'),
+    q('The best source need not be the earliest known NP-hard ', 'problem', '.', 'Cook-Levin provides theoretical reachability, but an intermediate source can make a practical proof shorter and clearer.'),
+    q('A reduction source should capture the target’s suspected difficult ', 'feature', '.', 'Identify whether the target’s challenge is choice, ordering, labeling, or packing. Then select a source with that same tension.'),
+    q('Choosing SAT for a numeric partition target may create unnecessary ', 'gadgets', '.', 'A Partition-like source can already encode balance. Simpler source structure often means fewer construction and decoding obligations.'),
+    q('A restricted target may require a restricted hard source such as planar ', 'SAT', '.', 'The reduction must output valid target instances. Starting from a source with the matching restriction can ease construction.'),
+    q('Source selection is a design heuristic, while the reduction proof is ', 'mandatory', '.', 'Even a perfect analogy does not establish hardness until the construction is polynomial and both yes directions are proved.'),
+    q('A proof should state the known hardness of its chosen source ', 'variant', '.', 'Similar names can hide different complexities. Specify decision thresholds and restrictions before using the source in an implication.'),
+    q('The source-to-target direction remains fixed regardless of structural ', 'fit', '.', 'A good analogy does not justify reversing the arrow. The target solver must become a subroutine for the known-hard source.', { code: 'hard_source_instance -> reduce -> target_instance -> target_solver' })
+  ]);
+  deepen('jea-12-8', [
+    'Only constructed target cases need this analysis.',
+    'Construction cost is part of source-solving time.',
+    'The mapping demonstrates the forward implication.',
+    'This is often the harder gadget obligation.',
+    'Logical proof direction differs from dataflow direction.',
+    'Their special structure enables certificate decoding.',
+    'This failure is a false positive.',
+    'This failure is a false negative.',
+    'The target solver assumes its input promise.',
+    'The certificate transformation makes correctness concrete.',
+    'Unintended target witnesses must be ruled out.',
+    'The composition transfers the complexity claim.',
+    'Proof obligations influence construction choices.',
+    'One target answer must determine the source answer.',
+    'Both sides must agree on yes instances.'
+  ]);
+  deepen('jea-12-14', [
+    'The gadget must still preserve satisfiability.',
+    'Color conflicts can enforce local incompatibility.',
+    'The sequence constraint is the shared feature.',
+    'Every target condition needs a corresponding source rule.',
+    'Compatibility structure should determine the choice.',
+    'Fixed-size groups are the relevant common pattern.',
+    'Three alone does not prove a reduction.',
+    'The source must already carry hardness.',
+    'That mapping rules out unintended target witnesses.',
+    'Convenience matters because every gadget needs proof.',
+    'The source should expose the difficult constraint.',
+    'Numeric balance is already present in Partition.',
+    'The output must meet the target restriction.',
+    'Heuristics never replace logical equivalence.',
+    'Problem variants can differ sharply in complexity.',
+    'The direction determines which solver is assumed.'
+  ]);
+  add('qsharp', [
+    q('A freshly allocated Q# qubit starts in the computational ', 'zero', ' state.', 'The `use` declaration allocates the resource in |0⟩. Quantum operations can then transform it before measurement or release.'),
+    q('The `use` keyword allocates a scoped ', 'qubit', '.', 'The qubit is available within that scope. It should be returned to |0⟩ before release so the resource can be safely reused.'),
+    q('Applying H to |0⟩ creates equal measurement probabilities for Zero and ', 'One', '.', 'The state becomes a superposition of the two basis states. A later Z-basis measurement returns either result with equal probability.'),
+    q('The X gate flips computational basis Zero to ', 'One', '.', 'It acts as a quantum bit flip on basis states. Superpositions transform linearly, so its effect is broader than a classical assignment.'),
+    q('Measurement produces a classical Q# value of type ', 'Result', '.', 'The standard Z-basis `M` operation returns Zero or One. It does not reveal a full unknown qubit state.'),
+    q('A measured result is classical even though the measured resource is a ', 'qubit', '.', 'Q# distinguishes quantum state from ordinary data. Code can branch on the Result, but measurement changes the quantum state.'),
+    q('A controlled operation acts on a target according to the control qubit’s ', 'state', '.', 'The control is not simply a classical if statement. On a superposed control, the operation can entangle control and target.'),
+    q('A `let` binding cannot be reassigned with ', 'set', '.', 'It is immutable classical data. Use `mutable` for a classical variable whose binding must change.'),
+    q('A mutable classical binding is declared with the ', 'mutable', ' keyword.', 'Later `set` statements can update its value. This differs from applying quantum operations to a qubit.'),
+    q('An operation is a Q# callable that may perform quantum ', 'actions', '.', 'It can accept qubits and apply gates. Its declared return type states what classical or quantum resource information it returns.'),
+    q('Reset returns a measured qubit to the ', 'zero', ' state.', 'This prepares it for safe release or reuse. ResetAll performs the corresponding action for an array of qubits.'),
+    q('A simulator can expose intermediate quantum state information for ', 'debugging', '.', 'Physical hardware generally cannot reveal the complete wavefunction of one unknown state. Simulator diagnostics are a development aid.'),
+    q('A Q# operation returning `Unit` returns no classical ', 'value', '.', 'It may still modify qubits passed to it. The type concerns its returned data, not whether quantum side effects occur.'),
+    q('This line allocates three qubits as a ', 'register', '.', 'The array begins in the all-zero state. The operation should reset all three before their scope ends.', { code: 'use qs = Qubit[3];' })
+  ]);
+
+  add('qft', [
+    q('The QFT changes amplitudes into a Fourier-transformed quantum ', 'basis', '.', 'Its output encodes frequency-like phase structure. Measuring immediately loses much of that phase information, so larger algorithms use the transform coherently.'),
+    q('The three-qubit tutorial begins by allocating a quantum ', 'register', '.', 'The register starts in |000⟩. Gates then transform its joint state before optional measurement and reset.'),
+    q('A Hadamard gate creates a superposition when applied to a fresh ', 'qubit', '.', 'On |0⟩ it produces equal Zero and One amplitudes. Later controlled rotations adjust relative phases among basis components.'),
+    q('A controlled R1 gate changes the target phase conditionally on a control ', 'qubit', '.', 'The rotation runs only on the control-one branch. This creates the phase relationships needed by the QFT circuit.'),
+    q('The tutorial uses smaller rotation angles for more distant control ', 'qubits', '.', 'For three qubits, controlled R1 operations use π/2 and π/4. The angle pattern encodes binary place value in phases.'),
+    q('A SWAP at the end reverses the output qubit ', 'order', '.', 'The standard QFT gate sequence naturally produces reversed bit significance. Exchanging outer qubits restores the intended ordering.'),
+    q('A relative phase can change later interference even when immediate measurement probabilities look ', 'unchanged', '.', 'Phase matters when amplitudes combine under subsequent gates. This is why QFT is useful inside larger quantum algorithms.'),
+    q('A global phase cannot affect measurement ', 'probabilities', '.', 'Multiplying every amplitude by the same complex phase changes no observable outcome. Relative phases between basis states carry useful information.'),
+    q('DumpMachine reports the simulator’s state ', 'amplitudes', '.', 'It helps inspect the evolving wavefunction in a simulator. A real device cannot reveal an arbitrary unknown state this way.'),
+    q('Measuring each qubit returns classical ', 'results', '.', 'The measurement samples the quantum state and changes it. Those results alone do not preserve the full phase information.'),
+    q('ResetAll prepares allocated qubits for safe ', 'release', '.', 'The tutorial calls it after diagnostics and measurement. It returns the register to the all-zero state.'),
+    q('The QFT circuit is built from Hadamards, controlled phase rotations, and final ', 'swaps', '.', 'Each gate has a distinct role: superposition, relative phase, and output order. Their sequence implements the transform.'),
+    q('A QFT operation can be used as a subroutine before further quantum ', 'processing', '.', 'Leaving amplitudes coherent lets later steps exploit interference. Measuring immediately turns the state into classical samples.'),
+    q('The controlled operation here adds a conditional phase ', 'rotation', '.', 'The second qubit controls an R1 rotation on the first. Its π/2 angle is part of the three-qubit QFT pattern.', { code: 'Controlled R1([qs[1]], (PI()/2.0, qs[0]));' })
+  ]);
+  deepen('qft', [
+    'The transform itself remains a reversible quantum operation.',
+    'Its three qubits share one joint state.',
+    'Subsequent gates exploit the resulting amplitudes.',
+    'The control can itself be in superposition.',
+    'Angle magnitude reflects relative bit significance.',
+    'The swap changes ordering, not measured values alone.',
+    'Interference is the operational consequence of phase.',
+    'Only differences between component phases matter.',
+    'That diagnostic is available in simulation.',
+    'The sampled outcome is only partial information.',
+    'Qubit cleanup is part of the program lifecycle.',
+    'All three ingredients are visible in the tutorial.',
+    'This is the usual role inside larger algorithms.',
+    'The angle matches the tutorial’s first controlled rotation.'
+  ]);
 })();
