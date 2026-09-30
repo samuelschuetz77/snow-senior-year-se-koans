@@ -289,4 +289,119 @@
     'Those repeated intervals motivate a table later.',
     'Only the child costs depend on the chosen root.'
   ]);
+  add('jea-12-1', [
+    q('CircuitSat is a decision problem because its output is yes or ', 'no', '.', 'It asks whether at least one input assignment makes the circuit true. The output is not the assignment itself.'),
+    q('The n switches in the black-box story permit 2ⁿ possible ', 'settings', '.', 'Each binary input doubles the number of assignments. Exhaustive search therefore grows exponentially with the number of switches.'),
+    q('A visible circuit can be evaluated quickly for one chosen ', 'assignment', '.', 'Process gates in dependency order to compute the output. This checks a proposed witness but does not find one efficiently.'),
+    q('A satisfying input assignment is a certificate for a ', 'yes', ' instance.', 'The verifier plugs in the proposed bits and evaluates the circuit. A true output proves that some satisfying assignment exists.'),
+    q('Showing no assignment works appears harder than verifying one that ', 'works', '.', 'A yes witness is one concrete setting. A no claim concerns all settings and may lack a similarly short certificate.'),
+    q('The adversary’s opaque box differs from a fully specified ', 'circuit', '.', 'When internals are hidden and can be chosen later, exhaustive testing is forced by the story. That is not a lower-bound proof for explicit CircuitSat.'),
+    q('A lower bound for the black-box game does not establish one for explicit ', 'CircuitSat', '.', 'An algorithm can inspect the known circuit structure, unlike the opaque box. No exponential lower bound follows from that analogy.'),
+    q('A Boolean circuit combines AND, OR, and NOT ', 'gates', '.', 'Wires carry binary values between gates. The output is determined by the inputs and the gate connections.'),
+    q('The size of the circuit includes its gates and ', 'wires', '.', 'Verification time is measured against the explicit representation. Evaluating one assignment is polynomial, indeed roughly linear, in that size.'),
+    q('Brute-force CircuitSat tests every input assignment until one yields ', 'true', '.', 'A successful setting ends the search. If none succeeds, all two-to-the-n assignments must have been checked by this method.'),
+    q('The known brute-force upper bound is exponential in the number of ', 'inputs', '.', 'There are two choices for each input bit. Evaluating each assignment adds a polynomial factor in circuit size.'),
+    q('The absence of a known fast algorithm is not a proof of ', 'impossibility', '.', 'Complexity theory distinguishes evidence and belief from a mathematical lower bound. The chapter uses this uncertainty to motivate P versus NP.'),
+    q('The evaluator returns true for this assignment if the circuit output is ', 'true', '.', 'The concrete bits form a proposed witness. Computing the circuit output checks it without exploring other assignments.', { code: 'assignment = {"x": True, "y": False}\nassert evaluate(circuit, assignment) is True' }),
+    q('A verifier may be fast even when discovering a witness seems ', 'hard', '.', 'Given the setting, gate evaluation is straightforward. Finding a successful setting may require exploring many possibilities.')
+  ]);
+
+  add('jea-12-2', [
+    q('P and NP are defined for decision problems with Boolean ', 'answers', '.', 'Optimization questions can often be converted to threshold decisions, but the formal classes here concern yes-or-no outputs.'),
+    q('Membership in P requires a polynomial-time algorithm that finds the ', 'answer', '.', 'The solver must decide yes or no from the instance alone. A proposed witness is not supplied to it.'),
+    q('Membership in NP requires efficiently checkable certificates for ', 'yes', ' instances.', 'The verifier checks a proposed proof in polynomial time. It need not efficiently discover the proof.'),
+    q('A certificate’s length must be polynomial in the input ', 'size', '.', 'A huge exponential witness would not support polynomial-time verification under the standard definition. The proof must be short enough to read.'),
+    q('Every problem in P belongs to NP because the verifier can run the ', 'solver', '.', 'It can ignore any certificate and compute the answer directly. Polynomial-time solving implies polynomial-time yes verification.'),
+    q('Every problem in P also belongs to ', 'coNP', '.', 'A polynomial solver can check no answers directly. The same easy decision procedure supports certificates on either side.'),
+    q('coNP concerns efficiently checkable certificates for ', 'no', ' instances.', 'The class reverses which answer has short evidence. It does not simply mean the complement is computationally easy.'),
+    q('A satisfying assignment certifies that a circuit is in a yes ', 'case', '.', 'Evaluating the known circuit on those bits is fast. The assignment serves as a succinct witness.'),
+    q('An unsatisfiable circuit has no known general short no ', 'certificate', '.', 'To certify that all assignments fail may be harder than exhibiting one success. This motivates the open NP versus coNP question.'),
+    q('Polynomial time means O(nᶜ) for some fixed constant ', 'c', '.', 'The exponent cannot grow with the input. This is a formal minimum standard for efficient computation in the chapter.'),
+    q('The equality P = NP remains an open mathematical ', 'question', '.', 'Efficient verification does not currently imply a known efficient solver for every NP problem, nor has the separation been proved.'),
+    q('A finite list of hard-looking instances cannot prove P differs from ', 'NP', '.', 'Difficulty observed so far is evidence, not a universal lower bound. A proof must rule out all polynomial algorithms.'),
+    q('A verifier checks the proposed certificate rather than searching for ', 'one', '.', 'Its input contains both the instance and candidate witness. The distinction separates NP membership from polynomial-time solving.', { code: 'def verify(circuit, bits):\n    return evaluate(circuit, bits)' })
+  ]);
+
+  add('jea-12-3', [
+    q('An NP-hard problem need not itself belong to ', 'NP', '.', 'Hardness describes what would follow from solving it efficiently. Membership separately requires efficiently verifiable yes certificates for a decision problem.'),
+    q('An NP-complete problem is both NP-hard and in ', 'NP', '.', 'It has polynomially checkable yes witnesses and is at least as hard as every NP problem.'),
+    q('A hardness proof maps a known-hard problem into the proposed ', 'target', '.', 'An efficient target solver would then solve the source through the transformation. Reversing direction proves a different claim.'),
+    q('A reduction must preserve yes and no ', 'answers', '.', 'The transformed instance is yes exactly when the original is yes. Otherwise a target solver would not decide the source correctly.'),
+    q('The reduction’s transformation must run in polynomial ', 'time', '.', 'If conversion were exponential, a fast target algorithm could still yield a slow source algorithm. Efficiency must include conversion.'),
+    q('To show target T is NP-hard, start from a problem already known to be ', 'hard', '.', 'Reduce the known-hard source to T. This transfers difficulty because a fast solver for T would solve the source.'),
+    q('To show NP-completeness, prove both hardness and NP ', 'membership', '.', 'The reduction handles hardness. A separate certificate and verifier establish that the target itself lies in NP.'),
+    q('A polynomial solver for any NP-hard problem would imply P equals ', 'NP', '.', 'Every NP problem can be reduced to that hard problem. Composing the reduction with its fast solver would solve all NP problems efficiently.'),
+    q('NP-hardness is a conditional statement about an efficient ', 'solver', '.', 'It does not by itself prove no polynomial algorithm exists. That stronger conclusion would resolve the P versus NP question.'),
+    q('A decision version asks whether a solution meeting a threshold ', 'exists', '.', 'The yes-or-no formulation makes complexity-class membership precise. An optimization version may require a different formal treatment.'),
+    q('The target of a reduction can be easier to solve only if the source also becomes ', 'easy', '.', 'A fast target solver combined with the reduction decides the source. This is why the direction of transformation matters.'),
+    q('Certificate verification and reduction construction are separate polynomial-time ', 'obligations', '.', 'One establishes NP membership; the other transfers hardness. A complete NP-completeness proof must meet both.'),
+    q('The source-to-target function must map a yes source instance to a yes target ', 'instance', '.', 'The reverse implication must hold as well. This exact correspondence lets a target solver answer the original question.', { code: 'x_is_yes == target_solver(reduce_source_to_target(x))' })
+  ]);
+  add('jea-3-4', [
+    q('Dynamic programming begins with a correct recursive ', 'specification', '.', 'Define precisely what each subproblem asks before choosing a table. A table cannot make an incorrect recurrence correct.'),
+    q('The recursive solution expresses a problem using answers to smaller instances of the ', 'same', ' problem.', 'That relationship is the algorithmic core. Memoization changes how often answers are computed, not what the recurrence means.'),
+    q('The set of reachable recursive arguments defines the distinct ', 'subproblems', '.', 'Count those states to estimate storage. Their structure also suggests an array, map, or other memoization representation.'),
+    q('A dependency arrow points from a state to the states it ', 'needs', '.', 'The table must evaluate prerequisite answers first. Drawing arrows exposes an ordering that code must respect.'),
+    q('A bottom-up order is a linear extension of the dependency partial ', 'order', '.', 'Each state appears after all states required by its recurrence. The base cases begin the sequence.'),
+    q('Memoization stores each subproblem answer so it is computed at most ', 'once', '.', 'Later calls reuse the saved result. This removes repetition but does not reduce the number of distinct states.'),
+    q('The number of distinct states often determines dynamic-programming ', 'space', '.', 'If each state stores one result, memory grows with state count. Extra reconstruction data may increase it.'),
+    q('Total dynamic-programming time sums the work of each distinct ', 'state', '.', 'Count candidate choices and lookups for one state, then sum across all states. Counting states alone can understate time.'),
+    q('A top-down memoized recursion computes only states it ', 'reaches', '.', 'It follows dependencies as needed and caches results. A bottom-up table may fill additional states unless carefully restricted.'),
+    q('A bottom-up table replaces recursive calls with already computed ', 'lookups', '.', 'The recurrence stays the same. Explicit loop order ensures dependencies are available at the moment of evaluation.'),
+    q('A subproblem state needs enough information to determine all future ', 'choices', '.', 'If omitted history affects the answer, memoizing by the incomplete key can reuse an incorrect result.'),
+    q('Text segmentation states can be indexed by the start of the remaining ', 'suffix', '.', 'The fixed string and dictionary need not be copied into each key. Each suffix index has a well-defined answer.'),
+    q('The segmentation table fills from right to left because each state needs later ', 'indices', '.', 'Trying a first word ending at j consults the suffix starting at j plus one. Those larger indexes must already be known.'),
+    q('The base case for the empty suffix stores ', 'true', '.', 'Once all characters have been covered by words, segmentation succeeds. Later states build on that direct answer.')
+  ]);
+
+  add('jea-3-5', [
+    q('A greedy method chooses a next action without solving the remaining ', 'subproblem', '.', 'It commits using local information. That can be fast, but correctness requires a proof that the local choice preserves an optimum.'),
+    q('A locally appealing prefix can leave an unsplittable ', 'suffix', '.', 'Text segmentation depends on the remaining string. A shortest- or longest-word choice alone cannot guarantee a valid completion.'),
+    q('A single failing input refutes a greedy algorithm’s universal ', 'claim', '.', 'If the algorithm promises correctness on every valid instance, one counterexample is enough. Test small adversarial cases before relying on intuition.'),
+    q('A correct greedy algorithm needs an argument that its first choice is ', 'safe', '.', 'An exchange proof often shows an optimal solution can be transformed to include that choice without worsening the objective.'),
+    q('Backtracking avoids premature commitment by trying alternative ', 'choices', '.', 'The recurrence explores possible continuations. Dynamic programming can reuse overlapping continuation results to make this search efficient.'),
+    q('Memoization accelerates a correct recurrence but cannot repair a wrong greedy ', 'choice', '.', 'Caching only repeats the same flawed decision faster. The solution structure must be justified before optimizing evaluation.'),
+    q('Greedy and dynamic programming both exploit structure, but greedy discards alternative ', 'branches', '.', 'That discard is valid only when a proof rules them out. Dynamic programming keeps the alternatives encoded in its recurrence.'),
+    q('A locally smallest element need not begin a longest increasing ', 'subsequence', '.', 'Choosing it may remove earlier elements needed for the longest chain. The example warns against equating local desirability with global optimality.'),
+    q('A proof of greedy correctness must cover every input, not only representative ', 'examples', '.', 'Observed successes support intuition but cannot exclude an adversarial arrangement. Formal reasoning justifies the commitment.'),
+    q('An exchange argument compares a greedy solution with an optimal ', 'solution', '.', 'It changes an optimum to include the greedy choice without making it worse. Repeating this argument can establish full correctness.'),
+    q('When no greedy proof is available, formulate the problem as a recursive ', 'search', '.', 'Explore the alternatives first. Once the recurrence is correct, overlapping states may support a dynamic-programming algorithm.'),
+    q('A greedy segmentation rule can fail even if its first word is ', 'valid', '.', 'Local dictionary membership does not guarantee a segmentable suffix. The complete condition includes both the prefix and remaining string.'),
+    q('This code commits to the first valid prefix without examining other ', 'prefixes', '.', 'If the chosen suffix fails but a later split succeeds, the algorithm returns a wrong answer. It needs a correctness proof or backtracking.', { code: 'for prefix in valid_prefixes(text):\n    return segment(text[len(prefix):])' }),
+    q('A greedy speed advantage is irrelevant when its answer is ', 'wrong', '.', 'Correctness is the first obligation. Efficiency comparisons make sense only among algorithms satisfying the same problem specification.'),
+    q('The chapter’s warning is a proof discipline rather than a theorem that greed never ', 'works', '.', 'Some later problems have valid greedy algorithms. Each one requires a specific argument showing why its choices are safe.')
+  ]);
+  deepen('jea-3-4', [
+    'The recurrence defines the meaning of every saved value.',
+    'Each call must satisfy that same subproblem contract.',
+    'Reachability also determines which states need evaluation.',
+    'A dependency diagram can reveal a mistaken loop order.',
+    'This order is required for correct table values.',
+    'Use a distinct marker for states not yet computed.',
+    'The representation can add overhead beyond stored answers.',
+    'Transitions, not just state count, determine time.',
+    'Recursive overhead may be traded for sparse evaluation.',
+    'A table lookup stands in for a solved subproblem.',
+    'The key must distinguish states with different answers.',
+    'Only the start index changes across recursive calls.',
+    'Ascending indexes would read answers not yet computed.',
+    'It corresponds to the empty remainder after the last word.'
+  ]);
+  deepen('jea-3-5', [
+    'The omitted alternatives are the source of risk.',
+    'A valid local choice may be globally useless.',
+    'A small constructed example can invalidate the strategy.',
+    'Safety must hold under every allowed input.',
+    'The recurrence retains paths that greed discards.',
+    'First establish correctness, then remove repetition.',
+    'That difference explains their distinct proof obligations.',
+    'The rest of the sequence constrains the best start.',
+    'The proof must address adversarial inputs.',
+    'An exchange must preserve feasibility as well as quality.',
+    'Correct subproblems are the foundation for optimization.',
+    'The suffix condition determines eventual success.',
+    'Returning inside the loop abandons other valid candidates.',
+    'A fast incorrect method does not solve the problem.',
+    'Greedy claims are local to a particular problem structure.'
+  ]);
 })();
