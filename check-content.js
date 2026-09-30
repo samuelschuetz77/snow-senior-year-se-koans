@@ -27,6 +27,8 @@ let withCode = 0;
 let explanationWords = 0;
 let expoundWords = 0;
 let terminalBlanks = 0;
+let standardTotal = 0;
+let standardWithCode = 0;
 
 for (const course of courses) {
   assert(!courseIds.has(course.id), `Duplicate course ${course.id}`);
@@ -39,7 +41,11 @@ for (const course of courses) {
     setIds.add(set.id);
     assert(set.source && set.due && set.koans.length >= 20 && set.koans.length <= 30, `Set needs 20–30 questions: ${course.id}/${set.id}`);
     const setCodeRatio = set.koans.filter(koan => koan.code).length / set.koans.length;
-    assert(setCodeRatio >= 0.03 && setCodeRatio <= 0.05, `Code ratio outside 3–5%: ${course.id}/${set.id}`);
+    if (set.codeRatio) {
+      assert(Math.abs(setCodeRatio - set.codeRatio) <= 0.05, `Code ratio not near ${set.codeRatio}: ${course.id}/${set.id}`);
+    } else {
+      assert(setCodeRatio >= 0.03 && setCodeRatio <= 0.05, `Code ratio outside 3–5%: ${course.id}/${set.id}`);
+    }
     for (const [index, koan] of set.koans.entries()) {
       assert(koan.before && koan.after && koan.answer, `Incomplete koan in ${course.id}/${set.id}`);
       assert(koan.why && koan.why.trim().split(/\s+/).length < 40, `Missing or long explanation in ${course.id}/${set.id}: ${koan.before}`);
@@ -59,9 +65,11 @@ for (const course of courses) {
       assert(!sentences.has(sentence), `Duplicate sentence: ${sentence}`);
       sentences.add(sentence);
       total += 1;
+      if (!set.codeRatio) standardTotal += 1;
       explanationWords += whyWords;
       expoundWords += deepWords;
       if (koan.code) withCode += 1;
+      if (koan.code && !set.codeRatio) standardWithCode += 1;
       if (/^[.!?]\s*$/.test(koan.after)) {
         terminalBlanks += 1;
         setTerminalBlanks += 1;
@@ -72,6 +80,7 @@ for (const course of courses) {
 }
 
 const codeRatio = withCode / total;
-assert(codeRatio >= 0.03 && codeRatio <= 0.05, `Code ratio ${codeRatio} outside 3–5%`);
+const standardRatio = standardWithCode / standardTotal;
+assert(standardRatio >= 0.03 && standardRatio <= 0.05, `Code ratio ${standardRatio} outside 3–5% for sets without a codeRatio`);
 assert(explanationWords / total >= 22, 'Average explanation must be at least twice the previous 11-word average');
 console.log(`${courses.length} courses, ${courses.reduce((n, c) => n + c.sets.length, 0)} reading sets, ${total} koans, ${withCode} code references (${(100 * codeRatio).toFixed(1)}%). Sentence-final blanks: ${terminalBlanks} (${(100 * terminalBlanks / total).toFixed(1)}%). Explanations average ${(explanationWords / total).toFixed(1)} words; expounds average ${(expoundWords / total).toFixed(1)} words.`);
