@@ -16,7 +16,6 @@ require('./data/additional-practicum.js');
 require('./data/additional-algorithms.js');
 require('./data/links-practicum.js');
 require('./data/expound.js');
-require('./data/placement.js');
 
 const courses = window.KOAN_COURSES;
 assert.equal(courses.length, 4);
@@ -54,6 +53,7 @@ for (const course of courses) {
       }
       assert(!/\s/.test(koan.answer), `Answer must be one word: ${koan.answer}`);
       assert(!koan.before.includes('____') && !koan.after.includes('____'), 'Literal blank outside input');
+      assert(!/^[;—]/.test(koan.after.trim()), `Artificial continuation after blank in ${course.id}/${set.id}: ${koan.before}`);
       const sentence = `${koan.before}___${koan.after}`;
       assert(!sentences.has(sentence), `Duplicate sentence: ${sentence}`);
       sentences.add(sentence);

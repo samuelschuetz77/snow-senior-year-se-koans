@@ -4,6 +4,8 @@ A small static study site for the published Fall 2026 reading lists in Advanced 
 
 The site currently has 95 reading sets with 20–30 questions each (1,915 questions total). Every set includes a code question. The brief explanations stay under 40 words, and Expound is available only after the five-Enter reveal.
 
+Question wording follows [CONTENT_STANDARDS.md](CONTENT_STANDARDS.md): blanks are authored in the sentences themselves, with meaningful verbs and other concepts appearing in varied positions.
+
 ## Coverage
 
 - Advanced Algorithms: the locally available JEA, induction, linear programming, Big O, and data structures readings, plus the public Q# and Microsoft QFT pages. JEA §§12.1–12.3 are included once even though the schedule assigns them again on November 16.
