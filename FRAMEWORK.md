@@ -16,6 +16,7 @@ Each koan must have:
 
 - `before` and `after`: the two parts of a natural sentence surrounding **one** missing word.
 - `answer`: one canonical word. Accept a few equivalent single-word answers when the sentence genuinely allows them.
+- `why`: a specific explanation of the completed claim in fewer than 40 words, shown only after five unsuccessful Enter presses on that koan.
 - `section`: the source section or topic for coverage auditing. Do not display section navigation in the exercise.
 - `code` (optional): a short, read-only snippet shown above the sentence. Keep **every blank in the sentence**, never in the code. Aim for 3–5% of all koans to reference code. Use Python for general programming and algorithms; use the reading's language when the language itself is the concept (for example TypeScript or React).
 
@@ -30,7 +31,7 @@ The exercise page contains the current sentence, its inline blank text box, an o
 Do not show a title, introduction, header, sidebar, chapter list, preview of upcoming topics, question number, progress count or bar, instructions, hint control, Check button, Next button, or footer on the exercise page. The Restart button stays small and visually quiet at the bottom. For a multi-course collection, the home page has only the collection title and class links; each class page lists its reading sets. Navigation disappears once a set starts.
 
 1. The learner types directly in the blank. A correct word turns the blank green and automatically advances after a brief pause.
-2. Enter checks an incorrect word, turning the blank red. Editing clears the red state. The learner stays on the same sentence, with no penalty or answer reveal.
+2. Enter checks an incorrect word, turning the blank red. Editing clears the red state. After five unsuccessful Enter presses on the same sentence, show the correct word in the blank's placeholder and the `why` text below the sentence. The learner may still type the answer to advance.
 3. Save the next question index in `localStorage` so refresh resumes the session.
 4. At the end, show only “Complete.” in the main area. The same small Restart button remains available at the bottom.
 

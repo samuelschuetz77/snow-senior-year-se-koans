@@ -1,6 +1,6 @@
 # Snow Senior Year SE Koans
 
-A small static study site for the published Fall 2026 reading lists in Advanced Algorithms, Software Practicum, Software Maintenance, and Frontend Development. Each reading opens one sentence at a time with one word missing. Correct answers advance automatically; Enter marks an incorrect answer; Restart begins the current reading again. Progress stays in the browser's local storage.
+A small static study site for the published Fall 2026 reading lists in Advanced Algorithms, Software Practicum, Software Maintenance, and Frontend Development. Each reading opens one sentence at a time with one word missing. Correct answers advance automatically. Enter checks an answer; after five unsuccessful Enter presses on a koan, the missing word appears in the blank and a short explanation appears below it. Restart begins the current reading again. Progress stays in the browser's local storage.
 
 ## Coverage
 

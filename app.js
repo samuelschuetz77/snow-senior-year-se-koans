@@ -43,9 +43,10 @@ if (!course) {
   const form = element('form', { autocomplete: 'off' });
   const label = element('label', { class: 'sr-only', for: 'answer' }, 'Missing word');
   const sentence = element('div', { class: 'sentence' });
+  const explanation = element('p', { class: 'explanation', hidden: '' });
   const feedback = element('div', { class: 'sr-only', id: 'feedback', 'aria-live': 'polite' });
   const restart = element('button', { class: 'restart', type: 'button' }, 'Restart');
-  form.append(label, sentence);
+  form.append(label, sentence, explanation);
   wrapper.append(code, form, feedback);
   app.append(wrapper, restart);
 
@@ -53,12 +54,16 @@ if (!course) {
   const saved = Number(localStorage.getItem(storageKey));
   let index = Number.isInteger(saved) && saved >= 0 && saved <= set.koans.length ? saved : 0;
   let advancing = false;
+  let enterCount = 0;
   let advanceTimer;
   const normalize = value => value.trim().toLocaleLowerCase().replace(/[.!?]+$/, '');
 
   function render() {
     advancing = false;
+    enterCount = 0;
     feedback.textContent = '';
+    explanation.hidden = true;
+    explanation.textContent = '';
     if (index === set.koans.length) {
       code.hidden = true;
       sentence.textContent = 'Complete.';
@@ -98,11 +103,28 @@ if (!course) {
   }
 
   form.addEventListener('input', () => {
-    sentence.querySelector('input').classList.remove('wrong');
+    sentence.querySelector('input').classList.remove('wrong', 'revealed');
     feedback.textContent = '';
     check();
   });
-  form.addEventListener('submit', event => { event.preventDefault(); check(true); });
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (advancing || index === set.koans.length) return;
+    check(true);
+    if (advancing) return;
+    enterCount += 1;
+    if (enterCount >= 5) {
+      const input = sentence.querySelector('input');
+      input.value = '';
+      input.classList.remove('wrong');
+      input.classList.add('revealed');
+      input.style.width = `${set.koans[index].answer.length + 1}ch`;
+      input.placeholder = set.koans[index].answer;
+      explanation.textContent = set.koans[index].why;
+      explanation.hidden = false;
+      feedback.textContent = `Answer: ${set.koans[index].answer}. ${set.koans[index].why}`;
+    }
+  });
   restart.addEventListener('click', () => {
     clearTimeout(advanceTimer);
     index = 0;

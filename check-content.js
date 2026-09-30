@@ -4,6 +4,9 @@ global.window = { KOAN_COURSES: [] };
 for (const file of ['algorithms', 'practicum', 'maintenance', 'frontend']) {
   require(`./data/${file}.js`);
 }
+for (const file of ['algorithms', 'practicum', 'maintenance', 'frontend']) {
+  require(`./data/explanations-${file}.js`);
+}
 
 const courses = window.KOAN_COURSES;
 assert.equal(courses.length, 4);
@@ -23,6 +26,7 @@ for (const course of courses) {
     assert(set.source && set.due && set.koans.length >= 5, `Incomplete set ${course.id}/${set.id}`);
     for (const koan of set.koans) {
       assert(koan.before && koan.after && koan.answer, `Incomplete koan in ${course.id}/${set.id}`);
+      assert(koan.why && koan.why.trim().split(/\s+/).length < 40, `Missing or long explanation in ${course.id}/${set.id}: ${koan.before}`);
       assert(!/\s/.test(koan.answer), `Answer must be one word: ${koan.answer}`);
       assert(!koan.before.includes('____') && !koan.after.includes('____'), 'Literal blank outside input');
       const sentence = `${koan.before}___${koan.after}`;
