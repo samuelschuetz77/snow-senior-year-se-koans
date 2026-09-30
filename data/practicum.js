@@ -3,69 +3,69 @@
   const set = (id, title, due, koans) => ({ id, title, due, source: `SWEBOK Guide v4, chapter ${id}`, koans });
   window.KOAN_COURSES.push({ id: 'software-practicum', title: 'Software Practicum', sets: [
     set('1', 'SWEBOK 1 · Requirements', 'Sep 9', [
-      q("A requirement ", "describes", " a needed property or behavior, not necessarily its implementation."),
-      q("A functional requirement ", "describes", " observable system behavior."),
+      q("A requirement describes a needed ", "property", " or behavior, not necessarily its implementation.", { accepts: ["quality", "capability", "feature", "characteristic", "attribute"] }),
+      q("A ", "functional", " requirement describes observable system behavior.", { accepts: ["behavioral", "behavioural"] }),
       q("A response-time ", "limit", " is a nonfunctional requirement."),
-      q('A requirement that cannot be checked is difficult to ', 'verify', '.', { accepts: ['test'] }),
+      q("A requirement that cannot be checked gives testers no clear ", "criterion", " for verification.", { accepts: ["criteria", "standard", "target", "measure", "basis", "oracle", "way"] }),
       q('If two stakeholders want incompatible behaviors, the conflict needs ', 'resolution', '.', { accepts: ['negotiation'] }),
-      q("A trace link helps locate design and test artifacts ", "affected", " by a requirement change."),
+      q("A trace ", "link", " helps locate design and test artifacts affected by a requirement change.", { accepts: ["links", "matrix", "relationship"] }),
       q('Changing a requirement should trigger an analysis of affected ', 'work', '.', { accepts: ['artifacts', 'tests', 'design'] })
     ]),
     set('2', 'SWEBOK 2 · Architecture', 'Sep 9', [
       q('Architecture describes major elements and their ', 'relationships', '.', { accepts: ['interactions'] }),
       q('Different architecture views serve different stakeholder ', 'concerns', '.'),
       q('A deployment view maps software elements to their execution ', 'environment', '.', { accepts: ['hardware', 'nodes'] }),
-      q("Separating components can ", "isolate", " the effect of a change."),
-      q("An architecture decision should be ", "judged", " against required quality attributes."),
-      q("A shared database may ", "simplify", " access while increasing coupling."),
+      q("Separating components can isolate the ", "effect", " of a change.", { accepts: ["impact", "effects", "consequences", "ripple"] }),
+      q("An architecture decision should be judged against required ", "quality", " attributes.", { accepts: ["nonfunctional", "non-functional"] }),
+      q("A shared database may simplify ", "access", " while increasing coupling.", { accepts: ["integration", "sharing", "queries", "development"] }),
       q('A prototype can test an architectural assumption before full ', 'implementation', '.')
     ]),
     set('3', 'SWEBOK 3 · Design', 'Sep 16', [
-      q("Design ", "turns", " requirements into a structure developers can implement."),
-      q("High-level design ", "chooses", " components; detailed design specifies their internal behavior."),
+      q("Design turns ", "requirements", " into a structure developers can implement.", { accepts: ["needs", "specifications", "specs"] }),
+      q("High-level design chooses ", "components", ", while detailed design specifies their internal behavior.", { accepts: ["modules", "subsystems", "parts", "architecture"] }),
       q('Information hiding keeps a module’s internal decisions behind an ', 'interface', '.'),
       q('High cohesion means a module’s responsibilities are closely ', 'related', '.'),
-      q("Low coupling ", "reduces", " the number of other modules affected by a change."),
+      q("Low ", "coupling", " reduces the number of other modules affected by a change.", { accepts: ["dependency", "dependence", "interdependence"] }),
       q('A design tradeoff should be evaluated against the system’s quality ', 'goals', '.', { accepts: ['requirements', 'attributes'] }),
-      q("Repeated conditionals for every subtype can ", "suggest", " a missing abstraction.")
+      q("Repeated ", "conditionals", " for every subtype can suggest a missing abstraction.", { accepts: ["conditions", "ifs", "switches", "checks", "branches", "if-statements"] })
     ]),
     set('4', 'SWEBOK 4 · Construction', 'Sep 16', [
-      q("Construction ", "produces", " executable software from the design."),
-      q("Small, clear units ", "reduce", " the complexity a reader must hold in mind."),
-      q("A code review can ", "catch", " defects before they reach testing."),
+      q("Construction produces executable ", "software", " from the design.", { accepts: ["code", "programs", "program", "artifacts"] }),
+      q("Small, clear ", "units", " reduce the complexity a reader must hold in mind.", { accepts: ["functions", "modules", "routines", "methods", "pieces"] }),
+      q("A code ", "review", " can catch defects before they reach testing.", { accepts: ["inspection", "walkthrough", "reviewer"] }),
       q('Automating a repeatable build reduces manual ', 'error', '.', { accepts: ['mistakes'] }),
-      q("An assertion ", "records", " a condition that should always hold."),
+      q("An ", "assertion", " records a condition that should always hold.", { accepts: ["assert", "invariant", "check"] }),
       q('A unit with hidden dependencies is harder to test in ', 'isolation', '.'),
-      q("This function keeps ", "ordering", " separate from callers through a narrow interface.", { code: 'def sort_orders(orders, key):\n    return sorted(orders, key=key)' })
+      q("This function hides its ordering ", "logic", " from callers behind a narrow interface.", { accepts: ["details", "algorithm", "implementation", "code", "rule"], code: 'def sort_orders(orders, key):\n    return sorted(orders, key=key)' })
     ]),
     set('5', 'SWEBOK 5 · Testing', 'Sep 30', [
       q('A work product such as a requirements document, design, source code, or test is an ', 'artifact', '.'),
       q("A fault is a defect in an artifact; a ", "failure", " is incorrect observed behavior."),
-      q("A test oracle ", "decides", " whether an observed result is correct."),
-      q("Boundary tests ", "focus", " on values near the edges of a valid range."),
+      q("A test ", "oracle", " decides whether an observed result is correct.", { accepts: ["assertion", "checker"] }),
+      q("Boundary tests focus on values near the ", "edges", " of a valid range.", { accepts: ["limits", "boundaries", "ends", "extremes", "edge"] }),
       q('A regression test checks that a change did not reintroduce an old ', 'failure', '.', { accepts: ['bug', 'defect'] }),
-      q('Branch coverage confirms that every outcome of a decision was ', 'executed', ' at least once; it does not show whether the outputs were correct.'),
+      q("Branch coverage confirms that every ", "outcome", " of a decision ran at least once, not that the outputs were correct.", { accepts: ["branch", "path", "result", "direction", "side"] }),
       q('An integration test checks interactions between ', 'components', '.', { accepts: ['modules'] }),
-      q("A failing test with no trustworthy ", "expected", " result has an oracle problem."),
+      q("A failing test with no trustworthy expected ", "result", " has an oracle problem.", { accepts: ["outcome", "value", "output", "answer", "behavior", "behaviour"] }),
       q('For this test, zero is a ', 'boundary', ' value.', { code: 'assert withdraw(balance=0, amount=1) == "insufficient funds"' })
     ]),
     set('6', 'SWEBOK 6 · Operations', 'Sep 30', [
-      q("Operations keeps ", "deployed", " software available and reliable."),
-      q('A rollout plan should include a way to ', 'recover', ' from failure.', { accepts: ['rollback'] }),
+      q("Operations keeps deployed ", "software", " available and reliable.", { accepts: ["systems", "services", "applications", "code", "system"] }),
+      q("A rollout plan should include a ", "recovery", " path in case of failure.", { accepts: ["rollback", "fallback", "backout", "escape", "revert", "exit"] }),
       q('Monitoring turns production behavior into observable ', 'signals', '.', { accepts: ['data', 'metrics'] }),
-      q("Automating repeated deployment steps ", "reduces", " configuration drift."),
+      q("Automating repeated deployment ", "steps", " reduces configuration drift.", { accepts: ["tasks", "actions", "work", "processes"] }),
       q('Load balancing spreads work across multiple ', 'servers', '.', { accepts: ['instances'] }),
       q('An incident review aims to improve the system and process after a ', 'failure', '.', { accepts: ['incident'] }),
       q('An alert is useful when it points to an actionable ', 'problem', '.', { accepts: ['condition'] })
     ]),
     set('7', 'SWEBOK 7 · Maintenance', 'Oct 7', [
-      q("Maintenance begins after delivery and ", "continues", " through system evolution."),
+      q("Maintenance begins after ", "delivery", " and continues through system evolution.", { accepts: ["release", "deployment", "launch", "shipping"] }),
       q('Corrective maintenance repairs a ', 'fault', '.', { accepts: ['defect', 'bug'] }),
       q('Adaptive maintenance responds to changes in the operating ', 'environment', '.'),
-      q("Perfective maintenance ", "improves", " functionality or quality."),
+      q("Improving functionality or quality for users is ", "perfective", " maintenance."),
       q('Preventive maintenance reduces the likelihood or cost of future ', 'problems', '.', { accepts: ['failures', 'changes'] }),
       q('Before editing unfamiliar code, impact analysis identifies likely affected ', 'parts', '.', { accepts: ['components', 'modules'] }),
-      q("A characterization test ", "captures", " current behavior before a risky change.")
+      q("A characterization test captures current ", "behavior", " before a risky change.", { accepts: ["behaviour", "output", "outputs", "functionality"] })
     ]),
     set('10', 'SWEBOK 10 · Process', 'Oct 7', [
       q('A software process defines activities, roles, and produced ', 'artifacts', '.', { accepts: ['work products'] }),
@@ -81,33 +81,33 @@
       q('A quality model makes attributes such as reliability and usability ', 'explicit', '.'),
       q('Verification asks whether the product was built according to its ', 'specification', '.', { accepts: ['requirements'] }),
       q('Validation asks whether the product meets the user’s actual ', 'needs', '.'),
-      q("A metric can ", "support", " judgment but does not by itself prove quality."),
-      q("A defect found before release usually ", "costs", " less to fix than one found after release."),
-      q('A static review examines an artifact without ', 'executing', ' it.', { accepts: ['running'] })
+      q("A ", "metric", " can support judgment but does not by itself prove quality.", { accepts: ["measure", "measurement", "number", "score"] }),
+      q("A defect found before ", "release", " usually costs less to fix than one found in production.", { accepts: ["shipping", "deployment", "delivery", "launch"] }),
+      q("A static review examines an ", "artifact", " without executing it.", { accepts: ["document", "design", "program", "code", "product"] })
     ]),
     set('13', 'SWEBOK 13 · Security', 'Oct 21', [
-      q('Threat modeling asks what assets exist, who may attack them, and how they could be ', 'misused', '.', { accepts: ['compromised'] }),
-      q("Authentication ", "establishes", " a user’s identity."),
+      q("Threat ", "modeling", " asks what assets exist, who may attack them, and how they could be misused.", { accepts: ["modelling", "analysis", "assessment"] }),
+      q("Verifying a password or token is part of ", "authentication", ", which establishes identity.", { accepts: ["login", "authn"] }),
       q('Authorization assigns permitted ', 'actions', '.', { accepts: ['permissions', 'access'] }),
       q('Least privilege grants only the access necessary for a ', 'task', '.'),
-      q('Checking a permission only in the browser leaves the server ', 'exposed', '.', { accepts: ['vulnerable'] }),
-      q("Defense in depth ", "uses", " multiple independent security controls."),
-      q("A security requirement should be ", "checked", " throughout the development life cycle.")
+      q("Checking a permission only in the ", "browser", " leaves the server exposed.", { accepts: ["client", "frontend", "front-end", "ui"] }),
+      q("Defense in depth uses several ", "independent", " security controls instead of trusting one.", { accepts: ["separate", "layered", "distinct", "different", "multiple"] }),
+      q("A security ", "requirement", " should be checked throughout the development life cycle.", { accepts: ["control", "property", "concern"] })
     ]),
     set('14', 'SWEBOK 14 · Professional Practice', 'Oct 28', [
-      q("Professional responsibility ", "extends", " beyond the immediate paying client."),
-      q("A conflict of interest can ", "impair", " independent professional judgment."),
+      q("Professional ", "responsibility", " extends beyond the immediate paying client.", { accepts: ["duty", "obligation", "accountability", "ethics"] }),
+      q("A conflict of ", "interest", " can impair independent professional judgment.", { accepts: ["interests"] }),
       q('A credible estimate should make its uncertainty ', 'visible', '.', { accepts: ['explicit'] }),
       q('Ethical reporting distinguishes observed facts from ', 'assumptions', '.', { accepts: ['inferences'] }),
       q('When a safety concern is found, silence is not a responsible ', 'response', '.'),
-      q("Clear communication helps stakeholders ", "understand", " the consequences of a decision.")
+      q("Clear ", "communication", " helps stakeholders understand the consequences of a decision.", { accepts: ["explanation", "writing", "reporting"] })
     ]),
     set('16', 'SWEBOK 16 · Computing Foundations', 'Oct 28', [
-      q("An abstraction ", "exposes", " useful behavior while hiding lower-level details."),
+      q("An ", "abstraction", " exposes useful behavior while hiding lower-level details.", { accepts: ["interface", "api"] }),
       q('A data structure choice changes the cost of common ', 'operations', '.'),
-      q("Concurrency ", "allows", " tasks to make progress during overlapping time."),
-      q("A race occurs when the result ", "depends", " on the order of unsynchronized operations."),
-      q("An algorithm with linear growth ", "takes", " work proportional to input size."),
+      q("Concurrency allows tasks to make ", "progress", " during overlapping time.", { accepts: ["headway"] }),
+      q("A race occurs when the result depends on the ", "order", " of unsynchronized operations.", { accepts: ["timing", "ordering", "sequence", "interleaving"] }),
+      q("An algorithm with linear growth takes ", "work", " proportional to input size.", { accepts: ["time", "effort", "steps", "operations"] }),
       q('A cache can speed repeated reads but may return ', 'stale', ' data.'),
       q('This loop’s work grows ', 'linearly', ' with the number of items.', { code: 'total = 0\nfor item in items:\n    total += item.cost' })
     ]),
@@ -116,18 +116,18 @@
       q('A counterexample disproves a universal ', 'claim', '.', { accepts: ['statement'] }),
       q('A relation that is reflexive, symmetric, and transitive is an equivalence ', 'relation', '.'),
       q("A probability between zero and one ", "quantifies", " uncertainty about an event."),
-      q("A graph ", "represents", " relationships using vertices and edges."),
-      q("A loop invariant must ", "hold", " before and after each iteration."),
+      q("A graph represents relationships using ", "vertices", " and edges.", { accepts: ["nodes", "points", "vertexes"] }),
+      q("A loop ", "invariant", " must hold before and after each iteration.", { accepts: ["condition", "property"] }),
       q('The assertion is the loop’s ', 'invariant', '.', { code: 'seen = set()\nfor item in items:\n    assert len(seen) <= len(items)\n    seen.add(item)' })
     ]),
     set('18', 'SWEBOK 18 · Engineering Foundations', 'Nov 4', [
       q('Engineering design balances requirements, constraints, and ', 'tradeoffs', '.'),
-      q("A model omits details so a particular question ", "becomes", " easier to answer."),
-      q("A prototype can ", "reveal", " a design risk before committing to full construction."),
-      q('Encapsulation groups a component’s state with controlled ways to ', 'access', ' it.'),
-      q("Decomposing a complex system ", "creates", " smaller parts with defined interfaces."),
+      q("A model omits ", "details", " so a particular question becomes easier to answer.", { accepts: ["detail", "information", "complexity"] }),
+      q("A ", "prototype", " can reveal a design risk before committing to full construction.", { accepts: ["spike", "mockup", "experiment"] }),
+      q("Encapsulation groups a component’s ", "state", " with controlled ways to access it.", { accepts: ["data", "fields"] }),
+      q("Decomposing a complex system creates smaller ", "parts", " with defined interfaces.", { accepts: ["pieces", "components", "modules", "subsystems"] }),
       q('Risk analysis combines the chance of failure with its potential ', 'impact', '.', { accepts: ['consequence'] }),
-      q("An engineering decision should be ", "revisited", " when its underlying assumptions change.")
+      q("An engineering ", "decision", " should be revisited when its underlying assumptions change.", { accepts: ["choice", "design"] })
     ])
   ] });
 })();
