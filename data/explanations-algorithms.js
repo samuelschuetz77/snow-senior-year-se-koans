@@ -161,6 +161,24 @@ An empty subtree contains no searches and contributes no cost.
 Each candidate root depends on smaller left and right intervals.
 There are about n squared intervals and up to n roots for each: order n cubed work.
 No keys in the interval means no search can incur a cost there.
+Each frequency belongs to its corresponding key in sorted order.
+Each search for a key traverses its ancestors, so that count is paid once per search.
+Reducing a popular key's depth saves a comparison on many searches.
+The search-tree ordering puts every key smaller than the root in its left subtree.
+Substituting a cheaper subtree would improve the full tree, contradicting optimality.
+The same keys are searched regardless of which of them becomes the root.
+The longer interval contains one additional key, contributing its frequency.
+An empty interval has no frequencies to sum, providing the row's starting value.
+There are quadratically many key intervals, and each total takes constant work from the previous one.
+Each subproblem is identified by a start and end index, which form the table's two dimensions.
+Either subtree excludes the chosen root, so it contains fewer keys than the full interval.
+Every needed subtree has smaller length, so earlier diagonals already hold its answer.
+Right subtrees start at larger indices and are computed in earlier rows.
+Left subtrees end at smaller indices and are computed in earlier columns.
+The first-root cost is 3+2·1=5; the second-root cost is 1+2·3=7.
+The cost table records values; stored root choices tell us how to rebuild the tree.
+There are O(n²) distinct start-end intervals and one stored cost for each.
+The interval total is independent of the root, so adding it outside the minimum gives the same result.
 `,
     'jea-4-1': `
 Every later file requires moving past an earlier file on the tape.

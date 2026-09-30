@@ -24,6 +24,11 @@ for (const course of courses) {
     assert(!setIds.has(set.id), `Duplicate set ${course.id}/${set.id}`);
     setIds.add(set.id);
     assert(set.source && set.due && set.koans.length >= 5, `Incomplete set ${course.id}/${set.id}`);
+    if (course.id === 'advanced-algorithms' && set.id === 'jea-3-9') {
+      assert(set.koans.length >= 20 && set.koans.length <= 30, 'JEA 3.9 needs 20–30 questions');
+      const setCodeRatio = set.koans.filter(koan => koan.code).length / set.koans.length;
+      assert(setCodeRatio >= 0.03 && setCodeRatio <= 0.05, 'JEA 3.9 code ratio must be 3–5%');
+    }
     for (const koan of set.koans) {
       assert(koan.before && koan.after && koan.answer, `Incomplete koan in ${course.id}/${set.id}`);
       assert(koan.why && koan.why.trim().split(/\s+/).length < 40, `Missing or long explanation in ${course.id}/${set.id}: ${koan.before}`);
