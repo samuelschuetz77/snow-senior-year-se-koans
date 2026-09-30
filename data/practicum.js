@@ -47,7 +47,7 @@
       q('Tests run both discount and standard-shipping branches, showing branch coverage but not proving the calculated prices are ', 'correct', '.'),
       q('An integration test checks interactions between ', 'components', '.', { accepts: ['modules'] }),
       q('A failing test with no trustworthy expected result has an oracle ', 'problem', '.'),
-      q('For this test, zero is a boundary ', 'value', '.', { code: 'assert withdraw(balance=0, amount=1) == "insufficient funds"' })
+      q('For this test, zero is a ', 'boundary', ' value.', { code: 'assert withdraw(balance=0, amount=1) == "insufficient funds"' })
     ]),
     set('6', 'SWEBOK 6 · Operations', 'Sep 30', [
       q('Operations keeps deployed software available and ', 'reliable', '.'),
