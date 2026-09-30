@@ -187,4 +187,106 @@
     q('An algorithm can be correct but inefficient because it repeats the same ', 'subproblems', '.', 'A recursion tree may contain identical instances in different branches. Memoization can reuse their answers without changing the recurrence’s meaning.'),
     q('A tight complexity claim requires both an upper and a lower ', 'bound', '.', 'An upper bound alone may be loose. Matching bounds identify the asymptotic growth for the stated algorithm and input model.')
   ]);
+  add('jea-2-4', [
+    q('A backtracking state should retain exactly the information future choices ', 'need', '.', 'Past decisions matter only through their effect on the remaining problem. Too little state merges distinct situations; too much obscures reuse.'),
+    q('The recursive step considers every valid next ', 'choice', '.', 'Exploring all alternatives makes the first formulation complete. Pruning is safe only when a proof shows skipped branches cannot succeed.'),
+    q('A backtracking base case decides whether a completed choice sequence is ', 'successful', '.', 'The recursion must return a definite result when no decisions remain. That result anchors the logical combination of branches.'),
+    q('For a yes-or-no problem, alternative branches combine with logical ', 'or', '.', 'Any successful choice suffices. The recurrence returns true if at least one valid next decision leads to a solution.'),
+    q('A partial assignment is worth abandoning only when it cannot extend to a valid ', 'solution', '.', 'This is pruning. The condition must be sound, or the search may discard the only successful branch.'),
+    q('A recursive subproblem can be broader than the original user ', 'question', '.', 'The algorithm may need to solve every possible remaining state, not just the initial input. The generalized contract makes recursion precise.'),
+    q('Two histories with identical future-relevant state have the same continuation ', 'answer', '.', 'The recurrence depends on that state, not the route taken to reach it. This observation prepares memoization.'),
+    q('Subset sum can branch by including or excluding the next ', 'item', '.', 'Both choices must be considered unless a safe pruning rule applies. The remaining target records the effect of inclusion.'),
+    q('An include branch for subset sum reduces the remaining ', 'target', '.', 'The selected value contributes to the sum, so the recursive call asks whether the rest can supply the difference.'),
+    q('An exclude branch advances past an item without changing the ', 'target', '.', 'The item is unavailable to later choices. The remaining target is unchanged because nothing was added.'),
+    q('Backtracking can take exponential time because the choice tree ', 'branches', '.', 'With two possibilities per item and little pruning, the tree can contain roughly two to the n leaves.'),
+    q('Memoization helps when different branches revisit the same ', 'state', '.', 'Caching the answer avoids recomputing all continuations from that state. The state representation must capture every relevant condition.'),
+    q('A valid recurrence must not confuse an impossible branch with a zero-cost ', 'solution', '.', 'The combination rule treats impossible and successful outcomes differently. Clear base cases prevent false success in optimization variants.'),
+    q('This search branches on including or excluding the next ', 'value', '.', 'The two calls cover both possible decisions for the current item. The target changes only in the include branch.', { code: 'return solve(i + 1, target) or solve(i + 1, target - values[i])' })
+  ]);
+
+  add('jea-2-5', [
+    q('Text segmentation asks whether the entire string can be covered by valid ', 'words', '.', 'A valid first word is insufficient if the remaining suffix cannot be segmented. The recurrence must check both pieces.'),
+    q('The first decision in segmentation selects a prefix ending at some ', 'position', '.', 'Each candidate boundary defines a possible first word and a remaining suffix. The search tries every allowable boundary.'),
+    q('A candidate prefix should be checked against the word ', 'dictionary', '.', 'Only dictionary words can start a valid segmentation. Invalid prefixes can be skipped before recursing on the suffix.'),
+    q('A valid first word succeeds only when its suffix is also ', 'segmentable', '.', 'The recursive call handles everything after the chosen prefix. Logical and combines the prefix test with the suffix result.'),
+    q('Alternative first-word choices combine with logical ', 'or', '.', 'One successful split is enough to prove the string segmentable. Failure requires every candidate split to fail.'),
+    q('The empty suffix is a successful base ', 'case', '.', 'After the final valid word, no characters remain. Zero additional words form a valid completion of the segmentation.'),
+    q('The suffix start index is enough state when the original string and dictionary stay ', 'fixed', '.', 'Future possibilities depend only on the remaining characters. Earlier split boundaries need not be stored for a yes-or-no answer.'),
+    q('Different prefix choices can reach the same suffix ', 'index', '.', 'That overlap causes repeated recursive work. Memoizing the result for each index turns the search into dynamic programming.'),
+    q('A greedy longest-prefix rule can fail even when a valid segmentation ', 'exists', '.', 'The longest first word may leave an impossible suffix. Backtracking keeps shorter valid prefixes available for consideration.'),
+    q('A greedy shortest-prefix rule also needs a correctness ', 'proof', '.', 'Local length alone does not guarantee the suffix can be segmented. Without a proof, explore all valid first words.'),
+    q('To reconstruct actual words, store the successful split ', 'position', '.', 'Boolean memoization says a suffix is possible but not how. A saved boundary allows the chosen words to be recovered.'),
+    q('An empty dictionary cannot segment a nonempty ', 'string', '.', 'No nonempty prefix qualifies as a valid first word. The only successful input is the empty string base case.'),
+    q('Checking prefixes naively can add string-copying ', 'cost', '.', 'The recurrence count alone may omit the work to create or compare substrings. Use indexes or account for copying in complexity.'),
+    q('The recurrence can be evaluated from the end of the string toward its ', 'start', '.', 'A suffix depends on shorter suffixes beginning farther right. Filling those states first makes every needed answer available.')
+  ]);
+
+  add('jea-2-8', [
+    q('Optimal-BST search cost weights each key’s depth by its access ', 'frequency', '.', 'Frequently accessed keys contribute more to the objective. A balanced shape may therefore be suboptimal under unequal frequencies.'),
+    q('Choosing a root partitions an ordered key interval into two smaller ', 'intervals', '.', 'All lesser keys must lie left and greater keys right. The binary-search-tree order fixes the subproblem boundaries.'),
+    q('Every key in the interval gains one extra comparison below the chosen ', 'root', '.', 'This adds the interval’s total frequency to the two subtree costs, regardless of which candidate becomes root.'),
+    q('The empty interval has cost ', 'zero', '.', 'It contains no searched keys, so contributes no weighted comparisons. This base case also handles a root at an endpoint.'),
+    q('The backtracking recurrence tries every possible interval ', 'root', '.', 'Each root defines a different pair of subtrees. Taking the minimum over candidates guarantees the best tree if subproblems are optimal.'),
+    q('For a fixed root, the optimal left and right subtrees can be chosen ', 'independently', '.', 'Their keys and costs are disjoint except for the shared interval-frequency increment. Improving either subtree improves the whole tree.'),
+    q('An optimal tree cannot contain a nonoptimal subtree for its fixed ', 'interval', '.', 'Replacing that subtree with a cheaper valid one would lower the total tree cost, contradicting optimality.'),
+    q('A frequent key near the root can outweigh a perfectly balanced tree ', 'shape', '.', 'The objective is weighted comparisons rather than worst-case height. Key frequencies determine the tradeoff.'),
+    q('The recurrence state needs both left and right interval ', 'endpoints', '.', 'The set of candidate keys is contiguous in sorted order. A single size value cannot identify which frequencies are included.'),
+    q('Trying one root greedily cannot guarantee the minimum without an exchange ', 'proof', '.', 'The chosen root changes both subtree costs. The backtracking recurrence avoids assuming that a locally frequent key is always best.'),
+    q('The interval-frequency term counts the comparison at the current ', 'root', '.', 'Every search in the interval visits that root once. Summing access frequencies gives the weighted contribution of this level.'),
+    q('A root at the left endpoint creates an empty ', 'left', ' subtree.', 'No interval keys are smaller than that root. The empty-interval base case supplies zero cost for that side.'),
+    q('Backtracking repeats interval subproblems under different root ', 'choices', '.', 'The same interval can appear in many search branches. Caching its optimal cost will later remove this duplication.'),
+    q('This recurrence adds interval weight after minimizing over candidate ', 'roots', '.', 'The frequency sum is independent of which root is chosen. The subtree costs vary with the selected split.', { code: 'cost(i,j) = sum(freq[i:j+1]) + min(cost(i,r-1)+cost(r+1,j) for r in range(i,j+1))' })
+  ]);
+  const deepen = (id, phrases) => {
+    const added = course.sets.find(set => set.id === id).koans.slice(-phrases.length);
+    added.forEach((koan, index) => { koan.why += ` ${phrases[index]}`; });
+  };
+  deepen('jea-2-4', [
+    'The state must not omit a future constraint.',
+    'This is the completeness obligation behind the search.',
+    'The final return value anchors the branch recurrence.',
+    'Failure means every continuation has been ruled out.',
+    'Pruning requires an argument stronger than intuition.',
+    'This broader contract covers all reachable recursive calls.',
+    'The common state is what makes caching sound.',
+    'The item index prevents choosing one item twice.',
+    'The remaining target tracks the unpaid sum.',
+    'Advancing the index rules out reconsidering the item.',
+    'The tree size explains why reuse can matter.',
+    'Distinct histories may collapse to one cached subproblem.',
+    'Use an explicit failure value when optimizing.',
+    'Neither decision can be ignored without proof.'
+  ]);
+  deepen('jea-2-5', [
+    'Every character must belong to some chosen word.',
+    'A split point determines both parts of the recurrence.',
+    'Dictionary membership is a necessary local condition.',
+    'A successful suffix completes the proposed first word.',
+    'A single successful boundary certifies the whole string.',
+    'This terminates a chain of valid prefixes.',
+    'Fixed inputs need not be duplicated in the state.',
+    'The number of distinct suffix indexes is linear.',
+    'The failure comes from its remaining suffix.',
+    'A counterexample defeats either unproved length rule.',
+    'The stored choice acts as a reconstruction pointer.',
+    'No candidate prefix can begin the recursion.',
+    'Implementation costs can change the final time bound.',
+    'The dependency order follows increasing suffix length.'
+  ]);
+  deepen('jea-2-8', [
+    'The objective is expected search work, not height alone.',
+    'Sorted order forces all smaller keys leftward.',
+    'Every search pays for one comparison at this level.',
+    'It also makes edge roots easy to handle.',
+    'Exhausting roots avoids an unsupported greedy assumption.',
+    'Neither subtree constrains the other beyond the split.',
+    'That replacement is the optimal-substructure proof.',
+    'The weights determine which shallow positions are valuable.',
+    'Endpoints identify exactly which keys remain.',
+    'A locally appealing root may create costly subtrees.',
+    'This term is shared across all root candidates.',
+    'The left cost then contributes nothing.',
+    'Those repeated intervals motivate a table later.',
+    'Only the child costs depend on the chosen root.'
+  ]);
 })();
