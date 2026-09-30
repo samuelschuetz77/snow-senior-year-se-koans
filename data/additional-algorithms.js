@@ -885,4 +885,231 @@
     'The weakest link controls that one path.',
     'Other cuts can provide tighter network bounds.'
   ]);
+  add('jea-11-0', [
+    q('A flow reduction needs a mapping from original solutions to feasible ', 'flows', '.', 'Every legal original choice should produce a network assignment satisfying capacities and conservation. Otherwise the model may exclude valid answers.'),
+    q('The reverse mapping converts an integral flow into original ', 'choices', '.', 'Without it, a maximum flow value might have no usable interpretation. Flow decomposition often supplies the required discrete selections.'),
+    q('A correct reduction preserves the original objective as flow ', 'value', '.', 'Maximizing network flow must maximize the intended number of paths, matches, or selections. A mismatched objective solves a different problem.'),
+    q('A capacity-one edge can express that a resource is used at most ', 'once', '.', 'Each unit of integral flow consumes capacity. The network construction must put every use of that resource through the edge.'),
+    q('Integral capacities support discrete path decomposition of an integral ', 'flow', '.', 'A unit of flow can represent one chosen item or route. Fractional assignments would not directly encode such decisions.'),
+    q('A modeling reduction must exclude invalid combinations through network ', 'structure', '.', 'If a forbidden original selection still corresponds to a source-to-sink path, maximum flow can return an unusable result.'),
+    q('A flow network can encode compatibility by including only allowed ', 'edges', '.', 'A path can then follow only permitted transitions. Missing edges represent disallowed pairs or assignments.'),
+    q('The source and sink frame one complete selection as a source-to-sink ', 'path', '.', 'Internal layers encode the resources used. A flow decomposition turns the final network result into individual selections.'),
+    q('A reduction proof must work in both ', 'directions', '.', 'Map every original solution to a flow and every relevant flow back to a valid original solution. One direction alone is insufficient.'),
+    q('An original feasibility question can be answered by comparing maximum flow to a required ', 'target', '.', 'If the flow reaches that value, the decomposition yields a feasible assignment. A lower value proves the requirement impossible under the model.'),
+    q('Network construction time belongs in the reduction’s total running ', 'time', '.', 'An efficient maxflow subroutine does not help if building the network is too expensive. Count vertices, edges, and conversion work.'),
+    q('A cut can reveal which resource constraints prevent a larger original ', 'solution', '.', 'The bottleneck certificate may explain why no more disjoint paths or assignments can be selected.'),
+    q('An infinite capacity should be implemented by a finite safe upper ', 'bound', '.', 'A bound above every possible useful flow serves the same purpose and avoids special arithmetic. Its value should be justified.'),
+    q('A source-to-sink path is a modeling object, not necessarily a physical ', 'route', '.', 'In assignments, its edges encode linked choices. The reduction proof gives the path its original-problem meaning.'),
+    q('This capacity-one edge limits the modeled resource to a single ', 'use', '.', 'Every path consuming that resource must cross the edge. Integral flow cannot send two units through it.', { code: 'add_edge(resource_in, resource_out, capacity=1)' })
+  ]);
+
+  add('jea-11-1', [
+    q('Edge-disjoint paths share no graph ', 'edges', '.', 'They may pass through the same vertices. The constrained resource is each edge’s single use.'),
+    q('Assigning unit capacity to each original edge enforces edge ', 'disjointness', '.', 'Two unit-flow paths cannot both use an edge whose capacity is one. Integral flow decomposes into separate paths.'),
+    q('An integral flow of value k yields k edge-disjoint source-to-sink ', 'paths', '.', 'Decompose the flow into unit paths and discard cycles. Unit edge capacities prevent two selected paths from sharing an edge.'),
+    q('Conversely, k edge-disjoint paths create a feasible flow of value ', 'k', '.', 'Send one unit along each path. Edge disjointness respects unit capacities, and each internal vertex balances inflow and outflow.'),
+    q('The maxflow-mincut theorem equates path count with a minimum separating edge ', 'cut', '.', 'A cut of c edges blocks every path and bounds their number. Unit-capacity maxflow attains that bound.'),
+    q('Two edge-disjoint paths may cross at an internal ', 'vertex', '.', 'The vertex has no capacity-one restriction in this model. Limiting vertices requires a different construction.'),
+    q('A bridge edge can limit the maximum path count to ', 'one', '.', 'If every source-to-sink path uses that edge, its unit capacity forms a cut of one.'),
+    q('A path decomposition may contain directed flow ', 'cycles', '.', 'Cycles contribute no source-to-sink value. Remove them to recover the paths representing the original solution.'),
+    q('Unit edge capacities make the optimal flow value an ', 'integer', '.', 'The integrality property permits a discrete path count. A fractional optimum would not directly count separate routes.'),
+    q('A source-to-sink cut with c unit edges proves at most c edge-disjoint ', 'paths', '.', 'Every path must cross at least one cut edge. Edge disjointness assigns a different cut edge to each path.'),
+    q('The reduction must preserve original edge ', 'direction', '.', 'A directed path may traverse only allowed orientations. Reversing an edge in the network could create a path absent from the graph.'),
+    q('Parallel edges can support separate edge-disjoint ', 'paths', '.', 'They are distinct resources even if they share endpoints. Give each its own unit-capacity network edge.'),
+    q('A flow value alone gives the count; decomposition gives the actual ', 'routes', '.', 'To return paths, follow positive-flow edges from source to sink, removing one unit for each recovered path.'),
+    q('The unit-capacity model answers edge-disjointness, not minimum total path ', 'length', '.', 'Maximum flow optimizes how many paths exist. It does not by itself minimize their edge counts or weights.'),
+    q('This capacity turns each graph edge into a one-use ', 'resource', '.', 'Integral maxflow then counts paths that cannot share that edge. Vertex sharing remains allowed.', { code: 'for u, v in graph_edges:\n    network.add_edge(u, v, capacity=1)' })
+  ]);
+
+  add('jea-11-2', [
+    q('Internally vertex-disjoint paths cannot share an intermediate ', 'vertex', '.', 'The source and sink may be common endpoints for every selected path. Each other vertex is a resource with capacity one in the flow model.'),
+    q('Splitting v into v-in and v-out makes a vertex limit an edge ', 'capacity', '.', 'Every route through v must cross the internal edge. Setting that edge to one prevents two unit paths from using v.'),
+    q('An original edge u to v becomes an edge from u-out to ', 'v-in', '.', 'This preserves direction while routing every visit through the appropriate split-vertex capacity edge.'),
+    q('The source and sink typically need special capacity ', 'treatment', '.', 'Many selected paths share those endpoints. A capacity-one internal edge there would incorrectly limit the answer to one.'),
+    q('A capacity-one internal edge enforces at most one path through a ', 'vertex', '.', 'Integral paths cannot both consume the same bottleneck edge. The flow network thereby encodes vertex disjointness.'),
+    q('A feasible family of vertex-disjoint paths maps to an integral ', 'flow', '.', 'Send one unit along each transformed path. Shared endpoints are allowed, while distinct internal vertices respect all capacity-one edges.'),
+    q('An integral flow maps back to internally disjoint original ', 'paths', '.', 'Decompose it and collapse each v-in to v-out traversal back to vertex v. Capacity one prevents repeated internal use.'),
+    q('Unit capacities on original edges alone are insufficient for vertex ', 'disjointness', '.', 'Two paths could enter and leave the same vertex using different edges. The split edge constrains that shared resource.'),
+    q('A minimum vertex separator corresponds to a cut through split ', 'edges', '.', 'Removing those capacity-one vertex edges blocks all routes. The flow model relates path count to vertex bottlenecks.'),
+    q('A split graph has approximately twice as many vertex ', 'nodes', '.', 'Each original vertex becomes an input and output copy. The transformation remains linear in graph size.'),
+    q('A direct source-to-sink edge needs care in a vertex-disjoint-path ', 'count', '.', 'Multiple uses of the same original edge are not separate simple paths. Model edge and endpoint conventions explicitly.'),
+    q('Vertex splitting can encode capacities greater than ', 'one', '.', 'Set the internal edge capacity to the allowed number of uses. The same construction generalizes beyond strict disjointness.'),
+    q('The internal edge is the only way to pass through its original ', 'vertex', '.', 'All incoming original edges connect to v-in and all outgoing edges leave v-out. The bottleneck cannot be bypassed.'),
+    q('Flow conservation at v-in and v-out preserves a path’s ', 'continuity', '.', 'A unit entering a vertex must cross the internal edge and leave along an outgoing transformed edge.'),
+    q('This edge gives each internal vertex one unit of ', 'capacity', '.', 'Every transformed path through v must use it. Two paths therefore cannot share the corresponding original vertex.', { code: 'network.add_edge(v_in, v_out, capacity=1)' })
+  ]);
+
+  add('jea-11-3', [
+    q('A bipartite graph divides vertices into left and right ', 'sets', '.', 'Every candidate matching edge crosses between the sets. The flow network follows that layered structure.'),
+    q('A matching contains no two edges with the same ', 'endpoint', '.', 'Each participant can appear in at most one chosen pair. Capacity-one edges at left and right vertices enforce this.'),
+    q('The flow network connects source to each left vertex with capacity ', 'one', '.', 'At most one unit can enter that left participant. The participant cannot be matched twice.'),
+    q('Each right vertex connects to sink with capacity ', 'one', '.', 'At most one selected pair can pass through that right participant. This enforces the other side of matching.'),
+    q('A left-to-right network edge exists only for an allowed ', 'pair', '.', 'A flow path then corresponds to a real bipartite edge. Forbidden pairs cannot appear in the output matching.'),
+    q('An integral flow path represents one matched ', 'edge', '.', 'It travels source, left vertex, right vertex, sink. Unit endpoint capacities prevent overlap with other selected paths.'),
+    q('An augmenting path may cancel a previous match and create a larger ', 'matching', '.', 'Backward residual edges reassign partners. This is why greedy first-available pairing can miss the optimum.'),
+    q('An alternating path switches between unmatched and matched ', 'edges', '.', 'Flipping their status along a suitable augmenting path increases the matching size by one without violating endpoint constraints.'),
+    q('The maximum-flow value equals the maximum matching ', 'cardinality', '.', 'Both-direction mappings preserve the number of selected pairs. The flow optimum therefore solves the original optimization problem.'),
+    q('An unmatched left vertex can begin an augmenting ', 'path', '.', 'The residual search may traverse existing matches backward and end at an unmatched right vertex, increasing size.'),
+    q('A maximal matching need not be ', 'maximum', '.', 'No single extra edge may be addable, yet an alternating augmenting path can rearrange pairs and increase total count.'),
+    q('The network’s unit capacities give an integral optimal ', 'flow', '.', 'This allows the result to be interpreted as whole matched pairs rather than fractional assignments.'),
+    q('A flow decomposition recovers the selected left-right ', 'pairs', '.', 'Inspect positive flow on edges between the two sides. Each such edge is one match in the output.'),
+    q('This sink edge prevents the right participant from being matched ', 'twice', '.', 'Its capacity one is shared by all candidate pairs entering that right vertex. Only one unit can leave for the sink.', { code: 'network.add_edge(right_vertex, sink, capacity=1)' }),
+    q('Matching size optimizes pair count, not participant ', 'preferences', '.', 'Stable matching uses preference order and blocking pairs. Maximum bipartite matching asks for the largest set of nonoverlapping edges.')
+  ]);
+  deepen('jea-11-1', [
+    'Vertex sharing is explicitly permitted in this model.',
+    'Each edge is the capacity-limited resource.',
+    'Path decomposition gives a discrete witness.',
+    'Their sum conserves flow at intermediate vertices.',
+    'The cut is the matching obstruction certificate.',
+    'This distinguishes edge and vertex constraints.',
+    'One bottleneck edge limits all routes.',
+    'Discarding cycles preserves source-to-sink value.',
+    'Integrality converts flow units into whole paths.',
+    'Distinct paths require distinct crossing edges.',
+    'The network must not invent reverse routes.',
+    'Parallel channels remain separate graph edges.',
+    'The optimization value is only the count.',
+    'Path quality is a different objective.',
+    'The restriction applies to each original edge.'
+  ]);
+  deepen('jea-11-2', [
+    'The endpoint convention must be stated explicitly.',
+    'The split edge is the resource bottleneck.',
+    'The transformation preserves route orientation.',
+    'Otherwise the model would cap all paths incorrectly.',
+    'Every internal visit crosses that one edge.',
+    'The path family satisfies the constructed constraints.',
+    'Collapse the split pairs after decomposition.',
+    'Different edges can still meet at one vertex.',
+    'Cuts now represent forbidden vertex sets.',
+    'The graph-size blowup remains linear.',
+    'Special cases depend on the path definition.',
+    'The same gadget models repeated-use limits.',
+    'No incoming route bypasses the capacity edge.',
+    'Both split nodes still obey conservation.',
+    'The unit limit rules out shared internal vertices.'
+  ]);
+  deepen('jea-11-3', [
+    'Edges never connect vertices on the same side.',
+    'This is the central combinatorial constraint.',
+    'That edge encodes one left-side use.',
+    'That edge encodes one right-side use.',
+    'The network omits forbidden compatibility pairs.',
+    'A full path is one complete assignment.',
+    'Residual cancellation is what enables reassignment.',
+    'The path alternates selection status after flipping.',
+    'The reduction preserves the objective exactly.',
+    'Existing matches can be traversed backward.',
+    'Local irreversibility can miss better rearrangements.',
+    'Discrete pairs need whole flow units.',
+    'Positive cross-layer flow reveals the selected edges.',
+    'All candidate partners share this one bottleneck.',
+    'The two problems have different feasibility conditions.'
+  ]);
+  add('jea-11-4', [
+    q('Tuple selection chooses one item from each ordered resource ', 'layer', '.', 'A source-to-sink path crosses the layers in order. Its vertices encode one complete compatible tuple.'),
+    q('An element capacity limits how many chosen tuples may contain that ', 'element', '.', 'Split its vertex into in and out copies with an edge of the allowed capacity. Every path using it crosses that edge.'),
+    q('A pair capacity constrains two elements in adjacent ', 'layers', '.', 'An edge between their vertices carries the pair limit. Zero-capacity pairs can be omitted from the network.'),
+    q('The flow model depends on pair constraints involving only adjacent ', 'layers', '.', 'A nonadjacent compatibility rule might not be captured by a local path edge. The chapter warns this broader problem can be hard.'),
+    q('A unit path from source to sink represents one selected ', 'tuple', '.', 'Flow decomposition extracts one path for each unit of integral flow. The path chooses exactly one element per layer.'),
+    q('An integral flow of value k can be decomposed into k unit ', 'paths', '.', 'Each path represents a tuple. Element and adjacent-pair capacities ensure the resulting collection satisfies every stated limit.'),
+    q('Conversely, k valid tuples create a feasible flow of value ', 'k', '.', 'Send one unit along each tuple path. The original capacity rules guarantee that no network edge is overused.'),
+    q('The maximum flow value equals the maximum number of selected ', 'tuples', '.', 'Both directions of the reduction preserve the count. A larger flow would imply a larger valid tuple collection.'),
+    q('An exam schedule can treat class, room, time, and proctor as four ', 'resources', '.', 'One path chooses all four. Edges encode which adjacent choices are compatible and capacities prevent overuse.'),
+    q('A class-to-room edge exists only if the room has enough ', 'seats', '.', 'The edge enforces local compatibility. A missing edge prevents the flow from assigning that class to an undersized room.'),
+    q('A room-to-time edge of capacity one prevents two exams using the same room at the same ', 'time', '.', 'Every assignment of that room and slot crosses the edge. The capacity enforces the shared-resource limit.'),
+    q('A time-to-proctor edge exists only when that proctor is ', 'available', '.', 'Unavailable combinations are absent from the graph. The path cannot represent an invalid proctor-time assignment.'),
+    q('The schedule is complete only if maximum flow value equals the number of ', 'classes', '.', 'Each class supplies at most one unit. Saturating all class source edges corresponds to assigning every exam.'),
+    q('A proctor-to-sink edge can encode a limit on total exams supervised by that ', 'proctor', '.', 'Its capacity sums all paths choosing that person. The limit applies across every time slot.'),
+    q('This edge allows at most one exam in a room during this ', 'slot', '.', 'Every schedule path using the room-slot pair crosses the edge. Capacity one prevents an overlapping second exam.', { code: 'add_edge(room, time_slot, capacity=1)' })
+  ]);
+
+  add('jea-11-5', [
+    q('A path cover includes every graph vertex in at least one directed ', 'path', '.', 'A disjoint cover uses every vertex exactly once. Length-zero paths allow isolated vertices to be covered.'),
+    q('The optimization seeks as few vertex-disjoint covering paths as ', 'possible', '.', 'Joining compatible consecutive vertices reduces the number of separate paths. The DAG restriction makes the matching reduction valid.'),
+    q('The construction makes a left and right copy of every ', 'vertex', '.', 'A directed edge u to v becomes a bipartite edge from u-left to v-right. Matching then chooses path links.'),
+    q('A matching edge assigns one vertex as the successor of ', 'another', '.', 'Matching prevents two chosen outgoing links from one vertex or two incoming links to one vertex.'),
+    q('A DAG prevents chosen predecessor-successor links from forming a ', 'cycle', '.', 'With indegree and outdegree at most one, an acyclic selected subgraph must be disjoint directed paths.'),
+    q('A cover with k paths uses V minus k chosen path ', 'edges', '.', 'Each path with r vertices has r minus one edges. Summing over all paths gives total vertices minus path count.'),
+    q('A matching of size m gives a path cover with V minus m ', 'paths', '.', 'Project matched edges back to the DAG. Each chosen link joins two vertices into one sequence, reducing path count by one.'),
+    q('Maximizing the matching minimizes the number of covering ', 'paths', '.', 'The formula V minus matching size reverses the objective. A larger matching joins more vertices and needs fewer paths.'),
+    q('A cyclic input can break the matching-to-path-cover ', 'argument', '.', 'Selected links might form a directed cycle rather than paths. The DAG assumption is therefore essential.'),
+    q('A vertex unmatched on the right copy has no chosen ', 'predecessor', '.', 'It starts one of the recovered paths. Counting such starts equals the number of paths in the cover.'),
+    q('A vertex unmatched on the left copy has no chosen ', 'successor', '.', 'It ends one of the recovered paths. Following matched successor links reconstructs the complete cover.'),
+    q('Class scheduling can model feasible succession as a DAG ', 'edge', '.', 'An edge exists when one professor can teach the later class after travel time. Each covering path becomes one professor’s schedule.'),
+    q('The minimum number of professors equals the minimum path-cover ', 'size', '.', 'Each professor follows one legal class path. Every class must appear exactly once, so the cover assigns all courses.'),
+    q('The matching graph contains two copies of each original ', 'vertex', '.', 'The copies separately constrain one outgoing and one incoming selected link. A single copy would conflate these roles.'),
+    q('This edge records a legal consecutive pair of ', 'classes', '.', 'A match can join the first class to the second in one professor’s schedule. Time and travel feasibility determine whether the edge exists.', { code: 'if next.start >= current.end + travel[current.loc, next.loc]:\n    dag.add_edge(current, next)' })
+  ]);
+
+  add('jea-11-6', [
+    q('Baseball elimination asks whether a team can finish first, possibly ', 'tied', '.', 'Assume the chosen team wins all its remaining games. Then distribute other games to keep opponents below its maximum win total.'),
+    q('The candidate team’s best possible final wins equal current wins plus remaining ', 'games', '.', 'If another team already exceeds that number, elimination is immediate. Otherwise interactions among opponents still matter.'),
+    q('Games between two opponents must award wins to one of those ', 'teams', '.', 'Those outcomes cannot all be losses for both. This is why comparing current standings alone is insufficient.'),
+    q('A game-pair node receives capacity equal to games remaining between that ', 'pair', '.', 'Each unit represents one game whose winner must be chosen. Saturating its source edge assigns every such game.'),
+    q('A game node connects only to the two teams that can ', 'win', ' it.', 'The outgoing flow assigns its games to one opponent or the other. No unrelated team can receive those wins.'),
+    q('A team-to-sink capacity limits that opponent’s additional ', 'wins', '.', 'The limit is the candidate’s maximum final wins minus that opponent’s current wins. Exceeding it would eliminate the candidate.'),
+    q('The candidate remains possible only if all source-to-game edges can be ', 'saturated', '.', 'Then every remaining opponent game has an assigned winner and no opponent exceeds the candidate’s maximum wins.'),
+    q('A maximum flow below the total remaining opponent games proves ', 'elimination', '.', 'Some game outcome cannot be assigned without violating a team win limit. The cut exposes the obstruction.'),
+    q('Integral flow lets one unit represent one actual ', 'game', '.', 'No game needs a fractional winner. Integer capacities guarantee an integral optimum that can be interpreted as outcomes.'),
+    q('A negative team-to-sink allowance means elimination is already ', 'trivial', '.', 'That opponent has more current wins than the candidate can ever achieve. No network distribution can repair it.'),
+    q('The reduction ignores games involving the candidate after assuming it wins them ', 'all', '.', 'Any schedule where it can finish first can be improved for that team by changing its remaining games to wins.'),
+    q('A cut can certify elimination without listing every possible season ', 'schedule', '.', 'Its capacity is too small to route all mandatory game units. This compact obstruction replaces exponential enumeration.'),
+    q('Source-edge capacity G[i,j] encodes all remaining games for one opponent ', 'pair', '.', 'Saturating it means all those games receive winners. The distribution between its two outgoing team edges chooses who wins.'),
+    q('A candidate may be eliminated even when no single opponent already has too many ', 'wins', '.', 'Several opponents must play each other, forcing some to gain wins. Network constraints capture this collective pressure.'),
+    q('This capacity bounds opponent i’s additional ', 'wins', '.', 'The opponent may gain no more than the candidate’s best final total minus its current wins. A negative result signals immediate elimination.', { code: 'limit_i = wins[candidate] + remaining[candidate] - wins[i]' })
+  ]);
+
+  add('jea-11-7', [
+    q('Project selection chooses a dependency-closed subset maximizing total ', 'profit', '.', 'A selected project must include every prerequisite it depends on. Positive and negative project values are both allowed.'),
+    q('A negative-profit project represents a ', 'cost', '.', 'It may still be worth selecting if it enables enough profitable dependent projects. The optimization considers the whole closed set.'),
+    q('A selected project’s prerequisites must also be ', 'selected', '.', 'The dependency edges enforce closure. A candidate set omitting a required predecessor is infeasible even if its apparent profit is high.'),
+    q('Profitable projects receive source edges with capacity equal to their ', 'profit', '.', 'Putting such a project on the rejected side cuts that edge and pays the opportunity cost of not earning its profit.'),
+    q('Costly projects receive sink edges with capacity equal to their positive ', 'cost', '.', 'Selecting one puts it on the source side and cuts its sink edge, accounting for the expense.'),
+    q('Dependency edges receive effectively infinite ', 'capacity', '.', 'A finite minimum cut will avoid separating a selected project from a required prerequisite. This enforces feasible closure.'),
+    q('The source side of a finite cut represents selected ', 'projects', '.', 'A dependency crossing from selected to rejected would incur infinite cost, so every selected project’s prerequisites stay selected.'),
+    q('Cut capacity equals selected costs plus rejected positive ', 'profits', '.', 'The cut pays for costly jobs kept and profitable jobs missed. This turns maximizing net profit into minimizing a loss.'),
+    q('Let P be total positive profit; selected net profit equals P minus cut ', 'capacity', '.', 'P is fixed across all cuts. Therefore the minimum finite cut corresponds to maximum feasible selected profit.'),
+    q('If all projects have negative profit, selecting none is ', 'optimal', '.', 'The empty set is dependency-closed and yields zero. Any nonempty selection would reduce total profit.'),
+    q('A profitable project may be rejected when its prerequisites cost too ', 'much', '.', 'The cut compares the lost profit against required expenses. Local positive value does not guarantee global benefit.'),
+    q('A dependency edge points from the dependent project to its ', 'prerequisite', '.', 'If the dependent lies on the selected source side, the prerequisite must too. This orientation makes an invalid selection cross infinite capacity.'),
+    q('A finite large number can stand in for infinity if it exceeds total possible positive ', 'profit', '.', 'No optimal cut will pay that penalty when a finite alternative exists. The bound must be chosen deliberately.'),
+    q('The reduction proves optimality by relating every feasible selection to a finite ', 'cut', '.', 'The correspondence works both ways, and profit differs from cut cost by a fixed constant. Min-cut therefore solves the original problem.'),
+    q('This edge penalizes rejecting a profitable ', 'project', '.', 'If the project is on the sink side, the source edge crosses the cut. Its capacity equals the forgone profit.', { code: 'if profit[v] > 0:\n    network.add_edge(source, v, profit[v])' })
+  ]);
+  deepen('jea-11-4', [
+    'The order is what makes local edges sufficient.',
+    'Every tuple using it crosses the bottleneck.',
+    'Nonadjacent restrictions change the problem substantially.',
+    'Such constraints are not visible to one transition.',
+    'The path links compatible neighboring choices.',
+    'Cycles contribute nothing to tuple count.',
+    'The capacities encode exactly those constraints.',
+    'This is an objective-preserving reduction.',
+    'The layers turn scheduling into selection.',
+    'Enrollment determines which edges are present.',
+    'Different classes compete for the same edge.',
+    'Unavailable pairs have no transition edge.',
+    'A lower flow value proves some class unassigned.',
+    'All chosen exams share that proctor limit.',
+    'The room-slot edge is the limited resource.'
+  ]);
+  deepen('jea-11-7', [
+    'Closure is the central feasibility condition.',
+    'A prerequisite cost can outweigh a project reward.',
+    'Selection must include the entire dependency chain.',
+    'The edge prices a foregone opportunity.',
+    'The edge prices taking an expensive job.',
+    'The penalty prevents an invalid dependency split.',
+    'Finite cuts correspond to legal project sets.',
+    'This identity explains every cut term.',
+    'The fixed constant reverses the optimization.',
+    'Nothing is a valid project selection.',
+    'The cut makes that tradeoff explicit.',
+    'The edge orientation is necessary for closure.',
+    'The chosen bound must dominate useful finite cuts.',
+    'Both directions establish the reduction’s correctness.',
+    'Rejecting positive value incurs its full penalty.'
+  ]);
 })();
