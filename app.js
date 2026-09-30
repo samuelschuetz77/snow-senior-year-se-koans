@@ -52,7 +52,8 @@ if (!course) {
   wrapper.append(code, form, feedback);
   app.append(wrapper, restart);
 
-  const storageKey = `snow-koans:v1:${course.id}:${set.id}`;
+  const progressVersion = course.id === 'software-practicum' && set.id === '5' ? 'v2' : 'v1';
+  const storageKey = `snow-koans:${progressVersion}:${course.id}:${set.id}`;
   const saved = Number(localStorage.getItem(storageKey));
   let index = Number.isInteger(saved) && saved >= 0 && saved <= set.koans.length ? saved : 0;
   let advancing = false;
