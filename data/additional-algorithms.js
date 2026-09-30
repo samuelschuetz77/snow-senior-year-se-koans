@@ -716,4 +716,86 @@
     'It is not necessarily a DFS forest root.',
     'Finishing events establish the needed component order.'
   ]);
+  add('jea-8-3', [
+    q('A tentative distance starts as an upper bound on the true shortest-path ', 'distance', '.', 'It represents the length of a known walk or infinity. Relaxation can only improve that bound, never increase it.'),
+    q('An edge u to v is tense when dist[u] plus its weight is less than ', 'dist[v]', '.', 'The route through u offers a shorter known path to v. Relaxing the edge replaces the old overestimate.'),
+    q('Relaxing an edge updates the head vertex’s tentative ', 'distance', '.', 'The new value equals the known route to the tail plus the edge weight. Its parent may also change.'),
+    q('A parent pointer on relaxation records the predecessor of the improved ', 'path', '.', 'Following parents can reconstruct a shortest route after distances stabilize, subject to the algorithm’s conditions.'),
+    q('Relaxation never makes a finite tentative distance ', 'larger', '.', 'It updates only when a strictly shorter route is found. This monotonicity is a useful invariant for reasoning about the process.'),
+    q('A reachable negative cycle permits walks of arbitrarily low ', 'weight', '.', 'Repeating the cycle keeps reducing path length. A finite shortest-path value to reachable descendants therefore may not exist.'),
+    q('An unreachable vertex retains tentative distance ', 'infinity', '.', 'No path from the source has been discovered or exists. Relaxation from reachable vertices cannot create a path across a missing connection.'),
+    q('When no edge is tense, every reachable distance label is ', 'optimal', '.', 'The labels satisfy all edge inequalities while corresponding to actual paths. Any supposedly shorter path would contradict one of those inequalities.'),
+    q('Choosing which tense edge to relax changes the algorithm’s ', 'schedule', '.', 'Different methods use different selection orders. The relaxation rule itself remains the same, while efficiency and termination arguments vary.'),
+    q('A zero-weight edge can still be tense if it improves the destination’s ', 'label', '.', 'The edge weight alone does not decide tension. Compare the full route through its tail against the current destination estimate.'),
+    q('A positive edge is not tense when its proposed route is no ', 'shorter', '.', 'Relaxation should leave the existing label intact. Replacing it with a worse route would violate the upper-bound improvement invariant.'),
+    q('A shortest-path proof must account for every edge on a claimed better ', 'route', '.', 'If all edge inequalities hold, chaining them along the route bounds its weight below by the final label, ruling out improvement.'),
+    q('The generic algorithm may repeatedly relax edges until none remains ', 'tense', '.', 'With a reachable negative cycle, improvements can continue indefinitely. The no-negative-cycle assumption is crucial for finite shortest paths.'),
+    q('A path through u improves v only when this inequality is ', 'strict', '.', 'The candidate dist[u] plus edge weight must beat the current label. The code then updates both distance and predecessor.', { code: 'if dist[u] + w[u, v] < dist[v]:\n    dist[v] = dist[u] + w[u, v]' })
+  ]);
+
+  add('jea-9-5', [
+    q('All-pairs shortest paths stores a distance for every ordered source-target ', 'pair', '.', 'A directed graph can have different distances from u to v and from v to u. The table therefore distinguishes order.'),
+    q('A naive predecessor recurrence can recurse around a directed ', 'cycle', '.', 'Without a decreasing parameter, a subproblem may depend on itself. Bounding path length makes the recurrence well founded.'),
+    q('The state dist(u,v,l) permits paths using at most l ', 'edges', '.', 'The edge limit is the progress measure. Each recursive dependency uses l minus one, so evaluation terminates.'),
+    q('The zero-edge base case has distance zero only when source equals ', 'target', '.', 'Staying at one vertex uses no edges. Reaching a different vertex needs at least one edge, so its value is infinity.'),
+    q('One recurrence branch keeps the best path with at most l minus one ', 'edges', '.', 'The optimal path may not use the newly allowed edge. Retaining the old answer prevents the value from becoming worse.'),
+    q('The other recurrence branch appends one final edge to a shorter ', 'path', '.', 'Try every predecessor of the destination. The prefix uses at most l minus one edges, then the chosen edge completes the route.'),
+    q('Without negative cycles, a shortest path can be chosen with at most V minus one ', 'edges', '.', 'Any repeated vertex forms a cycle that can be removed without increasing cost. A simple path visits each vertex once.'),
+    q('An unreachable pair keeps distance ', 'infinity', '.', 'No sequence of allowed edges connects the vertices. The minimum over nonexistent candidate routes remains infinite.'),
+    q('The bottom-up table grows the allowed edge count by ', 'one', ' per layer.', 'Layer l depends only on layer l minus one. Filling in that order satisfies the recurrence’s dependencies.'),
+    q('The straightforward all-pairs recurrence can cost O(V²E) ', 'time', '.', 'For each of V path-length layers and V sources, candidate final edges are considered across the graph.'),
+    q('In-place relaxation can remove the explicit edge-count ', 'dimension', '.', 'The chapter derives a version interleaving Bellman-Ford runs from every source. Correctness still relies on repeated edge scans.'),
+    q('Negative edges are allowed when there is no reachable negative ', 'cycle', '.', 'A negative edge can improve a path. The absence of negative cycles ensures meaningful finite shortest distances for reachable pairs.'),
+    q('A path with no route between its endpoints cannot be represented by a finite ', 'number', '.', 'Infinity acts as the sentinel. Adding an edge to an unreachable prefix must still leave that candidate unusable.'),
+    q('This base initialization assigns zero only to the diagonal ', 'entries', '.', 'A path from a vertex to itself needs no edges. All distinct pairs begin as unreachable with zero allowed edges.', { code: 'dist[u][v][0] = 0 if u == v else INF' })
+  ]);
+
+  add('jea-9-6', [
+    q('The divide-and-conquer recurrence splits a bounded path at a middle ', 'vertex', '.', 'Try each possible midpoint and combine shortest half-paths. Both halves use at most half the allowed edges.'),
+    q('A one-edge path bound is the base case because it has no internal ', 'midpoint', '.', 'Initialize from direct edge weights, including zero self-edges. Larger bounds can then be formed by combining two halves.'),
+    q('The path-edge allowance doubles from one layer to the ', 'next', '.', 'Each new layer combines two paths from the previous layer. After logarithmically many layers, it covers simple shortest paths.'),
+    q('The recurrence tries every possible middle vertex x between u and ', 'v', '.', 'The best path may pass through any vertex at the split. Taking the minimum over x preserves all candidates.'),
+    q('Using powers of two avoids fractional edge ', 'limits', '.', 'The recurrence halves the allowed count at each step. Starting at one and doubling keeps every subproblem parameter integral.'),
+    q('A power-of-two edge limit at least V minus one suffices without negative ', 'cycles', '.', 'A shortest simple path uses no more than V minus one edges. A slightly larger bound does not improve it further.'),
+    q('There are logarithmically many edge-bound ', 'layers', '.', 'Repeated doubling reaches at least V minus one after about log₂ V steps, rather than V separate one-edge increments.'),
+    q('Each layer considers every source, target, and middle ', 'vertex', '.', 'Three vertex choices give cubic work per layer. Multiplying by logarithmically many layers yields O(V³ log V).'),
+    q('The min-plus recurrence replaces multiplication with addition and addition with ', 'minimum', '.', 'Combining half-path lengths adds costs; choosing the best midpoint takes a minimum. This resembles matrix multiplication over different operations.'),
+    q('A missing direct edge begins with weight ', 'infinity', '.', 'It cannot form a finite one-edge path. Later layers may find a route through intermediate vertices.'),
+    q('A zero self-edge lets a shorter path fit an at-most edge ', 'bound', '.', 'Padding with a zero-cost stay allows the split recurrence to represent paths using fewer edges than the maximum.'),
+    q('The three-dimensional table can be reduced to quadratic ', 'space', '.', 'The chapter describes an in-place update variant. Only pair distances are retained rather than every path-bound layer.'),
+    q('The recurrence differs from repeated single-source edge ', 'relaxation', '.', 'Its inner operation combines two already bounded path distances at a middle vertex, rather than appending one graph edge.'),
+    q('This update tries x as the middle ', 'vertex', '.', 'The sum combines two bounded half-paths. Minimizing across x produces the best route for the doubled edge allowance.', { code: 'next_dist[u][v] = min(prev[u][x] + prev[x][v] for x in vertices)' })
+  ]);
+  deepen('jea-9-5', [
+    'Each source defines its own row of distances.',
+    'Cycles remove the needed decrease in the recursion.',
+    'The bound makes recursive progress explicit.',
+    'This is the direct zero-length path.',
+    'At-most bounds must retain shorter-path options.',
+    'Every nonempty path has a final edge.',
+    'This upper limit makes the final layer sufficient.',
+    'No path can be created by arithmetic alone.',
+    'The layers follow a straightforward dependency order.',
+    'Dense graphs make that bound especially large.',
+    'Every source still needs its own distance row.',
+    'Negative edges alone do not invalidate the recurrence.',
+    'Sentinels must remain distinct from finite weights.',
+    'The diagonal represents paths of zero cost.'
+  ]);
+  deepen('jea-9-6', [
+    'The midpoint ranges over the whole vertex set.',
+    'The base table represents direct connections.',
+    'Doubling replaces a linear number of edge layers.',
+    'The minimum is over all possible split points.',
+    'Each halving now returns an integer edge count.',
+    'No longer simple route can improve the answer.',
+    'This reduces the number of DP stages.',
+    'The midpoint loop is the cubic factor.',
+    'This is often called distance-matrix multiplication.',
+    'Later stages may connect indirectly through intermediates.',
+    'Padding preserves paths shorter than the bound.',
+    'Careful update ordering is needed for the in-place form.',
+    'The recurrence combines paths rather than edges.',
+    'Every midpoint supplies one candidate combined route.'
+  ]);
 })();
