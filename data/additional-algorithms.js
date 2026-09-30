@@ -404,4 +404,167 @@
     'A fast incorrect method does not solve the problem.',
     'Greedy claims are local to a particular problem structure.'
   ]);
+  add('jea-4-1', [
+    q('A tape file’s completion position determines how long a request for it ', 'waits', '.', 'Earlier files must be scanned first. Expected access time therefore depends on the order of all files before the requested one.'),
+    q('For equally likely files, a shorter file should precede a longer ', 'file', '.', 'Swapping an adjacent inversion reduces the later file’s waiting contribution without worsening earlier unaffected files. Repeated exchanges yield sorted order.'),
+    q('An exchange argument improves a proposed order by swapping adjacent ', 'files', '.', 'If the swap cannot increase cost, an optimum can be transformed into the greedy order. This proves more than intuition.'),
+    q('With access weights, expected tape cost is a weighted sum of completion ', 'times', '.', 'A frequent file contributes more to the objective. Its position may justify placing it earlier despite its length.'),
+    q('For weighted files, pairwise comparison uses length divided by access ', 'frequency', '.', 'The shorter ratio should precede the larger one under positive frequencies. The adjacent swap calculation establishes the ordering rule.'),
+    q('A greedy sorting rule requires a proof that every adjacent inversion can be ', 'removed', '.', 'Show the swap preserves feasibility and does not increase expected cost. Then an optimal order can be made greedy.'),
+    q('The cost of an arrangement includes time spent reading all preceding ', 'files', '.', 'A file’s own length affects its completion time, but its placement also delays all later requests. That external effect drives the rule.'),
+    q('If two files have equal length, swapping them leaves equal-frequency average cost ', 'unchanged', '.', 'The adjacent swap difference is zero. Their relative order is irrelevant under the equal-probability version.'),
+    q('A long frequently requested file can precede a short rarely requested ', 'file', '.', 'Weighted access changes the objective. Compare ratios rather than length alone to determine whether the swap helps.'),
+    q('The exchange proof converts a local swap rule into a global ', 'optimality', ' result.', 'Any nongreedy arrangement contains an adjacent inversion. Removing inversions without increasing cost eventually reaches the greedy order.'),
+    q('A sorted order can be found in O(n log n) comparison ', 'time', '.', 'Once the exchange rule identifies the correct key, a standard comparison sort constructs the schedule efficiently.'),
+    q('The prefix sum of file lengths gives the access time of the current ', 'file', '.', 'Every file before it must be read. Updating the cumulative length lets the total objective be computed in one pass.'),
+    q('The proof assumes the tape is searched from its beginning for each ', 'request', '.', 'If random access or caching changes the cost model, the same ordering objective and exchange rule may not apply.'),
+    q('These lengths should be stored shortest first under equal request ', 'frequency', '.', 'The adjacent exchange argument shows that a longer file before a shorter one cannot improve average completion time.', { code: 'lengths = [9, 2, 5]\norder = sorted(lengths)' })
+  ]);
+
+  add('jea-4-4', [
+    q('A prefix-free code can be decoded without a separate delimiter between ', 'codewords', '.', 'No valid codeword is the beginning of another. The decoder knows when a leaf has been reached in the code tree.'),
+    q('A character’s codeword corresponds to a root-to-leaf ', 'path', '.', 'Left and right edges can represent bits. Its depth gives the number of bits used for that character.'),
+    q('The objective sums each frequency times its codeword ', 'length', '.', 'Common characters contribute often, so placing them shallower can reduce total encoded size.'),
+    q('Two least frequent symbols can be siblings in some optimal ', 'tree', '.', 'The exchange argument moves low-weight leaves to deepest sibling positions without increasing weighted path length.'),
+    q('Huffman’s merge replaces two symbols with one combined ', 'weight', '.', 'The combined node represents a subtree containing both symbols. Its frequency is the sum of their frequencies.'),
+    q('The recursive smaller instance contains one fewer active ', 'symbol', '.', 'After merging a pair, solve the reduced coding problem. Expanding the merged node reconstructs a tree for the original symbols.'),
+    q('Each merged symbol later becomes an internal tree ', 'node', '.', 'The two chosen symbols become its children. Repeating merges yields a full prefix-code tree.'),
+    q('A priority queue can repeatedly extract the two smallest ', 'frequencies', '.', 'A min-heap supports each extraction and reinsertion in logarithmic time, giving an efficient implementation.'),
+    q('Equal frequencies may allow several optimal Huffman ', 'trees', '.', 'Tie choices can change individual bit patterns while preserving the minimum total weighted length.'),
+    q('A frequent symbol usually receives a shorter path because that saves more ', 'bits', '.', 'One bit saved on a frequent character contributes more to the objective than one bit saved on a rare character.'),
+    q('The code tree must put symbols at leaves to maintain prefix ', 'freedom', '.', 'If a symbol occupied an ancestor of another symbol, its codeword would prefix the descendant’s codeword.'),
+    q('Merging the two rarest symbols is a greedy choice backed by an exchange ', 'proof', '.', 'Local frequency alone is not the entire argument. The proof shows an optimum exists with those symbols as deepest siblings.'),
+    q('This heap operation selects the next pair with minimum combined ', 'frequency', '.', 'Huffman’s construction repeatedly removes the two lightest active trees and reinserts their merged parent.', { code: 'a = heappop(heap)\nb = heappop(heap)\nheappush(heap, (a.weight + b.weight, a, b))' })
+  ]);
+
+  add('jea-4-5', [
+    q('A blocking pair consists of two people who prefer each other to their assigned ', 'partners', '.', 'Their mutual preference makes a matching unstable. Stability requires that no such pair exist.'),
+    q('A tentative match can change when a receiver gets a more preferred ', 'proposal', '.', 'The receiver keeps the best proposal seen so far. The rejected proposer continues down their preference list.'),
+    q('A rejected proposer never needs to propose to the same receiver ', 'again', '.', 'That receiver already has or later gets someone preferred. The proposer cannot form a blocking pair with them in the final matching.'),
+    q('Each proposal advances one position in a proposer’s preference ', 'list', '.', 'No pair is proposed twice. With n participants per side, at most n squared proposals occur.'),
+    q('Termination follows because the number of possible distinct proposals is ', 'finite', '.', 'Every iteration makes a new proposal and none repeat. The algorithm must eventually stop.'),
+    q('A receiver’s tentative partner can only improve in their preference ', 'order', '.', 'They replace the current choice only with a more preferred proposer. This monotonicity is central to the stability proof.'),
+    q('A final blocking pair would imply one proposer preferred that receiver and proposed ', 'earlier', '.', 'The receiver would have rejected that proposer for someone at least as preferred as the final partner, yielding a contradiction.'),
+    q('Stable matching optimizes absence of blocking pairs, not total pair ', 'count', '.', 'Maximum bipartite matching asks how many edges can be selected. Preferences and stability define a different objective.'),
+    q('The proposing side receives its best stable partner under the standard proposal ', 'algorithm', '.', 'The result is proposer-optimal among stable matchings under complete strict preferences, though it need not optimize the receiving side.'),
+    q('A receiver may be temporarily unmatched until their first ', 'proposal', '.', 'Tentative engagements evolve during the algorithm. Final stability is assessed only after proposals stop.'),
+    q('An arbitrary swap of a blocking pair lacks a monotone progress ', 'measure', '.', 'It can create new blocking pairs or undo earlier repairs. The structured proposal process has a termination and stability proof.'),
+    q('The algorithm assumes participants provide an ordered preference ', 'list', '.', 'The next proposal is defined by that ordering. Ties or incomplete lists require an adapted model and proof.'),
+    q('A proposer who is rejected continues with the next untried ', 'receiver', '.', 'This preserves the invariant that every more preferred receiver has already declined or passed them over.'),
+    q('The code keeps the receiver’s preferred tentative ', 'partner', '.', 'A better proposal replaces the old one; the displaced proposer becomes free. That monotone choice supports the stability argument.', { code: 'if prefers(receiver, new_proposer, current):\n    engaged[receiver] = new_proposer\n    free.add(current)' })
+  ]);
+  add('jea-7-2', [
+    q('A spanning tree connects all vertices while containing no ', 'cycle', '.', 'For a connected graph, it uses exactly one fewer edge than vertices. A minimum spanning tree minimizes the sum of those edge weights.'),
+    q('A growing forest can be completed to an MST if every selected edge is ', 'safe', '.', 'This is the extension invariant. Each step must preserve the existence of some optimal tree containing the chosen edges.'),
+    q('An edge within one forest component would create a ', 'cycle', '.', 'Its endpoints are already connected by selected edges. Adding it cannot help the forest remain an acyclic subset of an MST.'),
+    q('A cut separates vertices into two disjoint ', 'sides', '.', 'An edge crossing that cut has one endpoint on each side. The cut property identifies safe light edges.'),
+    q('A minimum-weight edge crossing an appropriate cut is ', 'safe', '.', 'If an MST omits it, exchange it for a crossing edge on the cycle that its addition creates, without increasing weight.'),
+    q('The exchange proof adds a candidate edge and creates one ', 'cycle', '.', 'The cycle must contain another edge crossing the cut. Removing that edge restores a spanning tree while preserving or improving weight.'),
+    q('A light crossing edge is not necessarily the globally lightest edge in the whole ', 'graph', '.', 'The cut property compares only edges across the chosen cut. This local condition is enough for safety.'),
+    q('Distinct edge weights guarantee the minimum spanning tree is ', 'unique', '.', 'With ties, multiple MSTs can have the same total weight. The cut safety statement still works with minimum-weight crossing edges.'),
+    q('A forest component defines a cut between its vertices and the ', 'rest', '.', 'The lightest edge leaving that component can safely connect it to another part of the graph.'),
+    q('A disconnected input graph has a minimum spanning ', 'forest', ' rather than one spanning tree.', 'No edge sequence can connect components that lack graph paths. The optimization is applied separately to each connected component.'),
+    q('Greedy MST methods rely on a proof that selected edges remain extendable to an ', 'optimum', '.', 'Picking low weights alone is insufficient if an edge creates a cycle. The forest and cut invariants justify each addition.'),
+    q('If a candidate crossing edge is lighter than the MST edge it replaces, the old tree was not ', 'minimum', '.', 'The exchange lowers total weight while retaining connectivity. This contradiction establishes the safety of a light crossing edge.'),
+    q('A connected graph’s spanning tree has exactly V minus one ', 'edges', '.', 'Any fewer cannot connect all vertices, and any more in a connected subgraph creates a cycle. This bounds MST selection steps.'),
+    q('This test rejects an edge whose endpoints already share a forest ', 'component', '.', 'Adding that edge would close a cycle. A union-find structure can answer whether the endpoints are currently connected.', { code: 'if find(u) != find(v):\n    add_edge(u, v)\n    union(u, v)' })
+  ]);
+
+  add('jea-7-4', [
+    q('Jarník’s method grows one connected tree rather than several forest ', 'components', '.', 'It starts at any vertex and repeatedly connects one outside vertex with the cheapest edge leaving the current tree.'),
+    q('The eligible edge at each step crosses the cut around the current ', 'tree', '.', 'One endpoint is already selected and the other is outside. The cut property makes the cheapest such edge safe.'),
+    q('A priority queue orders candidate edges by their ', 'weight', '.', 'Extracting the minimum gives the next promising crossing edge. Some stored candidates may become stale as the tree grows.'),
+    q('A stale edge whose endpoints are both inside the tree should be ', 'discarded', '.', 'It no longer crosses the current cut and would form a cycle. The queue can hold it until extraction.'),
+    q('The algorithm can start at any vertex because the cut property holds for any initial ', 'singleton', '.', 'The first selected set contains one vertex. Repeated safe edges eventually connect all vertices of a connected graph.'),
+    q('Adding a crossing edge preserves the chosen subgraph as a ', 'tree', '.', 'It brings one new vertex into a connected acyclic structure. No cycle can arise when the new endpoint was outside.'),
+    q('The selected tree grows by one vertex per accepted ', 'edge', '.', 'The crossing edge connects an outside vertex. For V vertices, the algorithm accepts V minus one edges.'),
+    q('An edge queue may contain several offers for one outside ', 'vertex', '.', 'Later offers can be cheaper or become stale. The implementation must check current membership when extracting candidates.'),
+    q('A vertex-key implementation stores the cheapest known edge entering each outside ', 'vertex', '.', 'Updating that key can avoid storing all crossing edges. The cut argument still justifies choosing the minimum key.'),
+    q('The algorithm stops when every reachable vertex has joined the ', 'tree', '.', 'In a connected graph this includes all vertices. In a disconnected graph, a new start is needed for another component.'),
+    q('A negative edge weight does not invalidate the MST cut ', 'proof', '.', 'The exchange compares weights, not signs. The algorithm still chooses a minimum crossing edge at each step.'),
+    q('The priority queue does not itself prove MST ', 'correctness', '.', 'It implements the minimum-edge selection. The safety proof comes from the cut property and maintained tree invariant.'),
+    q('A chosen edge’s safety is relative to the current selected ', 'set', '.', 'The cut changes as vertices join the tree. Recompute or update eligible crossing edges after each accepted step.'),
+    q('This check discards a candidate whose destination already belongs to the ', 'tree', '.', 'Such an edge is no longer crossing. Accepting it could create a cycle and violate the growing-tree invariant.', { code: 'weight, u, v = heappop(edges)\nif v in tree: continue\ntree.add(v)' })
+  ]);
+
+  add('jea-5-5', [
+    q('Whatever-first search explores a graph from one start ', 'vertex', '.', 'The choice of bag policy changes the order, but every reachable vertex is eventually considered under the search rules.'),
+    q('The bag holds candidates that have been discovered but not yet ', 'processed', '.', 'Removing a candidate exposes its outgoing edges. Marking policy determines how duplicates are handled.'),
+    q('A visited marker prevents processing the same vertex ', 'repeatedly', '.', 'Cycles and multiple incoming edges can place a vertex in the bag more than once. The marker avoids duplicate exploration.'),
+    q('A parent pointer records the discovery edge for a ', 'vertex', '.', 'Following parent pointers back from a discovered vertex reconstructs a path to the start.'),
+    q('The parent edges form a tree over the reachable ', 'component', '.', 'Each nonroot visited vertex receives one parent when first discovered. These edges connect discovered vertices without a parent cycle.'),
+    q('A vertex outside the start component cannot be reached by any search ', 'policy', '.', 'No path exists from the start. Changing bag order affects traversal order, not the underlying reachability relation.'),
+    q('The search invariant is that every visited vertex is reachable from the ', 'start', '.', 'The root is reachable by a length-zero path. Each new vertex is reached by extending its parent’s path.'),
+    q('Completeness follows when every edge leaving a visited vertex has been ', 'considered', '.', 'If a reachable vertex remained unvisited, the first edge crossing from visited to unvisited on a path would contradict completion.'),
+    q('The exact parent tree can vary with the bag removal ', 'order', '.', 'Different policies or neighbor orders discover vertices through different edges. Reachability results remain the same.'),
+    q('A bag can be implemented as a stack, queue, or priority ', 'queue', '.', 'The removal rule determines exploration order. The generic search framework separates that policy from reachability logic.'),
+    q('For an undirected graph, an edge may add an already visited neighbor to the ', 'bag', '.', 'The processing-time visited check can skip it. Correctness requires a consistent rule for when a vertex is marked.'),
+    q('A graph with several components needs a new search start for each unseen ', 'component', '.', 'One traversal reaches only the start’s component. An outer loop over vertices can cover the whole graph.'),
+    q('Parent pointers can certify a path from start to any visited ', 'vertex', '.', 'Repeatedly following parents reaches the root. Each pointer corresponds to a real graph edge selected during discovery.'),
+    q('This bag policy removes the most recently added candidate ', 'first', '.', 'A stack gives depth-first behavior. The generic reachability argument still depends on processing every reachable neighbor.', { code: 'bag.append(start)\nwhile bag:\n    vertex = bag.pop()' })
+  ]);
+
+  add('jea-5-6', [
+    q('A stack makes whatever-first search explore one branch ', 'deeply', '.', 'Last-in-first-out removal favors the newest discovered vertex. This yields depth-first search under the generic framework.'),
+    q('A queue makes search advance in distance ', 'layers', '.', 'First-in-first-out removal processes earlier discoveries before later ones. In an unweighted graph, this supports shortest paths by edge count.'),
+    q('Breadth-first distance counts edges rather than total ', 'weight', '.', 'Every edge contributes one step, regardless of its numerical weight. For weighted paths, a fewer-edge route may have greater total cost.'),
+    q('The source is at BFS distance ', 'zero', '.', 'It reaches itself using no edges at all. Neighboring vertices discovered in the first search layer have distance one.'),
+    q('The first BFS discovery of a vertex uses a minimum-edge ', 'path', '.', 'All smaller distance layers have already been explored. A shorter path would have discovered the vertex earlier.'),
+    q('A DFS tree does not generally certify shortest ', 'paths', '.', 'Depth-first exploration can follow a long route before a direct edge is considered. Its parent chain proves reachability, not minimum distance.'),
+    q('The order of neighbors can change a DFS traversal ', 'tree', '.', 'A stack follows whichever neighbor is added or removed first. The reachable set is unchanged but parent edges may differ.'),
+    q('A visited marker prevents either search from revisiting a graph ', 'cycle', '.', 'Without it, the traversal could loop indefinitely or process edges repeatedly. Marking maintains finite exploration.'),
+    q('A BFS queue contains candidates discovered from current or next distance ', 'layers', '.', 'Its FIFO order ensures no deeper vertex is processed before an undiscovered shallower route has been considered.'),
+    q('A priority queue can implement a different whatever-first removal ', 'policy', '.', 'Selecting by key changes exploration order. Correctness of any stronger result, such as minimum weight, needs a separate invariant.'),
+    q('The generic framework proves reachability independently of the bag ', 'type', '.', 'Every candidate generated from a visited vertex is eventually processed. Stack and queue choices refine the order and possible path guarantees.'),
+    q('BFS runs in time proportional to vertices plus edges with adjacency ', 'lists', '.', 'Each vertex is processed once and each adjacency entry is inspected a bounded number of times under proper marking.'),
+    q('A DFS call stack can be replaced with an explicit ', 'stack', '.', 'Both follow last-in-first-out exploration. Iterative code may avoid recursion depth limits while preserving the basic policy.'),
+    q('A parent pointer from BFS yields a minimum-edge route to its ', 'vertex', '.', 'The first discovery occurs in the earliest possible layer. Following parents walks back through successively smaller distances.')
+  ]);
+  deepen('jea-4-1', [
+    'The objective counts work before each requested file.',
+    'The shorter file imposes less delay on later requests.',
+    'That local calculation justifies sorting the full order.',
+    'Completion time is the sum of preceding lengths.',
+    'The pairwise comparison includes both length and popularity.',
+    'The argument applies repeatedly until no inversion remains.',
+    'Delays imposed on later files drive the exchange result.',
+    'Equal ratios can also permit multiple optimal orders.',
+    'Popularity can offset the delay from a longer file.',
+    'The proof preserves all files and their request weights.',
+    'Evaluating the objective afterward takes only linear time.',
+    'This running sum captures every preceding tape segment.',
+    'The physical access assumption defines the mathematical objective.',
+    'The sorted order removes every harmful adjacent inversion.'
+  ]);
+  deepen('jea-4-4', [
+    'The leaf boundary tells the decoder when to stop.',
+    'This tree representation makes prefix freedom visible.',
+    'Weighted depth is precisely the total bit count.',
+    'That sibling property is the basis of the greedy step.',
+    'Their subtree depths increase together by one bit.',
+    'The reduced instance supports an induction proof.',
+    'Every original symbol remains a leaf in the result.',
+    'Each merge reduces the active-heap size by one.',
+    'The objective depends on lengths, not assigned bit labels.',
+    'Frequency weights each saved bit by occurrence count.',
+    'An internal symbol would make decoding ambiguous.',
+    'The proof is specific to the weighted-prefix objective.',
+    'Heap order makes the greedy operation efficient.'
+  ]);
+  deepen('jea-4-5', [
+    'The pair would prefer to abandon its assignments.',
+    'Tentative status allows the later improvement.',
+    'Receiver preference can only improve after rejection.',
+    'That finite count also bounds running time.',
+    'A repeat would invalidate this progress argument.',
+    'This monotonicity rules out later blocking pairs.',
+    'The contradiction uses both proposal and preference order.',
+    'A maximum-cardinality match may still be unstable.',
+    'The guarantee depends on the stated preference model.',
+    'A later proposal can change that temporary state.',
+    'The structured algorithm prevents cycling repairs.',
+    'Changing the model requires revisiting the proof.',
+    'No preferred option remains untried at that point.',
+    'The displaced proposer continues making new proposals.'
+  ]);
 })();
