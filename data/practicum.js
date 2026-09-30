@@ -44,7 +44,7 @@
       q("A test oracle ", "decides", " whether an observed result is correct."),
       q("Boundary tests ", "focus", " on values near the edges of a valid range."),
       q('A regression test checks that a change did not reintroduce an old ', 'failure', '.', { accepts: ['bug', 'defect'] }),
-      q('Tests run both discount and standard-shipping branches, showing branch coverage but not proving the calculated prices are ', 'correct', '.'),
+      q('Branch coverage confirms that every outcome of a decision was ', 'executed', ' at least once; it does not show whether the outputs were correct.'),
       q('An integration test checks interactions between ', 'components', '.', { accepts: ['modules'] }),
       q("A failing test with no trustworthy ", "expected", " result has an oracle problem."),
       q('For this test, zero is a ', 'boundary', ' value.', { code: 'assert withdraw(balance=0, amount=1) == "insufficient funds"' })

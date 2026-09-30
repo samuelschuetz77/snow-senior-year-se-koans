@@ -42,7 +42,7 @@ A defect exists in the artifact; a failure appears when behavior goes wrong.
 The oracle supplies the expected outcome against which a result is compared.
 Errors often occur exactly at or near allowed limits.
 Regression tests preserve a behavior previously broken and then repaired.
-Branch coverage confirms that each decision outcome ran during testing.
+Branch coverage shows which decision outcomes ran, not whether their results were right.
 Components can pass separately but fail when their interactions are exercised.
 Without a reliable expected answer, the test cannot judge its observed result.
 Zero sits at the edge of the shown input domain.

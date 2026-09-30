@@ -18,7 +18,7 @@
       16: [[2, 'The expected outcome in a test case is the oracle made concrete.']],
       17: [[16, 'Property-based testing scales the test-case idea by generating many inputs for one rule.']],
       18: [[16, 'A negative test still needs setup, action, and an expected outcome; the expected outcome is a rejection.']],
-      19: [[5, 'The earlier coverage example explains why a high percentage alone cannot identify the failures that matter most.']],
+      19: [[5, 'The earlier branch-coverage koan shows why exercising a path alone cannot establish that its output is correct.']],
       20: [[16, 'Clear setup and an expected outcome help separate a product defect from a test-setup error.'], [15, 'A flaky test is another case where the feedback itself needs scrutiny.']]
     },
     6: {
