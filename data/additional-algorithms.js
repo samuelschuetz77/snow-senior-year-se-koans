@@ -567,4 +567,153 @@
     'No preferred option remains untried at that point.',
     'The displaced proposer continues making new proposals.'
   ]);
+  add('jea-6-1', [
+    q('Preorder records a vertex when DFS first enters its recursive ', 'call', '.', 'That event occurs before exploring its outgoing edges. The timestamp orders first discoveries across the traversal.'),
+    q('Postorder records a vertex after DFS has explored all its outgoing ', 'edges', '.', 'Its recursive call is about to return. The timestamp captures completion rather than first discovery.'),
+    q('An active vertex remains on the DFS recursion ', 'stack', '.', 'Its call has begun but not returned. Edges to such vertices can reveal ancestor relationships and directed cycles.'),
+    q('A descendant’s active interval lies inside its ancestor’s ', 'interval', '.', 'The ancestor call stays active while recursive descendants run. Enter and exit times therefore form nested ranges.'),
+    q('Two DFS intervals that are not nested must be ', 'disjoint', '.', 'Recursive calls finish before an unrelated branch begins. Partial overlap cannot arise from well-formed call-stack execution.'),
+    q('A vertex with smaller preorder is not necessarily an ', 'ancestor', '.', 'It may have been discovered in a separate completed branch. Interval containment, not preorder alone, identifies ancestry.'),
+    q('The DFS forest contains one tree for each new traversal ', 'root', '.', 'DFSAll restarts from unmarked vertices so disconnected or unreachable portions also receive timestamps and parents.'),
+    q('Parent pointers record the recursive discovery ', 'edges', '.', 'Each nonroot vertex is first visited through one edge from its parent. Those edges form an acyclic forest.'),
+    q('An ancestor is discovered before a descendant and finishes ', 'after', ' it.', 'The ancestor’s recursive call encloses the descendant’s complete call. Both preorder and postorder inequalities follow.'),
+    q('A finished vertex has already received its postorder ', 'number', '.', 'It is no longer on the active stack. An edge to it is not automatically evidence of a directed cycle.'),
+    q('The interval test for ancestry uses both entry and exit ', 'times', '.', 'A candidate ancestor enters earlier and exits later. Using only one timestamp can confuse unrelated branches.'),
+    q('DFSAll is needed when one start vertex cannot reach the entire ', 'graph', '.', 'An outer loop selects another unmarked root. This covers every vertex while each edge is still inspected only a bounded number of times.'),
+    q('The time interval for a recursive call closes when that call ', 'returns', '.', 'Every nested child has already finished. The resulting interval structure mirrors the DFS call tree.'),
+    q('This exit timestamp is assigned after exploring every ', 'neighbor', '.', 'The placement makes it postorder. Moving the assignment before the loop would record discovery order instead.', { code: 'def dfs(v):\n    for w in graph[v]:\n        if not seen[w]: dfs(w)\n    post[v] = tick()' })
+  ]);
+
+  add('jea-6-2', [
+    q('A directed back edge points from a DFS vertex to an active ', 'ancestor', '.', 'The recursion stack already contains a path from that ancestor to the current vertex. The edge closes a directed cycle.'),
+    q('An edge to a finished vertex does not by itself close a directed ', 'cycle', '.', 'That vertex’s active interval ended. There need not be a path from it back to the current vertex.'),
+    q('A DAG has no directed path that returns to its starting ', 'vertex', '.', 'A directed cycle would make some vertex reachable from itself by a positive-length path. Acyclicity rules this out.'),
+    q('A source in a directed graph has no incoming ', 'edges', '.', 'In a DAG, at least one source exists. Otherwise repeatedly following incoming edges in a finite graph would produce a cycle.'),
+    q('A sink in a directed graph has no outgoing ', 'edges', '.', 'Every finite DAG also has a sink. Repeatedly following outgoing edges would otherwise revisit a vertex and form a cycle.'),
+    q('A DFS cycle detector needs to distinguish unseen, active, and ', 'finished', ' vertices.', 'The active state identifies edges to ancestors. A single visited bit cannot distinguish an active target from a completed one.'),
+    q('Detecting one back edge is enough to report a directed ', 'cycle', '.', 'The ancestor-to-current DFS path plus the return edge forms a concrete witness. No further search is needed for yes-or-no detection.'),
+    q('If DFS finds no edge to an active vertex, the directed graph is ', 'acyclic', '.', 'Every directed cycle would contain an edge returning to an active ancestor under DFS. Its absence excludes cycles.'),
+    q('The path on the recursion stack can reconstruct a discovered ', 'cycle', '.', 'When an edge targets an active ancestor, follow stack entries from that ancestor to the current vertex and close the loop.'),
+    q('Cycle detection is linear with adjacency lists because each vertex and edge is examined a constant number of ', 'times', '.', 'Status updates are constant time. The DFS scans each adjacency list once under proper marking.'),
+    q('A self-loop is a directed cycle of length ', 'one', '.', 'The edge returns from a vertex to itself while that vertex is active. The same back-edge rule detects it.'),
+    q('A graph can have a cycle even if the first DFS root cannot ', 'reach', ' it.', 'Run DFS from every unmarked vertex. A cycle in a separate component or unreachable region must still be considered.'),
+    q('An undirected edge back to the parent needs separate handling in cycle ', 'detection', '.', 'The two directions of one undirected edge should not be mistaken for a nontrivial cycle. The directed rule differs.'),
+    q('This status check detects an edge returning to the active DFS ', 'stack', '.', 'An active target is an ancestor of the current call. The tree path plus this edge forms a directed cycle.', { code: 'if status[w] == "active":\n    return True' })
+  ]);
+
+  add('jea-6-3', [
+    q('A topological order places each prerequisite before every task that ', 'depends', ' on it.', 'Represent a dependency as an edge from earlier to later. The order respects every directed edge.'),
+    q('A directed cycle makes a topological ordering ', 'impossible', '.', 'Following cycle edges would require each vertex to precede the next, eventually requiring one vertex to precede itself.'),
+    q('Reversed DFS postorder is topological only for a ', 'DAG', '.', 'Without cycles, a vertex finishes after every reachable descendant. Reversing completion order places each edge’s tail before its head.'),
+    q('A DAG always has at least one vertex of indegree ', 'zero', '.', 'Otherwise following incoming edges indefinitely in a finite graph would revisit a vertex, contradicting acyclicity.'),
+    q('Kahn’s algorithm repeatedly removes a zero-indegree ', 'vertex', '.', 'It emits a currently ready task and decreases indegrees of its outgoing neighbors. A remaining cycle prevents further removal.'),
+    q('Multiple zero-indegree vertices can yield several valid topological ', 'orders', '.', 'Unrelated tasks need not have a fixed relative order. Any choice that preserves all edge constraints is valid.'),
+    q('A topological order can be used to evaluate a DAG recurrence in dependency ', 'order', '.', 'When edges point from prerequisite to dependent state, each needed value is available before its consumer is processed.'),
+    q('A topological sort must account for every vertex, including isolated ', 'vertices', '.', 'An isolated task has no constraints but still belongs in the output. DFSAll or a full indegree initialization covers it.'),
+    q('If a topological procedure emits fewer than V vertices, a directed cycle may ', 'remain', '.', 'The unprocessed subgraph has no zero-indegree vertex. In a finite graph that implies a cycle.'),
+    q('The order is a linear arrangement satisfying a partial order of ', 'dependencies', '.', 'The graph states only required precedence pairs. The list chooses one total order consistent with those constraints.'),
+    q('For an edge u to v, u must appear before ', 'v', '.', 'That is the defining condition. A single reversed edge invalidates an otherwise plausible task schedule.'),
+    q('A DFS exit order must be reversed before it becomes a topological ', 'order', '.', 'DFS completes descendants before their ancestors. The reverse places sources and prerequisites ahead of their dependents.'),
+    q('A cycle detector can reject invalid input before using a topological ', 'schedule', '.', 'Without acyclicity, some tasks depend on themselves indirectly. Returning an arbitrary list would hide an impossible schedule.'),
+    q('This queue starts with tasks having no outstanding ', 'prerequisites', '.', 'Their indegree is zero, so they can be emitted immediately. Processing one may make additional tasks ready.', { code: 'ready = deque(v for v in vertices if indegree[v] == 0)' })
+  ]);
+  deepen('jea-6-1', [
+    'Discovery precedes any descendant’s entry event.',
+    'This is the last event of that call.',
+    'The call-stack position gives this state its meaning.',
+    'Nested calls produce nested time intervals.',
+    'Both inequalities are needed for the ancestry test.',
+    'An earlier sibling can have smaller preorder too.',
+    'Each new root begins another DFS tree.',
+    'They are distinct from non-tree graph edges.',
+    'The call stack forces this ordering.',
+    'Finished status differs from active status.',
+    'Compare the whole active interval.',
+    'The outer scan prevents missing separate components.',
+    'The exit event follows all descendant exits.',
+    'The loop must finish before postorder is recorded.'
+  ]);
+  add('jea-6-5', [
+    q('Strong connectivity requires directed paths in both ', 'directions', '.', 'A one-way route establishes reachability but not mutual reachability. Both routes are needed for two vertices to share an SCC.'),
+    q('Strong connectivity is an equivalence relation because it is reflexive, symmetric, and ', 'transitive', '.', 'The equivalence classes partition the vertices. Each class is one maximal strongly connected component.'),
+    q('An SCC is maximal under mutual ', 'reachability', '.', 'Adding any outside vertex would break the property. A small strongly connected subset need not be a whole component.'),
+    q('The condensation graph contracts each SCC to one ', 'vertex', '.', 'Edges between components remain. It summarizes how components can reach one another without internal cycles.'),
+    q('The condensation graph cannot contain a directed ', 'cycle', '.', 'A cycle of components would make all vertices on it mutually reachable, contradicting that they were separate SCCs.'),
+    q('A DAG has singleton strong ', 'components', '.', 'Any SCC with multiple vertices would contain directed routes both ways and therefore a cycle. Conversely, an acyclic graph cannot have such a component.'),
+    q('A directed graph is strongly connected exactly when it has one ', 'SCC', '.', 'Every pair then lies in the same mutual-reachability class. More than one class means some pair lacks a path in one direction.'),
+    q('Forward search from v finds vertices that v can ', 'reach', '.', 'It establishes only one direction of connectivity. A reverse search is needed to find vertices that can reach v.'),
+    q('Searching the reversed graph from v finds vertices that can reach v in the ', 'original', ' graph.', 'Reversing every edge turns original paths into paths from v. This supplies the missing direction for SCC membership.'),
+    q('The intersection of forward and reverse reachability yields v’s ', 'component', '.', 'Every vertex in both sets can reach v and be reached from v. Those vertices form exactly the SCC containing v.'),
+    q('Repeating two graph searches for every component can exceed linear ', 'time', '.', 'Each search scans much of the graph. A more structured DFS-based algorithm reuses global ordering information.'),
+    q('A source SCC has no incoming edges in the condensation ', 'DAG', '.', 'Other components cannot reach into it directly. The condensation graph permits reasoning with DAG sources and sinks.'),
+    q('A sink SCC has no outgoing edges to other ', 'components', '.', 'Starting within it reaches only vertices of that same SCC. This fact underlies a component-removal strategy.'),
+    q('The two searches here retain only vertices reachable in both ', 'directions', '.', 'The first search finds v’s outward reach; the reversed search finds original paths into v. Their intersection is one SCC.', { code: 'component = reachable(graph, v) & reachable(reverse(graph), v)' })
+  ]);
+
+  add('jea-6-6', [
+    q('The earliest-discovered vertex of an SCC is its DFS ', 'root', '.', 'It has no parent inside that component. Every other component vertex is a descendant within the DFS forest.'),
+    q('Every SCC forms a connected subtree of the DFS ', 'forest', '.', 'Paths between mutually reachable vertices stay within the SCC. The earliest member becomes ancestor of the rest.'),
+    q('The condensation graph of SCCs is always a ', 'DAG', '.', 'A cycle among components would make its vertices mutually reachable, merging them into one component.'),
+    q('A sink SCC can reach no vertex in another ', 'SCC', '.', 'Any outgoing component edge would contradict its sink status. A search from one of its vertices remains inside it.'),
+    q('Kosaraju-Sharir first runs DFS on the edge-reversed ', 'graph', '.', 'The finishing order from that traversal identifies a useful order for searching the original graph.'),
+    q('The second pass considers vertices in reverse finishing ', 'order', '.', 'Using the reversed graph’s postorder makes each new traversal of the original graph stay within one SCC.'),
+    q('Reversing the graph swaps source and sink ', 'components', '.', 'An incoming component edge becomes outgoing and vice versa. The algorithm exploits this relation to find sink SCCs of the original.'),
+    q('The last finished vertex in a DFS of a graph lies in a source ', 'component', '.', 'A hypothetical incoming edge from another component would contradict the DFS ordering argument given in the chapter.'),
+    q('The last finished vertex of the reversed graph lies in an original sink ', 'component', '.', 'Sources of the reversed condensation graph correspond to sinks of the original. Starting there isolates one component.'),
+    q('Finishing order of reversed G is not generally the same as finishing order of ', 'G', '.', 'Reversing edges changes DFS reachability and traversal structure. Using the wrong order invalidates the second-pass argument.'),
+    q('Each vertex is labeled by exactly one second-pass ', 'traversal', '.', 'That traversal discovers one SCC. Marking prevents later passes from relabeling already assigned vertices.'),
+    q('Two DFS passes and graph reversal take O(V+E) ', 'time', '.', 'Each pass scans each vertex and edge only a bounded number of times. Constructing reverse adjacency lists is also linear.'),
+    q('The SCC root is the component vertex with earliest DFS ', 'start', '.', 'The lemma shows it is the only vertex without a parent inside the component, giving a structural anchor.'),
+    q('This first pass saves vertices when DFS ', 'finishes', '.', 'The resulting stack represents postorder of the reversed graph. Popping it controls the second pass on the original.', { code: 'dfs_all(reverse_graph, on_exit=lambda v: finish_stack.append(v))' })
+  ]);
+
+  add('jea-6-exercises', [
+    q('A DFS tree edge first discovers an unvisited ', 'vertex', '.', 'The discovered vertex receives the current vertex as parent. These edges create the spanning forest of the search.'),
+    q('An edge to an active ancestor is a back ', 'edge', '.', 'The active recursion stack contains a path from that ancestor to the current vertex, so a directed back edge witnesses a cycle.'),
+    q('A finished target does not provide the same cycle ', 'witness', '.', 'Its call has returned, so it is not on the current ancestor path. Additional reachability information would be required.'),
+    q('A directed cycle prevents a valid topological ', 'order', '.', 'The cycle’s precedence constraints would force a vertex before itself. Reject the graph or report the cycle.'),
+    q('A DAG’s reverse postorder respects every directed ', 'edge', '.', 'In the absence of back edges, DFS finishing relationships put each predecessor before its successor after reversal.'),
+    q('DFSAll covers vertices unreachable from the first ', 'root', '.', 'The outer loop launches a new traversal from every still-unmarked vertex. This matters for disconnected directed graphs.'),
+    q('Preorder and postorder intervals can test whether one vertex is an ', 'ancestor', '.', 'An ancestor starts earlier and finishes later than its descendant. Comparing both timestamps avoids confusion with other branches.'),
+    q('A full graph traversal can be linear if each adjacency list is scanned ', 'once', '.', 'Constant work per vertex and edge yields O(V+E). Repeated full scans would lose that bound.'),
+    q('Contracting SCCs creates an acyclic graph even if the original graph has ', 'cycles', '.', 'Every internal cycle stays inside a component. A cycle among components would merge them into one SCC.'),
+    q('A vertex can be reachable from the start without reaching the start ', 'back', '.', 'One-way reachability is insufficient for strong connectivity. Search the reverse graph to test the other direction.'),
+    q('A zero-indegree vertex can begin a topological ', 'ordering', '.', 'No edge requires another remaining vertex before it. Removing it may expose new ready vertices.'),
+    q('A DFS parent path certifies ordinary ', 'reachability', '.', 'Every parent pointer corresponds to a graph edge. Following them back reaches the traversal root.'),
+    q('This condition identifies an edge to a currently active ', 'ancestor', '.', 'The recursion stack supplies the forward path; the edge returns to an earlier vertex and closes a directed cycle.', { code: 'if color[v] == "gray":\n    report_cycle()' }),
+    q('A completed DFS call receives its postorder number after its descendants ', 'finish', '.', 'That order makes reverse postorder useful for scheduling tasks in a DAG.'),
+    q('A DFS algorithm that marks vertices late can accidentally process one vertex ', 'repeatedly', '.', 'Choose a consistent discovery or removal rule. Marking controls duplicate work and supports the claimed linear running time.')
+  ]);
+  deepen('jea-6-5', [
+    'Direction is essential in this graph property.',
+    'The partition follows from those three relation properties.',
+    'Maximality distinguishes a component from a subset.',
+    'Internal cycles disappear inside contracted vertices.',
+    'The supposed cycle contradicts maximal SCC membership.',
+    'Singleton self-loops are excluded in a DAG.',
+    'One component contains the entire vertex set.',
+    'Forward reach alone cannot certify an SCC.',
+    'Every reversed path corresponds to an original backward path.',
+    'Both reachability directions are explicitly required.',
+    'The next section avoids that repeated work.',
+    'Condensation order can begin at such a source.',
+    'A search from this component cannot escape it.',
+    'The intersection enforces mutual reachability exactly.'
+  ]);
+  deepen('jea-6-6', [
+    'The proof uses earliest preorder inside the component.',
+    'This is a structural consequence of mutual reachability.',
+    'Condensation supports source-and-sink arguments.',
+    'Its outgoing reach is exactly itself.',
+    'The direction of this first pass matters.',
+    'The reversed order isolates components during discovery.',
+    'This reversal turns an easier source into a sink.',
+    'This is the ordering lemma used in the algorithm.',
+    'The original direction is used in pass two.',
+    'These orders cannot be interchanged casually.',
+    'No vertex needs another second-pass assignment.',
+    'The two traversals preserve a linear bound.',
+    'It is not necessarily a DFS forest root.',
+    'Finishing events establish the needed component order.'
+  ]);
 })();
