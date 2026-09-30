@@ -12,16 +12,50 @@ function element(tag, attributes = {}, text = '') {
 
 function listPage(title, items, backHref) {
   app.className = 'listing';
+  document.body.classList.add('listing-page');
   if (backHref) app.append(element('a', { class: 'back', href: backHref }, '← All classes'));
   app.append(element('h1', {}, title));
   const nav = element('nav', { class: backHref ? 'reading-list' : 'course-list' });
-  for (const item of items) {
-    const link = element('a', { href: item.href });
-    link.append(element('span', {}, item.title));
-    if (item.detail) link.append(element('small', {}, item.detail));
-    nav.append(link);
+  const controls = element('div', { class: 'pagination' });
+  const previous = element('button', { type: 'button' }, 'Previous');
+  const position = element('span', { 'aria-live': 'polite' });
+  const next = element('button', { type: 'button' }, 'Next');
+  controls.append(previous, position, next);
+  app.append(nav, controls);
+  let page = 0;
+  let pageSize = items.length;
+
+  function renderPage() {
+    const height = window.visualViewport?.height ?? window.innerHeight;
+    pageSize = Math.min(items.length, Math.max(1, Math.floor((height - 190) / (window.innerWidth <= 600 ? 72 : 62))));
+    page = Math.min(page, Math.ceil(items.length / pageSize) - 1);
+    const draw = () => {
+      nav.replaceChildren();
+      for (const item of items.slice(page * pageSize, (page + 1) * pageSize)) {
+        const link = element('a', { href: item.href });
+        link.append(element('span', {}, item.title));
+        if (item.detail) link.append(element('small', {}, item.detail));
+        nav.append(link);
+      }
+      const pages = Math.ceil(items.length / pageSize);
+      controls.hidden = pages <= 1;
+      position.textContent = `${page + 1} / ${pages}`;
+      previous.disabled = page === 0;
+      next.disabled = page === pages - 1;
+    };
+    draw();
+    while (app.scrollHeight > app.clientHeight && pageSize > 1) {
+      pageSize -= 1;
+      page = Math.min(page, Math.ceil(items.length / pageSize) - 1);
+      draw();
+    }
   }
-  app.append(nav);
+
+  previous.addEventListener('click', () => { page -= 1; renderPage(); });
+  next.addEventListener('click', () => { page += 1; renderPage(); });
+  window.addEventListener('resize', renderPage);
+  window.visualViewport?.addEventListener('resize', renderPage);
+  renderPage();
 }
 
 if (!course) {
@@ -38,6 +72,7 @@ if (!course) {
 } else {
   document.title = `${set.title} · Snow Senior Year SE Koans`;
   app.className = 'player';
+  document.body.classList.add('playing');
   const wrapper = element('div', { class: 'player-inner' });
   const code = element('pre', { class: 'code-sample' });
   const form = element('form', { autocomplete: 'off' });
@@ -61,6 +96,21 @@ if (!course) {
   let advanceTimer;
   const normalize = value => value.trim().toLocaleLowerCase().replace(/[.!?]+$/, '');
 
+  function fitPlayer() {
+    wrapper.style.transform = '';
+    const height = window.visualViewport?.height ?? window.innerHeight;
+    const available = Math.max(100, height - 24);
+    const scale = Math.min(1, available / Math.max(wrapper.scrollHeight, 1));
+    wrapper.style.transform = `scale(${scale})`;
+  }
+
+  function syncViewport() {
+    const viewport = window.visualViewport;
+    document.documentElement.style.setProperty('--visual-height', `${viewport?.height ?? window.innerHeight}px`);
+    document.documentElement.style.setProperty('--visual-top', `${viewport?.offsetTop ?? 0}px`);
+    requestAnimationFrame(fitPlayer);
+  }
+
   function fitInput(input, text = input.value) {
     const maxWidth = Math.max(80, Math.min(sentence.clientWidth - 8, window.innerWidth - 48));
     const baseWidth = Number(input.dataset.baseWidth);
@@ -72,7 +122,7 @@ if (!course) {
     const textWidth = context.measureText(text).width;
     const targetWidth = Math.max(baseWidth, textWidth + 20);
     const fontSize = targetWidth > maxWidth
-      ? Math.max(12, baseFontSize * (maxWidth - 20) / Math.max(textWidth, 1))
+      ? Math.max(16, baseFontSize * (maxWidth - 20) / Math.max(textWidth, 1))
       : baseFontSize;
     input.style.fontSize = `${fontSize}px`;
     input.style.width = `${Math.min(maxWidth, Math.max(baseWidth, textWidth * fontSize / baseFontSize + 20))}px`;
@@ -82,15 +132,18 @@ if (!course) {
     advancing = false;
     enterCount = 0;
     feedback.textContent = '';
+    sentence.hidden = false;
     explanation.hidden = true;
     explanation.textContent = '';
     expoundToggle.hidden = true;
+    expoundToggle.textContent = 'Expound';
     expoundToggle.setAttribute('aria-expanded', 'false');
     expound.hidden = true;
     expound.textContent = '';
     if (index === set.koans.length) {
       code.hidden = true;
       sentence.textContent = 'Complete.';
+      requestAnimationFrame(fitPlayer);
       return;
     }
     const koan = set.koans[index];
@@ -103,7 +156,8 @@ if (!course) {
     input.dataset.baseWidth = String(input.getBoundingClientRect().width);
     input.dataset.baseFontSize = String(parseFloat(getComputedStyle(input).fontSize));
     fitInput(input);
-    input.focus();
+    if (!window.matchMedia('(pointer:coarse)').matches) input.focus({ preventScroll: true });
+    requestAnimationFrame(fitPlayer);
   }
 
   function check(showWrong = false) {
@@ -154,11 +208,19 @@ if (!course) {
       expound.textContent = set.koans[index].expound;
       expoundToggle.hidden = false;
       feedback.textContent = `Answer: ${set.koans[index].answer}. ${set.koans[index].why}`;
+      input.blur();
+      requestAnimationFrame(fitPlayer);
     }
   });
   expoundToggle.addEventListener('click', () => {
-    expound.hidden = !expound.hidden;
-    expoundToggle.setAttribute('aria-expanded', String(!expound.hidden));
+    const opening = expound.hidden;
+    expound.hidden = !opening;
+    sentence.hidden = opening;
+    explanation.hidden = opening;
+    code.hidden = opening || !set.koans[index].code;
+    expoundToggle.textContent = opening ? 'Back to koan' : 'Expound';
+    expoundToggle.setAttribute('aria-expanded', String(opening));
+    requestAnimationFrame(fitPlayer);
   });
   restart.addEventListener('click', () => {
     clearTimeout(advanceTimer);
@@ -169,6 +231,20 @@ if (!course) {
   window.addEventListener('resize', () => {
     const input = sentence.querySelector('input');
     if (input) fitInput(input, input.value || input.placeholder);
+    syncViewport();
   });
+  form.addEventListener('focusin', () => {
+    document.body.classList.add('typing');
+    requestAnimationFrame(fitPlayer);
+  });
+  form.addEventListener('focusout', () => {
+    setTimeout(() => {
+      if (!form.contains(document.activeElement)) document.body.classList.remove('typing');
+      requestAnimationFrame(fitPlayer);
+    }, 0);
+  });
+  window.visualViewport?.addEventListener('resize', syncViewport);
+  window.visualViewport?.addEventListener('scroll', syncViewport);
+  syncViewport();
   render();
 }

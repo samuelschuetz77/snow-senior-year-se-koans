@@ -14,9 +14,7 @@ require('./data/additional-frontend.js');
 require('./data/additional-maintenance.js');
 require('./data/additional-practicum.js');
 require('./data/additional-algorithms.js');
-for (const file of ['algorithms', 'practicum', 'maintenance', 'frontend']) {
-  require(`./data/contexts-${file}.js`);
-}
+require('./data/links-practicum.js');
 require('./data/expound.js');
 require('./data/placement.js');
 
@@ -42,12 +40,18 @@ for (const course of courses) {
     assert(set.source && set.due && set.koans.length >= 20 && set.koans.length <= 30, `Set needs 20–30 questions: ${course.id}/${set.id}`);
     const setCodeRatio = set.koans.filter(koan => koan.code).length / set.koans.length;
     assert(setCodeRatio >= 0.03 && setCodeRatio <= 0.05, `Code ratio outside 3–5%: ${course.id}/${set.id}`);
-    for (const koan of set.koans) {
+    for (const [index, koan] of set.koans.entries()) {
       assert(koan.before && koan.after && koan.answer, `Incomplete koan in ${course.id}/${set.id}`);
       assert(koan.why && koan.why.trim().split(/\s+/).length < 40, `Missing or long explanation in ${course.id}/${set.id}: ${koan.before}`);
       const whyWords = koan.why.trim().split(/\s+/).length;
       const deepWords = koan.expound?.trim().split(/\s+/).length;
-      assert(deepWords >= 80 && deepWords <= 120, `Expound should be about 100 words in ${course.id}/${set.id}: ${koan.before}`);
+      assert(deepWords >= 25 && deepWords <= 180, `Expound length outside 25–180 words in ${course.id}/${set.id}: ${koan.before}`);
+      assert(koan.expound.startsWith(`${koan.before}${koan.answer}`), `Expound must start with its own koan in ${course.id}/${set.id}`);
+      assert(koan.connections.length <= 2, `Too many earlier connections in ${course.id}/${set.id}`);
+      for (const connection of koan.connections) {
+        assert(connection.index < index, `Connection must point backward in ${course.id}/${set.id}`);
+        assert(connection.bridge.match(/[.!?]/g).length <= 2, `Long transition in ${course.id}/${set.id}`);
+      }
       assert(!/\s/.test(koan.answer), `Answer must be one word: ${koan.answer}`);
       assert(!koan.before.includes('____') && !koan.after.includes('____'), 'Literal blank outside input');
       const sentence = `${koan.before}___${koan.after}`;

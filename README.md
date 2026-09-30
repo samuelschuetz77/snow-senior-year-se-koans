@@ -1,8 +1,8 @@
 # Snow Senior Year SE Koans
 
-A small static study site for the published Fall 2026 reading lists in Advanced Algorithms, Software Practicum, Software Maintenance, and Frontend Development. Each reading opens one sentence at a time with one word missing. Correct answers advance automatically. Enter checks an answer; after five unsuccessful Enter presses on a koan, the missing word appears in the blank with an explanation below it. An optional Expound button then opens a roughly 100-word, self-contained source-context explanation. Restart begins the current reading again. Progress stays in the browser's local storage.
+A small static study site for the published Fall 2026 reading lists in Advanced Algorithms, Software Practicum, Software Maintenance, and Frontend Development. Each reading opens one sentence at a time with one word missing. Correct answers advance automatically. Enter checks an answer; after five unsuccessful Enter presses on a koan, the missing word appears in the blank with an explanation below it. An optional Expound button starts with the current answer and reasoning, then connects it to up to two relevant earlier koans in that reading. Restart begins the current reading again. Progress stays in the browser's local storage.
 
-The site currently has 95 reading sets with 20–30 questions each (1,914 questions total). Every set includes a code question. The brief explanations stay under 40 words, and Expound is available only after the five-Enter reveal.
+The site currently has 95 reading sets with 20–30 questions each (1,915 questions total). Every set includes a code question. The brief explanations stay under 40 words, and Expound is available only after the five-Enter reveal.
 
 ## Coverage
 
