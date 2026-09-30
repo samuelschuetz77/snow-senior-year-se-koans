@@ -104,4 +104,87 @@
     q('A divide-and-conquer algorithm may solve subproblems in ', 'parallel', '.', 'Independence allows concurrent execution. The total work may stay similar while elapsed time changes, subject to combine and scheduling costs.'),
     q('The two recursive calls split the array into ', 'halves', '.', 'Each call receives a smaller instance of the same problem. A separate combine step is still required to build the full answer.', { code: 'left = solve(a[:mid])\nright = solve(a[mid:])\nreturn combine(left, right)' })
   ]);
+  add('jea-1-7', [
+    q('A recursion tree expands each recursive call into a child ', 'node', '.', 'The tree exposes how many subproblems appear at each depth. Summing nonrecursive work over its nodes gives total time.'),
+    q('The work at one tree level equals the sum of its node ', 'weights', '.', 'Each weight counts operations outside child calls. Level totals reveal whether root, leaves, or all levels dominate.'),
+    q('For T(n)=2T(n/2)+n, each complete level costs ', 'linear', ' work.', 'There are twice as many nodes and each is half as large at the next level. Their n-sized total stays constant.'),
+    q('For T(n)=2T(n/2)+n, the number of levels is ', 'logarithmic', '.', 'Halving size repeatedly takes about log₂ n steps. With linear work per level, the total is Theta of n log n.'),
+    q('For T(n)=2T(n/2)+1, the leaf count is ', 'linear', ' in n.', 'The tree branches twice while sizes halve, producing about n leaves. Constant work per node then sums to linear time.'),
+    q('At depth d of an r-way recursion tree, there are rᵈ ', 'nodes', '.', 'Every level multiplies node count by r until base cases appear. Multiply that count by work per node for level cost.'),
+    q('At depth d in T(n)=rT(n/c)+f(n), each subproblem has size about n/cᵈ ', 'elements', '.', 'Each generation divides size by c. The depth reaches the base case when c to the d is about n.'),
+    q('A recursion tree’s leaves represent calls at the ', 'base', ' case.', 'Their number and individual cost can dominate the sum. Include them even when internal nonrecursive work seems more prominent.'),
+    q('A geometric increase in per-level work often makes the deepest levels ', 'dominate', '.', 'When each level costs a fixed factor more than the previous, the final levels account for a constant fraction of the total.'),
+    q('A geometric decrease in per-level work often makes the root ', 'dominate', '.', 'Each deeper level contributes a smaller fixed fraction. Summing the series stays within a constant multiple of the root cost.'),
+    q('Equal cost across logarithmically many levels yields an extra ', 'logarithm', '.', 'For example, linear work on every level of a balanced binary split sums to n log n rather than n.'),
+    q('A recursion tree must account for the work of the ', 'combine', ' step.', 'Nonrecursive work includes partitioning and assembling answers. Ignoring it can change which levels dominate the total.'),
+    q('Uneven recursive sizes require care when labeling node ', 'sizes', '.', 'A balanced-tree shortcut may no longer apply. Track actual sizes or bound them before summing work across levels.'),
+    q('The recurrence T(n)=T(n/2)+1 has ', 'logarithmic', ' depth.', 'Only one smaller call occurs per level, and size halves. Constant work per level gives logarithmic total time.')
+  ]);
+
+  add('induction-1', [
+    q('A smallest-counterexample proof begins by supposing the theorem is ', 'false', '.', 'If any counterexample exists, well-ordering gives a least one. Showing it forces a smaller counterexample creates a contradiction.'),
+    q('The chosen counterexample must be smallest under a well-founded ', 'order', '.', 'Without a least element, the descent argument has no starting point. Positive integer size commonly supplies the required order.'),
+    q('A smaller counterexample contradicts the minimality of the original ', 'counterexample', '.', 'The proof assumes the chosen bad instance was least. Constructing a strictly smaller bad instance makes that assumption impossible.'),
+    q('A universal claim needs only one counterexample to be ', 'disproved', '.', 'If it promises the property for every valid input, a single valid input where the property fails refutes it.'),
+    q('A smallest-counterexample proof must show the reduced instance is still ', 'valid', '.', 'A smaller object outside the theorem’s domain does not contradict anything. Verify that all preconditions remain satisfied.'),
+    q('The descending step needs a strictly smaller measure, not merely a different ', 'object', '.', 'Minimality only rules out a bad instance with a lower rank. An equal-sized transformation gives no contradiction.'),
+    q('A composite number can be decomposed into smaller positive ', 'factors', '.', 'Those factors provide the smaller instances used in a proof about prime divisors. The proof must track which divides the original.'),
+    q('If a proper factor has a prime divisor, that prime also divides the original ', 'number', '.', 'Divisibility is transitive through multiplication. This lets a smaller factor’s property transfer back to the composite number.'),
+    q('The base case is implicit when no smaller valid instance ', 'exists', '.', 'The smallest objects must satisfy the claim directly. Otherwise the descent step cannot start from them.'),
+    q('Minimal-counterexample reasoning is equivalent in power to mathematical ', 'induction', '.', 'Both use the well-ordering of positive integers. One proves no least failure exists; the other builds truth from smaller cases.'),
+    q('An infinite descent contradicts the well-ordering of positive ', 'integers', '.', 'There cannot be an endlessly decreasing sequence of positive integers. A supposed counterexample that generates one is impossible.'),
+    q('A proof fails if the constructed smaller object need not be a ', 'counterexample', '.', 'Smallness alone is insufficient. The new object must also violate the original claim, under the same valid-input conditions.'),
+    q('This divisor is proper because it lies strictly between one and ', 'n', '.', 'A proper factor is smaller than the composite number. It can support the descent argument while remaining positive.', { code: 'if n % d == 0 and 1 < d < n:\n    factor = d' }),
+    q('A contradiction proof should identify the exact assumption that becomes ', 'impossible', '.', 'Here it is the least bad instance. The derived smaller bad instance directly conflicts with that assumption.')
+  ]);
+
+  add('induction-2', [
+    q('The induction axiom turns a base case and a valid step into a universal ', 'claim', '.', 'The base anchors the chain, and the step extends truth to every later integer. Both obligations are necessary.'),
+    q('Strong induction may assume the claim for all smaller ', 'values', '.', 'This is useful when the current case depends on several earlier sizes. It is not stronger in what can ultimately be proved.'),
+    q('An induction hypothesis can be used only on a strictly smaller ', 'instance', '.', 'Using the current case assumes the conclusion being proved. The proof must identify a valid earlier case.'),
+    q('A base case prevents the step from leaving the entire claim ', 'unanchored', '.', 'A conditional statement that P(n) implies P(n+1) can hold even when every P(n) is false. Establish the start explicitly.'),
+    q('A proof with multiple residues may need several base ', 'cases', '.', 'If the step advances by more than one, one starting value may not cover every chain. Check the reachable classes.'),
+    q('Well-ordering guarantees a least member of every nonempty set of positive ', 'integers', '.', 'That least element supports minimal-counterexample arguments. It is the structural reason infinite descent cannot persist.'),
+    q('The step should prove the current case from previously established ', 'cases', '.', 'State the hypothesis precisely and show how it yields the target. A numerical pattern is not a substitute.'),
+    q('If the step proves P(n) implies P(n+2), the base must cover both parity ', 'classes', '.', 'One chain reaches even indexes and the other reaches odd indexes. A single starting case covers only one chain.'),
+    q('A circular proof hides the desired conclusion inside an unjustified ', 'assumption', '.', 'The induction hypothesis applies to earlier instances only. Assuming the present claim makes the argument invalid.'),
+    q('Choosing an induction parameter requires a well-founded measure that decreases in recursive ', 'calls', '.', 'The parameter should match the actual dependency structure. Otherwise the hypothesis may not justify the algorithm’s subcalls.'),
+    q('An inductive proof can establish a property of a recursive ', 'algorithm', '.', 'Prove direct cases, assume correctness for smaller inputs, and show the parent combines their answers correctly.'),
+    q('The statement P(0) plus P(n) implies P(n+1) establishes all nonnegative ', 'integers', '.', 'The base establishes zero and the step advances one at a time. Every nonnegative integer is reached in finitely many steps.'),
+    q('This recursive call supports induction on n because its input is strictly ', 'smaller', '.', 'The function reduces n by one before calling itself. A base case at zero completes the termination and correctness structure.', { code: 'def factorial(n):\n    if n == 0: return 1\n    return n * factorial(n - 1)' })
+  ]);
+
+  add('induction-3', [
+    q('A recursive correctness proof should match the algorithm’s actual ', 'calls', '.', 'The induction hypothesis must cover the subproblem that the code solves. Proving a different recurrence does not justify the implementation.'),
+    q('Strong induction is convenient when recursive calls skip more than one ', 'size', '.', 'Assuming all smaller cases covers varied decreases. The proof still requires direct bases and a valid reduction.'),
+    q('A termination measure must decrease on every recursive ', 'branch', '.', 'One decreasing path is insufficient if another can cycle forever. Check all cases that make recursive calls.'),
+    q('Several base cases may be needed when the reduction jumps by a fixed ', 'amount', '.', 'Subtracting five creates separate residue chains. Direct starting cases must cover every valid chain used by the step.'),
+    q('A stamp proof should show the final construction uses only allowed ', 'denominations', '.', 'A numerical decomposition is valid only if each added piece is a permitted stamp and the prior amount is constructible.'),
+    q('If an amount is obtained by adding five to a smaller constructible amount, the step adds one five-cent ', 'stamp', '.', 'The induction hypothesis supplies the smaller construction. Adding the allowed stamp yields a construction for the current amount.'),
+    q('A recurrence without reachable base cases may run ', 'forever', '.', 'Every recursive branch needs to approach a directly solved instance. A decreasing but invalid-size sequence may still miss the intended base.'),
+    q('The proof’s domain should include the smaller instances it invokes in the ', 'hypothesis', '.', 'If the recursive call leaves the claimed domain, the hypothesis cannot justify its answer. State and preserve the domain.'),
+    q('A 5-and-7 stamp construction has different behavior across small ', 'amounts', '.', 'Not every small target is representable. Explicit base cases and a threshold are needed before an inductive step applies broadly.'),
+    q('An induction step can fail when subtracting five produces a nonconstructible ', 'remainder', '.', 'The smaller amount must satisfy the induction hypothesis. Merely being numerically smaller does not prove it has a valid construction.'),
+    q('Recursive calls should pass enough state to describe the remaining ', 'problem', '.', 'The subproblem must contain all information needed for future decisions. Missing state can make two different histories look identical.'),
+    q('A proof of termination is distinct from a proof of output ', 'correctness', '.', 'A function can halt with the wrong answer, or maintain a valid invariant while never halting. Both claims need support.'),
+    q('This call reduces the target by an allowed stamp ', 'value', '.', 'The recursive branch explores a smaller remaining amount. Base cases must classify reachable small targets correctly.', { code: 'def can_make(n):\n    if n == 0: return True\n    return n >= 5 and can_make(n - 5)' })
+  ]);
+
+  add('jea-1-exercises', [
+    q('A recurrence must include the cost of work outside the recursive ', 'calls', '.', 'Partitioning, comparisons, and combining consume time too. Ignoring them understates total cost, sometimes by an asymptotic factor.'),
+    q('A recursive algorithm needs an explicit rule for its smallest ', 'inputs', '.', 'These base cases provide answers without further calls. They also anchor a correctness proof and termination argument.'),
+    q('A divide-and-conquer combination must satisfy the original output ', 'condition', '.', 'Correct child answers do not automatically solve the parent. Show how the merge or selection step preserves the specification.'),
+    q('A reduction transforms one problem into another while preserving the needed ', 'answer', '.', 'The transformed instance must encode the original question. A solution to it must be convertible back to a correct original solution.'),
+    q('A reduction used in an efficient algorithm must itself run in ', 'polynomial', ' time.', 'An expensive transformation can dominate the whole method. Complexity claims must include instance conversion and answer conversion.'),
+    q('A recurrence tree helps reveal which depth contributes most of the ', 'work', '.', 'Compute node count and node cost per level. Sum levels, including leaves, to estimate the total.'),
+    q('An induction proof for recursion assumes child calls return correct ', 'answers', '.', 'The parent argument then shows how those answers yield a correct result. Direct base cases begin the proof.'),
+    q('A subproblem must be strictly smaller to justify termination by size ', 'induction', '.', 'If a recursive call can receive the same input, the proof of descent fails and the algorithm may loop.'),
+    q('An example where a greedy choice fails is a ', 'counterexample', '.', 'One valid input with a suboptimal greedy output disproves a universal optimality claim. It may suggest a fuller search recurrence.'),
+    q('A transformed solution needs a decoding step to answer the original ', 'question', '.', 'Solving a different instance is useful only when its answer can be mapped back. Include that mapping in the reduction proof.'),
+    q('A time bound for a recursive method includes the number of child ', 'calls', '.', 'Branching can multiply subproblem count. Even small work at each call may accumulate over many tree nodes.'),
+    q('A proof by induction should use the exact structure of the recursive ', 'algorithm', '.', 'If the code splits into halves, the hypothesis should cover those halves and the proof should analyze their combination.'),
+    q('The base case in this recurrence contributes constant ', 'time', '.', 'A size-one input returns directly. The recurrence applies only to larger inputs, where the two recursive calls dominate.', { code: 'def solve(n):\n    if n <= 1: return 1\n    return solve(n // 2) + solve(n // 2)' }),
+    q('An algorithm can be correct but inefficient because it repeats the same ', 'subproblems', '.', 'A recursion tree may contain identical instances in different branches. Memoization can reuse their answers without changing the recurrence’s meaning.'),
+    q('A tight complexity claim requires both an upper and a lower ', 'bound', '.', 'An upper bound alone may be loose. Matching bounds identify the asymptotic growth for the stated algorithm and input model.')
+  ]);
 })();
