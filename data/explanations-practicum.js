@@ -37,6 +37,7 @@ Hidden dependencies make a unit require more surrounding setup to test.
 Callers use the function's contract without needing its ordering implementation.
 `,
     5: `
+A software artifact is a tangible work product created or used during development.
 A defect exists in the artifact; a failure appears when behavior goes wrong.
 The oracle supplies the expected outcome against which a result is compared.
 Errors often occur exactly at or near allowed limits.

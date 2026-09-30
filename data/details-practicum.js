@@ -37,6 +37,7 @@ If a unit silently reaches a database, an isolated test may need unwanted infras
 The caller requests sorting through the function instead of depending on its internal steps.
 `,
     5: `
+Requirements, designs, code, and tests are all artifacts. A mistake in one can affect later work, even before anyone observes incorrect runtime behavior.
 The same fault may remain dormant until a particular input or environment triggers a failure.
 Without an expected result, a test cannot distinguish success from a plausible wrong answer.
 For a range from zero to ten, test zero, ten, and nearby invalid values.

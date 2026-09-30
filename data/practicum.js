@@ -39,6 +39,7 @@
       q('This function keeps ordering separate from callers through a narrow ', 'interface', '.', { code: 'def sort_orders(orders, key):\n    return sorted(orders, key=key)' })
     ]),
     set('5', 'SWEBOK 5 · Testing', 'Sep 30', [
+      q('A work product such as a requirements document, design, source code, or test is an ', 'artifact', '.'),
       q('A fault is a defect in an artifact; a failure is incorrect observed ', 'behavior', '.'),
       q('A test oracle decides whether an observed result is ', 'correct', '.'),
       q('Boundary tests focus on values near the edges of a valid ', 'range', '.'),
