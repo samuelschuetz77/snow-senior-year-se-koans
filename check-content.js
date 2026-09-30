@@ -7,6 +7,13 @@ for (const file of ['algorithms', 'practicum', 'maintenance', 'frontend']) {
 for (const file of ['algorithms', 'practicum', 'maintenance', 'frontend']) {
   require(`./data/explanations-${file}.js`);
 }
+for (const file of ['algorithms', 'practicum', 'maintenance', 'frontend']) {
+  require(`./data/details-${file}.js`);
+}
+for (const file of ['algorithms', 'practicum', 'maintenance', 'frontend']) {
+  require(`./data/contexts-${file}.js`);
+}
+require('./data/expound.js');
 
 const courses = window.KOAN_COURSES;
 assert.equal(courses.length, 4);
@@ -14,6 +21,8 @@ const courseIds = new Set();
 const sentences = new Set();
 let total = 0;
 let withCode = 0;
+let explanationWords = 0;
+let expoundWords = 0;
 
 for (const course of courses) {
   assert(!courseIds.has(course.id), `Duplicate course ${course.id}`);
@@ -32,12 +41,17 @@ for (const course of courses) {
     for (const koan of set.koans) {
       assert(koan.before && koan.after && koan.answer, `Incomplete koan in ${course.id}/${set.id}`);
       assert(koan.why && koan.why.trim().split(/\s+/).length < 40, `Missing or long explanation in ${course.id}/${set.id}: ${koan.before}`);
+      const whyWords = koan.why.trim().split(/\s+/).length;
+      const deepWords = koan.expound?.trim().split(/\s+/).length;
+      assert(deepWords >= 80 && deepWords <= 120, `Expound should be about 100 words in ${course.id}/${set.id}: ${koan.before}`);
       assert(!/\s/.test(koan.answer), `Answer must be one word: ${koan.answer}`);
       assert(!koan.before.includes('____') && !koan.after.includes('____'), 'Literal blank outside input');
       const sentence = `${koan.before}___${koan.after}`;
       assert(!sentences.has(sentence), `Duplicate sentence: ${sentence}`);
       sentences.add(sentence);
       total += 1;
+      explanationWords += whyWords;
+      expoundWords += deepWords;
       if (koan.code) withCode += 1;
     }
   }
@@ -45,4 +59,5 @@ for (const course of courses) {
 
 const codeRatio = withCode / total;
 assert(codeRatio >= 0.03 && codeRatio <= 0.05, `Code ratio ${codeRatio} outside 3–5%`);
-console.log(`${courses.length} courses, ${courses.reduce((n, c) => n + c.sets.length, 0)} reading sets, ${total} koans, ${withCode} code references (${(100 * codeRatio).toFixed(1)}%).`);
+assert(explanationWords / total >= 22, 'Average explanation must be at least twice the previous 11-word average');
+console.log(`${courses.length} courses, ${courses.reduce((n, c) => n + c.sets.length, 0)} reading sets, ${total} koans, ${withCode} code references (${(100 * codeRatio).toFixed(1)}%). Explanations average ${(explanationWords / total).toFixed(1)} words; expounds average ${(expoundWords / total).toFixed(1)} words.`);

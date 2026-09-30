@@ -44,9 +44,11 @@ if (!course) {
   const label = element('label', { class: 'sr-only', for: 'answer' }, 'Missing word');
   const sentence = element('div', { class: 'sentence' });
   const explanation = element('p', { class: 'explanation', hidden: '' });
+  const expoundToggle = element('button', { class: 'expound-toggle', type: 'button', 'aria-controls': 'expound-text', 'aria-expanded': 'false', hidden: '' }, 'Expound');
+  const expound = element('p', { class: 'expound', id: 'expound-text', hidden: '' });
   const feedback = element('div', { class: 'sr-only', id: 'feedback', 'aria-live': 'polite' });
   const restart = element('button', { class: 'restart', type: 'button' }, 'Restart');
-  form.append(label, sentence, explanation);
+  form.append(label, sentence, explanation, expoundToggle, expound);
   wrapper.append(code, form, feedback);
   app.append(wrapper, restart);
 
@@ -64,6 +66,10 @@ if (!course) {
     feedback.textContent = '';
     explanation.hidden = true;
     explanation.textContent = '';
+    expoundToggle.hidden = true;
+    expoundToggle.setAttribute('aria-expanded', 'false');
+    expound.hidden = true;
+    expound.textContent = '';
     if (index === set.koans.length) {
       code.hidden = true;
       sentence.textContent = 'Complete.';
@@ -122,8 +128,14 @@ if (!course) {
       input.placeholder = set.koans[index].answer;
       explanation.textContent = set.koans[index].why;
       explanation.hidden = false;
+      expound.textContent = set.koans[index].expound;
+      expoundToggle.hidden = false;
       feedback.textContent = `Answer: ${set.koans[index].answer}. ${set.koans[index].why}`;
     }
+  });
+  expoundToggle.addEventListener('click', () => {
+    expound.hidden = !expound.hidden;
+    expoundToggle.setAttribute('aria-expanded', String(!expound.hidden));
   });
   restart.addEventListener('click', () => {
     clearTimeout(advanceTimer);

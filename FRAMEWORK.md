@@ -10,13 +10,14 @@ Use this guide to turn **any supplied reading, notes, or source text** into a sm
 
 ## Write the koans
 
-Create roughly 6–10 koans per section, adjusted to the density of the source. Order them so one idea prepares for the next. Teach a concept before asking the learner to recall its name. Prioritize predictions, consequences, distinctions, and decision rules over isolated vocabulary.
+Create 20–30 koans per reading set. Order them so one idea prepares for the next. Teach a concept before asking the learner to recall its name. Prioritize predictions, consequences, distinctions, and decision rules over isolated vocabulary. Include applications and boundary cases rather than repeating definitions to reach the count.
 
 Each koan must have:
 
 - `before` and `after`: the two parts of a natural sentence surrounding **one** missing word.
 - `answer`: one canonical word. Accept a few equivalent single-word answers when the sentence genuinely allows them.
 - `why`: a specific explanation of the completed claim in fewer than 40 words, shown only after five unsuccessful Enter presses on that koan.
+- `expound`: a deeper explanation of about 100 words that introduces the source concept and explains the answer without relying on earlier explanations. Earlier koan sentences may provide context; their revealed descriptions may not be assumed.
 - `section`: the source section or topic for coverage auditing. Do not display section navigation in the exercise.
 - `code` (optional): a short, read-only snippet shown above the sentence. Keep **every blank in the sentence**, never in the code. Aim for 3–5% of all koans to reference code. Use Python for general programming and algorithms; use the reading's language when the language itself is the concept (for example TypeScript or React).
 
@@ -28,10 +29,10 @@ Check every sentence against its source. In particular, distinguish a known algo
 
 The exercise page contains the current sentence, its inline blank text box, an optional small code snippet when the question needs it, and a very small Restart button at the bottom. Center the sentence and blank with generous empty space. Use an off-white background and near-black text. Use a plain sans-serif font. No cursive or decorative type.
 
-Do not show a title, introduction, header, sidebar, chapter list, preview of upcoming topics, question number, progress count or bar, instructions, hint control, Check button, Next button, or footer on the exercise page. The Restart button stays small and visually quiet at the bottom. For a multi-course collection, the home page has only the collection title and class links; each class page lists its reading sets. Navigation disappears once a set starts.
+Do not show a title, introduction, header, sidebar, chapter list, preview of upcoming topics, question number, progress count or bar, instructions, hint control before answer reveal, Check button, Next button, or footer on the exercise page. The Restart button stays small and visually quiet at the bottom. For a multi-course collection, the home page has only the collection title and class links; each class page lists its reading sets. Navigation disappears once a set starts.
 
 1. The learner types directly in the blank. A correct word turns the blank green and automatically advances after a brief pause.
-2. Enter checks an incorrect word, turning the blank red. Editing clears the red state. After five unsuccessful Enter presses on the same sentence, show the correct word in the blank's placeholder and the `why` text below the sentence. The learner may still type the answer to advance.
+2. Enter checks an incorrect word, turning the blank red. Editing clears the red state. After five unsuccessful Enter presses on the same sentence, show the correct word in the blank's placeholder, the `why` text below the sentence, and a subtle Expound control beneath it. Expound reveals the deeper explanation only when selected. The learner may still type the answer to advance.
 3. Save the next question index in `localStorage` so refresh resumes the session.
 4. At the end, show only “Complete.” in the main area. The same small Restart button remains available at the bottom.
 
