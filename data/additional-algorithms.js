@@ -1112,4 +1112,143 @@
     'Both directions establish the reduction’s correctness.',
     'Rejecting positive value incurs its full penalty.'
   ]);
+  add('jea-h-1', [
+    q('A linear program chooses real-valued variables to optimize a linear ', 'objective', '.', 'The feasible assignments satisfy linear equalities or inequalities. Both the objective and constraints must be linear in the variables.'),
+    q('The coefficients of the objective specify how each variable contributes to ', 'value', '.', 'Changing a variable affects the objective by its fixed coefficient. Products of two decision variables would not be linear.'),
+    q('A feasible point satisfies all constraints ', 'simultaneously', '.', 'Meeting most inequalities is insufficient. The feasible region is their intersection, including any sign restrictions.'),
+    q('A canonical maximization LP uses inequalities Ax ≤ b and nonnegative ', 'variables', '.', 'The objective is c dot x. Other LP forms can be translated into this structure before taking a dual.'),
+    q('A free variable can be represented as the difference of two nonnegative ', 'variables', '.', 'The positive and negative parts allow any real value. This converts a sign-unrestricted variable into canonical form.'),
+    q('An equality constraint can be represented by two opposing ', 'inequalities', '.', 'Requiring both at most and at least the same value forces equality. This helps convert an LP to canonical form.'),
+    q('Multiplying an inequality by negative one reverses its ', 'direction', '.', 'A lower-bound constraint can thereby become an upper-bound constraint. Forgetting the reversal changes the feasible region.'),
+    q('A slack variable turns an inequality into an ', 'equality', '.', 'For Ax ≤ b, nonnegative slack records unused allowance. Slack form supports certain algorithms and makes residual capacity explicit.'),
+    q('Requiring variables to be integral changes the problem to integer ', 'programming', '.', 'The feasible set becomes discrete. An LP optimum may be fractional and therefore not directly solve the integer problem.'),
+    q('A flow network’s edge amounts can be LP ', 'variables', '.', 'Capacity bounds and conservation are linear constraints. The source’s net outflow is a linear objective.'),
+    q('A linear objective has no products of decision ', 'variables', '.', 'Terms may be constant coefficients times variables and summed. A term x times y makes the expression nonlinear.'),
+    q('The offset vector b supplies right-hand sides of the ', 'constraints', '.', 'Together with matrix A, it defines the feasible region. The objective vector c defines what is optimized over that region.'),
+    q('An LP may ask for a minimum rather than a ', 'maximum', '.', 'Negating the objective can convert between the two forms. The feasible region remains the same under that transformation.'),
+    q('A proposed LP solution must report both its assignment and objective ', 'value', '.', 'Feasibility checks its constraints; optimality requires comparing against every feasible alternative or a valid certificate.'),
+    q('This is linear because each variable has a fixed ', 'coefficient', '.', 'The objective is a sum of constant multiples of variables. No variable is multiplied by another variable.', { code: 'maximize 3*x + 2*y\nsubject to x + y <= 5, x >= 0, y >= 0' })
+  ]);
+
+  add('jea-h-2', [
+    q('A linear equality describes a hyperplane in the variable ', 'space', '.', 'In two dimensions it is a line. In higher dimensions it separates or restricts the feasible region geometrically.'),
+    q('A linear inequality describes one closed ', 'halfspace', '.', 'The boundary hyperplane and one side satisfy the condition. Intersecting such sets constructs the feasible region.'),
+    q('The feasible region is the intersection of all constraint ', 'sets', '.', 'Every feasible point must satisfy every equality, inequality, and sign restriction. One violated condition excludes the point.'),
+    q('A finite intersection of halfspaces is a ', 'polyhedron', '.', 'It may be empty, bounded, or unbounded. Its geometric structure supports linear-programming reasoning.'),
+    q('Convexity means the segment between two feasible points remains ', 'feasible', '.', 'Each linear constraint holds along the segment. Their intersection therefore has no gaps between feasible points.'),
+    q('An infeasible LP has no point satisfying every ', 'constraint', '.', 'Its feasible region is empty. There is no objective value to optimize over valid assignments.'),
+    q('An unbounded maximization LP has feasible objective values arbitrarily ', 'large', '.', 'The feasible region must allow improving directions. Merely being geometrically unbounded does not guarantee the chosen objective is unbounded.'),
+    q('A geometrically unbounded polyhedron may still have a bounded ', 'objective', '.', 'An open direction can be perpendicular to or worsen the objective. Feasible-region shape alone does not settle optimization.'),
+    q('The objective’s level sets are parallel hyperplanes of equal ', 'value', '.', 'Moving the hyperplane in the improving direction searches for the best feasible contact point.'),
+    q('A feasible line segment cannot cross outside a convex ', 'region', '.', 'Convexity follows from linear inequalities. A nonconvex feasible set would require a different model or integer restrictions.'),
+    q('An empty intersection of halfspaces yields an ', 'infeasible', ' program.', 'Conflicting constraints can leave no point satisfying all of them. Plotting each halfspace can make this visible in two dimensions.'),
+    q('A linear objective can be visualized as sliding a level ', 'line', '.', 'Each position has one objective value. The optimal point is the last feasible contact in the improving direction when a finite optimum exists.'),
+    q('A point on a constraint boundary makes that inequality ', 'tight', '.', 'Its left and right sides are equal. Other inequalities may still have slack at that same point.'),
+    q('The feasible region can contain infinitely many points even with finitely many ', 'constraints', '.', 'Real-valued variables vary continuously. Linear inequalities describe entire regions rather than a finite candidate list.'),
+    q('This pair of bounds leaves no feasible value for ', 'x', '.', 'No real number can be at most one and at least two simultaneously. The intersection of these halfspaces is empty.', { code: 'x <= 1\nx >= 2' })
+  ]);
+
+  add('jea-h-4', [
+    q('The dual of a canonical primal maximization LP is a ', 'minimization', ' LP.', 'Its feasible values give upper bounds on primal feasible values. Weak duality formalizes that relationship.'),
+    q('One primal inequality corresponds to one dual ', 'variable', '.', 'The dual variable weights that primal constraint. Its sign depends on the original inequality direction.'),
+    q('One primal variable corresponds to one dual ', 'constraint', '.', 'The coefficients in that primal column become the corresponding dual inequality. The objective coefficient becomes its right-hand side.'),
+    q('The dual coefficient matrix is the transpose of the primal ', 'matrix', '.', 'Rows and columns swap roles. This reflects the exchange between constraints and variables.'),
+    q('For max c·x with Ax ≤ b and x ≥ 0, the dual minimizes b·y subject to Aᵀy ≥ ', 'c', '.', 'The dual also requires y ≥ 0. These directions are crucial for the weak-duality inequality.'),
+    q('A primal upper-bound constraint creates a nonnegative dual ', 'variable', '.', 'Nonnegative weights preserve the inequality when primal constraints are multiplied and summed to bound the objective.'),
+    q('A primal equality creates a sign-unrestricted dual ', 'variable', '.', 'Multiplying an equality by any real coefficient preserves equality. The dual variable need not be nonnegative.'),
+    q('A sign-unrestricted primal variable creates a dual ', 'equality', '.', 'The corresponding weighted coefficient must match exactly; either inequality direction could be violated by choosing the variable’s sign.'),
+    q('Taking the dual twice returns an equivalent ', 'primal', '.', 'The translation swaps constraints and variables twice. The primal-dual naming choice is therefore conventional rather than intrinsic.'),
+    q('The dual objective coefficients come from primal constraint bounds ', 'b', '.', 'Each dual variable weights one right-hand side. Their weighted sum supplies a bound on primal objective value.'),
+    q('The dual constraint bounds the coefficient of each primal ', 'variable', '.', 'The weighted primal constraints must dominate that variable’s objective contribution. This is how feasible duals certify upper bounds.'),
+    q('A primal minimization problem has a corresponding dual ', 'maximization', '.', 'Reversing optimization direction preserves the bound relationship. The exact signs still depend on constraint and variable forms.'),
+    q('A transpose changes an n-by-d constraint matrix into a d-by-n ', 'matrix', '.', 'The dual therefore has d structural constraints and n variables in canonical form.'),
+    q('Duality can turn an optimization result into a checkable ', 'certificate', '.', 'A feasible dual value bounds every primal candidate. Equality with a feasible primal proves both optimal.'),
+    q('This canonical pair swaps the roles of constraints and ', 'variables', '.', 'Primal matrix rows index dual variables, while primal columns index dual constraints. The inequality directions match weak duality.', { code: 'primal: max c·x, Ax<=b, x>=0\ndual:   min b·y, Aᵀy>=c, y>=0' })
+  ]);
+
+  add('jea-h-5', [
+    q('Weak duality bounds every feasible primal maximization value by every feasible dual ', 'value', '.', 'The dual gives an upper bound even before either side is optimized. This is the basis for an optimality certificate.'),
+    q('If feasible primal and dual objective values match, both solutions are ', 'optimal', '.', 'Weak duality prevents any better primal or lower dual value. Equality closes the entire possible gap.'),
+    q('Strong duality says finite optimal primal and dual values are ', 'equal', '.', 'The fundamental theorem guarantees matching optima when the appropriate optimal solutions exist. It extends maxflow-mincut style equality.'),
+    q('For canonical forms, Ax ≤ b and nonnegative y imply yAx ≤ y·', 'b', '.', 'Multiplying each primal inequality by a nonnegative dual weight preserves direction, then summing gives the upper bound.'),
+    q('Dual feasibility and nonnegative x imply c·x ≤ yA', 'x', '.', 'Each dual constraint bounds a primal objective coefficient. Weighting by nonnegative primal variables preserves the inequality.'),
+    q('Combining the two inequalities yields c·x ≤ yAx ≤ y·', 'b', '.', 'This chain proves weak duality. Matching endpoints forces equality throughout and certifies optimality of both assignments.'),
+    q('A feasible dual solution is a certificate that no primal value exceeds its ', 'objective', '.', 'Anyone can check the dual constraints and arithmetic. A matching primal assignment then proves the exact optimum.'),
+    q('An unbounded primal maximization problem forces its dual to be ', 'infeasible', '.', 'A feasible dual would give a finite upper bound by weak duality, contradicting arbitrarily large primal values.'),
+    q('An infeasible primal does not automatically mean the dual is ', 'unbounded', '.', 'Both sides can be infeasible in degenerate cases. The logical implications must not be reversed without conditions.'),
+    q('Maxflow–mincut is a special primal-dual ', 'equality', '.', 'A feasible flow gives a lower bound, a cut gives an upper bound, and matching values certify both optima.'),
+    q('A gap between feasible primal and dual values means optimality has not yet been ', 'certified', '.', 'Either side might improve. The gap measures how much room remains between the known lower and upper bounds.'),
+    q('Weak duality holds without assuming the solver has found an ', 'optimum', '.', 'Any feasible pair supplies bounds. That makes it useful for checking intermediate or independently proposed solutions.'),
+    q('A primal feasible value is a lower bound on the maximum ', 'objective', '.', 'The optimum is at least as good as any valid candidate. A feasible dual supplies the corresponding upper bound.'),
+    q('A matching certificate needs feasibility on both ', 'sides', '.', 'Equal numbers from invalid assignments prove nothing. Check all primal and dual constraints before invoking weak duality.'),
+    q('This equality certifies the two feasible solutions as ', 'optimal', '.', 'Weak duality brackets every possible primal and dual value between the matching objectives. Neither side can improve.', { code: 'assert primal_feasible(x) and dual_feasible(y)\nassert objective_primal(x) == objective_dual(y)' })
+  ]);
+  deepen('jea-h-1', [
+    'The variables are continuous unless restricted otherwise.',
+    'Constant coefficients preserve the required linear form.',
+    'A single violation makes the point infeasible.',
+    'The sign constraints are part of canonical feasibility.',
+    'Both parts must remain nonnegative individually.',
+    'The two bounds pin down one value.',
+    'Inequality signs must be handled carefully.',
+    'Slack measures how far a bound is unused.',
+    'Fractional solutions may no longer be acceptable.',
+    'This connects flow theory with general optimization.',
+    'Quadratic interactions require another optimization model.',
+    'The three data objects define the LP.',
+    'Negating the objective reverses the preference order.',
+    'A dual witness can establish the latter.',
+    'The fixed coefficients determine the marginal contributions.'
+  ]);
+  deepen('jea-h-2', [
+    'The dimension is one less than the ambient space.',
+    'Its boundary satisfies the inequality with equality.',
+    'The geometry makes simultaneous feasibility concrete.',
+    'The intersection inherits convexity from its pieces.',
+    'This property supports global optimization arguments.',
+    'Contradictory bounds can empty the region.',
+    'Objective direction matters as much as region shape.',
+    'Open directions need not improve the objective.',
+    'Moving the level set visualizes optimization.',
+    'Linear combinations preserve each constraint.',
+    'No candidate assignment can repair the contradiction.',
+    'The final contact gives the optimum when attained.',
+    'Tightness identifies a binding constraint.',
+    'Continuity is why geometry is useful here.',
+    'No point lies in both one-dimensional halfspaces.'
+  ]);
+  deepen('jea-h-4', [
+    'The dual objective provides the bound.',
+    'Its sign reflects the primal constraint direction.',
+    'The column-to-row conversion is mechanical.',
+    'This is the algebraic core of dualization.',
+    'The transpose aligns dimensions on both sides.',
+    'A negative multiplier would reverse the bound.',
+    'Equality allows either sign without contradiction.',
+    'A free variable can move in either direction.',
+    'Duality is an involution up to equivalent form.',
+    'The primal bounds become dual weights.',
+    'Every primal column receives a dual inequality.',
+    'The general rule reverses max and min.',
+    'Rows become columns under the matrix transpose.',
+    'Matching bounds make that certificate exact.',
+    'This pairing is the canonical example.'
+  ]);
+  deepen('jea-h-5', [
+    'It holds for every feasible pair.',
+    'No hidden better solution can fit between them.',
+    'This is stronger than weak duality alone.',
+    'The nonnegative multiplier preserves inequality direction.',
+    'The sign of x is necessary for the step.',
+    'The middle expression links both feasible systems.',
+    'The certificate can be checked independently.',
+    'Otherwise weak duality would give a contradiction.',
+    'The converse requires additional assumptions.',
+    'Equality of constructive bounds proves both sides.',
+    'The gap is an upper bound on remaining improvement.',
+    'Optimality is not needed to obtain bounds.',
+    'This is the primal side of the bracket.',
+    'Constraint checks are part of the certificate.',
+    'The two objectives close the duality gap.'
+  ]);
 })();
