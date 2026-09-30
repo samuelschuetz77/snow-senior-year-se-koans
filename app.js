@@ -78,7 +78,7 @@ if (!course) {
     const koan = set.koans[index];
     code.hidden = !koan.code;
     code.textContent = koan.code || '';
-    const input = element('input', { id: 'answer', type: 'text', autocomplete: 'off', inputmode: 'text', 'aria-label': 'Missing word', 'aria-describedby': 'feedback' });
+    const input = element('input', { id: 'answer', type: 'text', autocomplete: 'off', autocapitalize: 'none', inputmode: 'text', 'aria-label': 'Missing word', 'aria-describedby': 'feedback' });
     input.spellcheck = false;
     if (koan.blankChars) input.style.width = `${koan.blankChars}ch`;
     sentence.replaceChildren(document.createTextNode(koan.before), input, document.createTextNode(koan.after));
