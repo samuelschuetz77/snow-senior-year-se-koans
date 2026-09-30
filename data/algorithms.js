@@ -446,7 +446,7 @@
         q('A polynomial reduction cannot enumerate all exponentially many input ', 'assignments', '.')
       ]),
       set('jea-12-6', 'JEA 12.6 · 3SAT', 'Nov 18', 'Erickson, Algorithms §12.6', [
-        q('A 3CNF formula is a conjunction of clauses containing at most three ', 'literals', '.'),
+        q('In this chapter, a 3CNF formula is a conjunction of clauses containing exactly three ', 'literals', '.'),
         q('Converting long clauses to three-literal clauses introduces auxiliary ', 'variables', '.'),
         q('The conversion must preserve ', 'satisfiability', '.'),
         q('A satisfying assignment for the new formula implies one for the original ', 'formula', '.'),

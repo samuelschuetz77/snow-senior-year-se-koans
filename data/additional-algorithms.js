@@ -730,7 +730,7 @@
     q('A positive edge is not tense when its proposed route is no ', 'shorter', '.', 'Relaxation should leave the existing label intact. Replacing it with a worse route would violate the upper-bound improvement invariant.'),
     q('A shortest-path proof must account for every edge on a claimed better ', 'route', '.', 'If all edge inequalities hold, chaining them along the route bounds its weight below by the final label, ruling out improvement.'),
     q('The generic algorithm may repeatedly relax edges until none remains ', 'tense', '.', 'With a reachable negative cycle, improvements can continue indefinitely. The no-negative-cycle assumption is crucial for finite shortest paths.'),
-    q('A path through u improves v only when this inequality is ', 'strict', '.', 'The candidate dist[u] plus edge weight must beat the current label. The code then updates both distance and predecessor.', { code: 'if dist[u] + w[u, v] < dist[v]:\n    dist[v] = dist[u] + w[u, v]' })
+    q('A path through u improves v only when this inequality is ', 'strict', '.', 'The candidate dist[u] plus edge weight must beat the current label. Relaxation then updates both distance and predecessor in the full algorithm.')
   ]);
 
   add('jea-9-5', [
@@ -1250,5 +1250,110 @@
     'This is the primal side of the bracket.',
     'Constraint checks are part of the certificate.',
     'The two objectives close the duality gap.'
+  ]);
+  add('jea-12-0', [
+    q('A decision problem asks for a yes-or-no ', 'answer', '.', 'Complexity classes such as P and NP are formally defined for these outputs. Optimization problems can be studied through decision variants.'),
+    q('A short witness may be easy to check even when finding one is ', 'difficult', '.', 'CircuitSat illustrates this gap: evaluate proposed bits quickly, while no general polynomial-time discovery method is known.'),
+    q('An NP-hardness proof transfers difficulty through an efficient ', 'reduction', '.', 'Start with a known-hard source and show that a solver for the target would solve the source.'),
+    q('The reduction maps yes source instances to yes target ', 'instances', '.', 'It must also preserve no cases. Without equivalence, the target solver could return the wrong answer to the original problem.'),
+    q('A polynomial reduction must construct its output without exponential ', 'search', '.', 'Enumerating all witnesses would defeat the purpose. The transformed instance must be built in polynomial time from the source.'),
+    q('NP-hardness alone does not give a polynomially verifiable ', 'certificate', '.', 'That requirement establishes NP membership separately. An NP-hard target need not belong to NP.'),
+    q('An NP-complete problem is both NP-hard and inside ', 'NP', '.', 'Its yes instances have efficiently checkable witnesses, and a fast solver for it would solve every NP problem.'),
+    q('A solver for the target becomes a subroutine in the source ', 'algorithm', '.', 'The reduction first transforms the input, calls the hypothetical solver, and translates its answer back.'),
+    q('The direction of a hardness reduction points from known-hard source to new ', 'target', '.', 'A reverse reduction only shows the source can solve the target, which does not establish target hardness.'),
+    q('A difficult example does not prove a problem is ', 'NP-hard', '.', 'Hardness is a statement about all instances and all possible polynomial algorithms. A formal reduction supplies that general claim.'),
+    q('A reduction proof should state the source and target problem ', 'variants', '.', 'Changing decision thresholds or allowed inputs can change complexity. Precise domains are needed for a valid correspondence.'),
+    q('The transformation’s output size must be polynomial in the input ', 'size', '.', 'A polynomial-time construction cannot write an exponential-size target instance. Size bounds are part of the efficiency argument.'),
+    q('If a polynomial target solver existed, composing it with the reduction would solve the source in polynomial ', 'time', '.', 'This implication is the core of the hardness proof. It does not require an actual fast target solver.'),
+    q('A verifier checks a proposed witness, while a solver must find the ', 'answer', '.', 'The distinction explains why easy verification does not currently imply easy decision for every NP problem.'),
+    q('This composition points from a hard source to the target ', 'solver', '.', 'The source input is transformed first. A hypothetical fast target solver would then give a fast source algorithm.', { code: 'def solve_hard(x):\n    return solve_target(reduce_to_target(x))' })
+  ]);
+
+  add('jea-12-5', [
+    q('To prove SAT hard, reduce the already-hard CircuitSat ', 'problem', '.', 'Transcribe each circuit into a formula. A hypothetical fast SAT solver would then decide CircuitSat quickly.'),
+    q('An internal circuit wire receives a new Boolean ', 'variable', '.', 'That variable represents the wire’s value. Gate equations constrain it to agree with its input wires.'),
+    q('Each gate contributes a formula expressing its output ', 'equation', '.', 'The conjunction of all gate equations forces a satisfying assignment to simulate a consistent circuit evaluation.'),
+    q('The formula additionally requires the final circuit output to be ', 'true', '.', 'Without that condition, any circuit evaluation could satisfy the gate equations, including one with false output.'),
+    q('A satisfying circuit input extends to a satisfying formula ', 'assignment', '.', 'Evaluate every gate and assign each wire variable its actual value. All gate constraints and the true-output condition then hold.'),
+    q('A satisfying formula assignment restricts to satisfying circuit ', 'inputs', '.', 'Ignore internal variables after using gate equations to verify consistency. The forced output variable proves the circuit returns true.'),
+    q('Introducing wire variables avoids exponentially duplicating a shared ', 'subcircuit', '.', 'A formula that recursively substitutes every gate could repeat shared expressions. One variable per wire keeps the transcription linear.'),
+    q('The circuit-to-formula transformation uses time linear in circuit ', 'size', '.', 'Each gate and wire contributes only a constant amount of formula. The output is polynomially sized.'),
+    q('A reduction must prove satisfiability equivalence in both ', 'directions', '.', 'One direction prevents false negatives and the other prevents false positives. Together they let the SAT result answer CircuitSat.'),
+    q('The SAT solver is hypothetical in the hardness ', 'argument', '.', 'The proof asks what would follow if it were polynomial. The composition would make known-hard CircuitSat polynomial too.'),
+    q('A formula assignment may include auxiliary gate variables beyond original circuit ', 'inputs', '.', 'Those variables are constrained by the gate equations. They are not additional independent freedoms in a satisfying simulation.'),
+    q('A bare output variable without gate constraints would give a false ', 'reduction', '.', 'It could simply be assigned true even if the circuit always returns false. The gate equations enforce the connection.'),
+    q('The source-to-target direction is CircuitSat to ', 'SAT', '.', 'This establishes SAT hardness because a fast SAT solver would solve the already-hard source. Reversing direction would not establish that claim.'),
+    q('The transformation is many-one because it makes one target ', 'instance', '.', 'The solver’s yes-or-no result on that formula directly decides the original circuit question.'),
+    q('This constraint makes the output wire equal the gate’s logical ', 'result', '.', 'Assignments violating the AND relation cannot satisfy the formula. The gate variable therefore tracks the actual circuit computation.', { code: 'constraint = (out == (left and right))' })
+  ]);
+
+  add('jea-12-6', [
+    q('In Erickson’s definition, each 3CNF clause contains exactly three ', 'literals', '.', 'Shorter clauses are padded with auxiliary variables while preserving satisfiability. The exact form matters for the stated reduction.'),
+    q('A CNF formula is an AND of OR ', 'clauses', '.', 'Each clause must be true for the whole formula to be true. A literal is a variable or its negation.'),
+    q('A literal may be a variable or its ', 'negation', '.', 'A three-literal clause combines three such choices with OR. Clauses are combined with AND in 3CNF.'),
+    q('A wide circuit gate can be replaced by a binary gate ', 'tree', '.', 'The tree computes the same Boolean value and grows only linearly with gate fan-in. Later gate encodings need bounded inputs.'),
+    q('A gate equation can be represented by a constant number of short ', 'clauses', '.', 'Each local truth relation is encoded in CNF. The construction remains polynomial because each gate adds bounded formula size.'),
+    q('Auxiliary variables can pad a two-literal clause to three literals while preserving ', 'satisfiability', '.', 'The new clauses permit a suitable auxiliary choice exactly when the original two-literal OR is true.'),
+    q('Padding need not preserve every individual truth ', 'assignment', '.', 'The reduction must preserve existence of a satisfying assignment. New auxiliary values can differ while the yes-or-no answer remains equivalent.'),
+    q('The circuit output must still be forced ', 'true', '.', 'Gate consistency alone allows false-output evaluations. A final constraint makes formula satisfiability correspond to a satisfying input.'),
+    q('A circuit satisfying input extends through the auxiliary variables to a satisfying 3CNF ', 'assignment', '.', 'Choose wire values from the gate evaluation and padding values that satisfy the converted clauses.'),
+    q('A satisfying 3CNF assignment yields a satisfying original circuit ', 'input', '.', 'The gate clauses enforce consistency, and the output condition forces truth. Restrict the assignment to original input wires.'),
+    q('The reduction adds only polynomially many variables and ', 'clauses', '.', 'Each gate has a constant-size encoding after fan-in normalization. The formula cannot blow up exponentially.'),
+    q('3SAT belongs to NP because a proposed assignment can be checked in polynomial ', 'time', '.', 'Evaluate every literal and clause, then their conjunction. The assignment is a short yes certificate.'),
+    q('3SAT is NP-complete after showing both NP membership and NP-', 'hardness', '.', 'The circuit reduction transfers hardness, while easy assignment verification establishes membership. Both properties are required.'),
+    q('A clause with three literals is true when at least one literal is ', 'true', '.', 'The formula requires every clause to meet this condition. A single false clause makes the whole CNF false.'),
+    q('This padding preserves satisfiability of the original two-literal ', 'clause', '.', 'If a or b is true, both new clauses hold. If both are false, x and not-x cannot both hold.', { code: '(a or b)  =>  (a or b or x) and (a or b or not x)' })
+  ]);
+
+  add('jea-12-10', [
+    q('A proper graph coloring assigns different colors to adjacent ', 'vertices', '.', 'The problem asks whether the graph can be colored with a fixed number of colors while respecting every edge.'),
+    q('A 3SAT-to-coloring reduction uses gadgets that enforce Boolean ', 'choices', '.', 'Vertex colors encode truth values. Edges constrain which assignments are compatible with variable and clause behavior.'),
+    q('A variable gadget must assign one consistent truth ', 'value', '.', 'Every appearance of a variable should agree. If occurrences could disagree, the coloring might encode no real SAT assignment.'),
+    q('A negated literal must reflect the opposite truth value of its ', 'variable', '.', 'The gadget wiring enforces this relation. Otherwise a clause could appear satisfied by an inconsistent interpretation.'),
+    q('A clause gadget must be colorable only when at least one literal is ', 'true', '.', 'This captures the OR condition. An all-false clause must make the target graph impossible to color properly.'),
+    q('The reduction needs a global palette of available ', 'colors', '.', 'Reference vertices or equivalent constraints fix the meaning of truth and auxiliary colors across gadgets.'),
+    q('A satisfying formula assignment must extend to a proper graph ', 'coloring', '.', 'Choose gadget colors according to the assignment. The construction proof checks every edge constraint.'),
+    q('A proper coloring must decode to a satisfying formula ', 'assignment', '.', 'Variable gadgets provide consistent values, and every clause gadget forces at least one true literal. This proves the reverse direction.'),
+    q('A gadget must be built with polynomially many vertices and ', 'edges', '.', 'Constant-size pieces per variable or clause keep the entire graph construction efficient.'),
+    q('A coloring reduction is invalid if it allows a graph coloring for an unsatisfiable ', 'formula', '.', 'That would be a false positive. The reverse implication from coloring to assignment must rule it out.'),
+    q('A coloring reduction is invalid if it blocks a satisfiable ', 'formula', '.', 'That would be a false negative. The forward implication must show how every satisfying assignment colors the gadgets.'),
+    q('The number of colors is fixed by the target decision ', 'problem', '.', 'Letting the palette grow with each instance can change the complexity claim. State the exact coloring variant.'),
+    q('Graph coloring concerns adjacency constraints, not geometric map ', 'regions', '.', 'A graph abstracts the conflict relation. Any application must first translate its conflicts into edges correctly.'),
+    q('The source of the hardness proof is known-hard ', '3SAT', '.', 'The reduction turns each formula into a graph. A fast coloring solver would then decide 3SAT.'),
+    q('This check enforces the proper-coloring rule on every ', 'edge', '.', 'Adjacent vertices cannot share a color. Gadget edges use this local rule to encode global Boolean constraints.', { code: 'all(color[u] != color[v] for u, v in graph_edges)' })
+  ]);
+  deepen('jea-12-5', [
+    'The direction transfers hardness into SAT.',
+    'Shared wires do not duplicate the circuit.',
+    'Local equations preserve global gate behavior.',
+    'This final conjunct distinguishes satisfiable circuits.',
+    'The extension is determined by circuit evaluation.',
+    'Consistency prevents invented internal wire values.',
+    'The formula size stays proportional to circuit size.',
+    'Each gate adds bounded construction work.',
+    'Both implications are necessary for equivalence.',
+    'Its assumed speed creates the contradiction.',
+    'Auxiliary values carry no independent semantics.',
+    'The output variable needs a connection to inputs.',
+    'Source and target roles must not be reversed.',
+    'One formula call answers one circuit instance.',
+    'The equation constrains all satisfying assignments.'
+  ]);
+  deepen('jea-12-6', [
+    'The textbook uses the exact-length convention.',
+    'This outer AND requires every clause.',
+    'Negation changes a literal’s truth condition.',
+    'Bounded fan-in supports constant-size encodings.',
+    'Local encodings compose by conjunction.',
+    'The auxiliary assignment supplies the flexibility.',
+    'Existence, not identical assignments, is preserved.',
+    'That condition links the formula to CircuitSat.',
+    'Each stage preserves the yes answer.',
+    'The reverse stage rules out false positives.',
+    'Polynomial size is essential to the reduction.',
+    'Verification scans the whole formula once.',
+    'These are separate proof obligations.',
+    'An OR requires only one true literal.',
+    'The contradictory pair rules out false originals.'
   ]);
 })();

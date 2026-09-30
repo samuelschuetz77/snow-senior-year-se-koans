@@ -441,7 +441,7 @@ The constraints force the formula to match the circuit's behavior and output.
 Enumerating exponentially many assignments would violate polynomial-time reduction.
 `,
     'jea-12-6': `
-Each clause is an OR of at most three variables or their negations.
+Each clause is an OR of exactly three variables or their negations in Erickson’s definition.
 Auxiliary variables connect several short clauses in place of one long clause.
 The new formula must have a solution exactly when the old one does.
 Otherwise a yes answer for the new problem could falsely certify the original.
