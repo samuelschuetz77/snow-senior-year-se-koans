@@ -1,0 +1,113 @@
+const app = document.querySelector('#app');
+const params = new URLSearchParams(location.search);
+const course = window.KOAN_COURSES.find(item => item.id === params.get('course'));
+const set = course?.sets.find(item => item.id === params.get('set'));
+
+function element(tag, attributes = {}, text = '') {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, value);
+  node.textContent = text;
+  return node;
+}
+
+function listPage(title, items, backHref) {
+  app.className = 'listing';
+  if (backHref) app.append(element('a', { class: 'back', href: backHref }, '← All classes'));
+  app.append(element('h1', {}, title));
+  const nav = element('nav', { class: backHref ? 'reading-list' : 'course-list' });
+  for (const item of items) {
+    const link = element('a', { href: item.href });
+    link.append(element('span', {}, item.title));
+    if (item.detail) link.append(element('small', {}, item.detail));
+    nav.append(link);
+  }
+  app.append(nav);
+}
+
+if (!course) {
+  listPage('Snow Senior Year SE Koans', window.KOAN_COURSES.map(item => ({
+    title: item.title,
+    href: `?course=${encodeURIComponent(item.id)}`
+  })));
+} else if (!set) {
+  listPage(course.title, course.sets.map(item => ({
+    title: item.title,
+    detail: item.due || '',
+    href: `?course=${encodeURIComponent(course.id)}&set=${encodeURIComponent(item.id)}`
+  })), './');
+} else {
+  document.title = `${set.title} · Snow Senior Year SE Koans`;
+  app.className = 'player';
+  const wrapper = element('div', { class: 'player-inner' });
+  const code = element('pre', { class: 'code-sample' });
+  const form = element('form', { autocomplete: 'off' });
+  const label = element('label', { class: 'sr-only', for: 'answer' }, 'Missing word');
+  const sentence = element('div', { class: 'sentence' });
+  const feedback = element('div', { class: 'sr-only', id: 'feedback', 'aria-live': 'polite' });
+  const restart = element('button', { class: 'restart', type: 'button' }, 'Restart');
+  form.append(label, sentence);
+  wrapper.append(code, form, feedback);
+  app.append(wrapper, restart);
+
+  const storageKey = `snow-koans:v1:${course.id}:${set.id}`;
+  const saved = Number(localStorage.getItem(storageKey));
+  let index = Number.isInteger(saved) && saved >= 0 && saved <= set.koans.length ? saved : 0;
+  let advancing = false;
+  let advanceTimer;
+  const normalize = value => value.trim().toLocaleLowerCase().replace(/[.!?]+$/, '');
+
+  function render() {
+    advancing = false;
+    feedback.textContent = '';
+    if (index === set.koans.length) {
+      code.hidden = true;
+      sentence.textContent = 'Complete.';
+      return;
+    }
+    const koan = set.koans[index];
+    code.hidden = !koan.code;
+    code.textContent = koan.code || '';
+    const input = element('input', { id: 'answer', type: 'text', autocomplete: 'off', inputmode: 'text', 'aria-label': 'Missing word', 'aria-describedby': 'feedback' });
+    input.spellcheck = false;
+    if (koan.blankChars) input.style.width = `${koan.blankChars}ch`;
+    sentence.replaceChildren(document.createTextNode(koan.before), input, document.createTextNode(koan.after));
+    input.focus();
+  }
+
+  function check(showWrong = false) {
+    if (advancing || index === set.koans.length) return;
+    const input = sentence.querySelector('input');
+    const koan = set.koans[index];
+    const value = normalize(input.value);
+    const accepted = [koan.answer, ...(koan.accepts || [])].map(normalize);
+    if (accepted.includes(value)) {
+      advancing = true;
+      input.classList.remove('wrong');
+      input.classList.add('correct');
+      input.disabled = true;
+      feedback.textContent = 'Correct.';
+      advanceTimer = setTimeout(() => {
+        index += 1;
+        localStorage.setItem(storageKey, String(index));
+        render();
+      }, 750);
+    } else if (showWrong && value) {
+      input.classList.add('wrong');
+      feedback.textContent = 'Try another word.';
+    }
+  }
+
+  form.addEventListener('input', () => {
+    sentence.querySelector('input').classList.remove('wrong');
+    feedback.textContent = '';
+    check();
+  });
+  form.addEventListener('submit', event => { event.preventDefault(); check(true); });
+  restart.addEventListener('click', () => {
+    clearTimeout(advanceTimer);
+    index = 0;
+    localStorage.setItem(storageKey, '0');
+    render();
+  });
+  render();
+}
