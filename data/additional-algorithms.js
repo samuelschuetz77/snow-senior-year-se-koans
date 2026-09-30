@@ -798,4 +798,91 @@
     'The recurrence combines paths rather than edges.',
     'Every midpoint supplies one candidate combined route.'
   ]);
+  add('jea-10-0', [
+    q('A flow network represents transport through directed edges with limited ', 'capacity', '.', 'The model applies to commodities, assignments, or paths. Feasibility requires respecting every edge limit and conserving flow at intermediate vertices.'),
+    q('The source is where the modeled flow enters the ', 'network', '.', 'Its net outgoing amount defines the flow value. The sink receives the corresponding net amount under conservation elsewhere.'),
+    q('The sink is where flow leaves the modeled ', 'network', '.', 'The objective asks how much can reach it from the source while every capacity and balance constraint holds.'),
+    q('A bottleneck edge can cap every source-to-sink ', 'route', '.', 'If all feasible routes cross a small-capacity cut, total flow cannot exceed that cut’s capacity, however large other edges are.'),
+    q('A feasible flow must satisfy capacity and conservation ', 'constraints', '.', 'An arbitrary assignment of numbers to edges is not enough. Internal vertices cannot create or destroy the modeled commodity.'),
+    q('The zero assignment is always a feasible ', 'flow', '.', 'It violates no nonnegative capacity limit and balances every internal vertex. It provides a baseline, though not usually the maximum.'),
+    q('Flow value is measured as net output from the ', 'source', '.', 'Incoming flow to the source is subtracted from outgoing flow. Conservation makes this equal the net input at the sink.'),
+    q('Maximizing each edge independently can violate flow ', 'conservation', '.', 'Sending capacity on an outgoing edge requires enough inflow at its tail. A feasible solution must coordinate the whole network.'),
+    q('A directed edge carries flow only in its specified ', 'direction', '.', 'Residual reversal later permits canceling previous assignments; it does not mean the original capacity points both ways.'),
+    q('Capacities can encode resource limits in another optimization ', 'problem', '.', 'A reduction is correct only if feasible flows correspond to valid original solutions and the flow value matches the objective.'),
+    q('A maximum-flow algorithm must return a feasible flow with greatest possible ', 'value', '.', 'Feasibility and optimality are separate obligations. A cut can certify that no larger feasible value exists.'),
+    q('A zero-capacity edge cannot carry positive ', 'flow', '.', 'Its upper bound is zero. The edge may be omitted from useful source-to-sink routes, though reverse residual behavior depends on assignments.'),
+    q('An internal vertex’s inflow equals its ', 'outflow', '.', 'Conservation prevents flow from appearing or disappearing inside the network. Only source and sink have nonzero net balance.'),
+    q('An s-to-t path with capacity three can carry at most ', 'three', ' units.', 'The smallest edge capacity along the path limits its usable amount. Other paths may allow additional total flow.'),
+    q('This network edge’s capacity limits flow to at most ', 'five', ' units.', 'The number is an upper bound for this edge alone. Total network flow also depends on other capacities and conservation.', { code: 'capacity[("source", "a")] = 5' })
+  ]);
+
+  add('jea-10-1', [
+    q('A feasible edge flow lies between zero and its ', 'capacity', '.', 'Both the nonnegativity and upper-bound constraints apply to each directed edge. A numerical assignment outside them is invalid.'),
+    q('An internal vertex must conserve incoming and outgoing ', 'flow', '.', 'The amounts must balance at that vertex. This rule links edge choices and prevents artificial creation of flow.'),
+    q('The flow value is source outflow minus source ', 'inflow', '.', 'Gross outgoing traffic can overstate the amount delivered when edges return to the source. Net flow is the relevant quantity.'),
+    q('Conservation implies net source outflow equals net sink ', 'inflow', '.', 'Summing balance equations cancels internal edge contributions. What leaves the source must eventually be absorbed by the sink.'),
+    q('A circulation can move around a cycle without changing flow ', 'value', '.', 'Its net contribution at source and sink is zero. Feasible edge assignments may contain such cycles.'),
+    q('Capacity is an upper bound rather than an obligation to send that ', 'amount', '.', 'An edge may carry less than its limit or nothing. The optimization chooses amounts to maximize net source-to-sink delivery.'),
+    q('A flow assignment should be checked at every internal ', 'vertex', '.', 'Satisfying edge capacities alone does not establish feasibility. One unbalanced intermediate vertex invalidates the flow.'),
+    q('A source-to-sink path can support flow no greater than its narrowest ', 'edge', '.', 'Every edge on that path must carry the same path contribution. The minimum capacity therefore limits it.'),
+    q('A network with no source-to-sink path has maximum flow ', 'zero', '.', 'Positive flow cannot reach the sink while conservation holds. The all-zero feasible flow is then optimal.'),
+    q('Parallel edges can contribute separate amounts subject to their individual ', 'capacities', '.', 'They represent distinct channels between the same vertices. The sum may exceed either edge’s individual capacity.'),
+    q('The total value cannot exceed the sum of capacities leaving the ', 'source', '.', 'All positive net source flow must cross one of those edges. Their combined limits provide an immediate upper bound.'),
+    q('The total value cannot exceed the sum of capacities entering the ', 'sink', '.', 'Every delivered unit must enter the sink. Those incoming limits form another valid upper bound on feasible value.'),
+    q('Flow feasibility is not the same as flow ', 'optimality', '.', 'The zero flow is feasible, but a positive augmenting path may increase its value. A cut certificate can establish optimality.'),
+    q('A flow model should state whether capacities are integral or real ', 'numbers', '.', 'Integral capacities support discrete path interpretations through integrality. Real capacities still define a valid optimization problem but may need different reasoning.')
+  ]);
+
+  add('jea-10-2', [
+    q('An s-t cut places the source and sink on opposite ', 'sides', '.', 'The partition separates possible routes. Every source-to-sink path must cross from the source side to the sink side.'),
+    q('Cut capacity sums original capacities only on edges crossing ', 'forward', '.', 'Edges from the sink side back to the source side are not included in capacity. Their flow enters the net-flow equation negatively.'),
+    q('The net flow across any s-t cut equals the flow ', 'value', '.', 'Internal flows cancel when conservation equations are summed over the source-side vertices. Only crossing edges remain.'),
+    q('Backward flow across a cut reduces its net ', 'crossing', '.', 'A reverse-directed edge contributes a negative term to net source-side outflow. Omitting that sign can invalidate the bound derivation.'),
+    q('Every cut capacity is an upper bound on feasible flow ', 'value', '.', 'Forward crossing flow cannot exceed forward capacities, while backward crossing flow only subtracts. Thus net flow is bounded by capacity.'),
+    q('A minimum cut has the smallest capacity among all s-t ', 'partitions', '.', 'Its value gives the strongest cut-based upper bound. The maxflow-mincut theorem later shows the bound is achievable.'),
+    q('A single low-capacity cut can certify that no flow exceeds a stated ', 'number', '.', 'The certificate need only list the source-side vertices and crossing capacities. Checking their sum is straightforward.'),
+    q('A cut with no forward capacity forces maximum flow to ', 'zero', '.', 'Every source-to-sink path would need a forward crossing edge. Without one, no positive feasible value can pass.'),
+    q('The cut bound depends on capacities, not on a particular candidate flow ', 'algorithm', '.', 'Any feasible assignment must obey it. That independence makes a cut useful as an optimality certificate.'),
+    q('An edge entirely inside one cut side does not contribute to cut ', 'capacity', '.', 'It does not cross the partition. Its flow cancels when vertex conservation equations are summed over that side.'),
+    q('A reverse edge across the partition is excluded from forward cut ', 'capacity', '.', 'Capacity measures source-side to sink-side edges only. Reverse flow appears separately with a minus sign in net crossing.'),
+    q('A flow matching a cut’s capacity is already ', 'maximum', '.', 'No feasible flow can exceed that cut bound. Achieving it simultaneously proves the flow optimal and the cut minimum.'),
+    q('A cut is specified by a set containing the source but excluding the ', 'sink', '.', 'The complement forms the other side. Listing this set is enough to determine every forward crossing edge.'),
+    q('A cut through parallel edges counts each forward edge’s ', 'capacity', '.', 'Both channels can carry flow across the boundary. Their capacities add in the cut upper bound.'),
+    q('This expression sums only forward edges across the ', 'cut', '.', 'Edges from S to its complement limit net source-to-sink flow. Reverse edges are not added to capacity.', { code: 'sum(cap[u, v] for u, v in edges if u in S and v not in S)' })
+  ]);
+
+  add('jea-10-3', [
+    q('A forward residual edge records unused original ', 'capacity', '.', 'It permits additional flow along that edge. Its residual amount is capacity minus current flow.'),
+    q('A backward residual edge records flow that can be ', 'canceled', '.', 'Sending residual flow backward reduces a previous assignment. This allows an algorithm to revise an earlier route choice.'),
+    q('An augmenting path runs from source to sink through positive residual ', 'edges', '.', 'Every edge along it can support some change. The path offers a way to increase net flow value.'),
+    q('The augmenting amount is the minimum residual capacity on the ', 'path', '.', 'Every path edge must accommodate the same increase or cancellation. The smallest residual value is the bottleneck.'),
+    q('After augmentation, at least one path edge becomes residual-capacity ', 'zero', '.', 'The bottleneck is saturated in the chosen direction. Future augmentations may still alter the route through reverse residual edges.'),
+    q('A residual path can reroute flow without violating original ', 'capacities', '.', 'Forward changes use slack and backward changes cancel existing flow. Conservation is preserved along internal path vertices.'),
+    q('When no residual s-t path remains, source-reachable residual vertices define a ', 'cut', '.', 'No positive residual forward edge leaves that set. Its original cut capacity equals the current feasible flow value.'),
+    q('Matching flow and cut values proves both are ', 'optimal', '.', 'Every flow is at most every cut. Equality leaves no room for a better flow or smaller cut.'),
+    q('The maxflow-mincut theorem equates maximum flow value with minimum cut ', 'capacity', '.', 'Augmenting-path reasoning supplies a constructive proof: no residual route exposes a cut whose bound is achieved.'),
+    q('A backward residual edge can undo an earlier greedy-looking ', 'choice', '.', 'The algorithm does not have to commit permanently to its first path. Reassignment can make room for more total flow.'),
+    q('An arbitrary path selection may have different running-time ', 'behavior', '.', 'The augmentation rule is correct, but the number of steps depends on selection and capacity assumptions. Choose a schedule with a proven bound.'),
+    q('An integral network can be augmented in integral ', 'amounts', '.', 'Residual bottlenecks remain integers when capacities and current flows are integral. This supports discrete path reductions later.'),
+    q('A residual graph is computed from the current ', 'flow', '.', 'Its edges and capacities change after each augmentation. Reusing stale residual values can produce an invalid update.'),
+    q('A feasible maximum flow may have unused capacity on some ', 'edges', '.', 'The absence of an augmenting source-to-sink route, not saturation everywhere, is the optimality condition.'),
+    q('This backward residual capacity equals the existing forward ', 'flow', '.', 'That amount can be canceled if a later augmenting path traverses the reverse direction. It permits rerouting without breaking feasibility.', { code: 'residual[(v, u)] = flow[(u, v)]' })
+  ]);
+  deepen('jea-10-0', [
+    'The direction of each edge also matters.',
+    'Source balance differs from internal conservation.',
+    'Sink balance measures delivered quantity.',
+    'The cut viewpoint reveals this limitation.',
+    'Both constraints apply at every feasible solution.',
+    'Optimization begins from this valid baseline.',
+    'Net value ignores circulating flow around cycles.',
+    'A vertex cannot manufacture missing incoming flow.',
+    'Backward residual edges arise from cancellation instead.',
+    'The encoding must be proved in both directions.',
+    'A matching cut gives an optimality certificate.',
+    'A zero bound cannot support positive use.',
+    'This balance is the central flow constraint.',
+    'The weakest link controls that one path.',
+    'Other cuts can provide tighter network bounds.'
+  ]);
 })();
