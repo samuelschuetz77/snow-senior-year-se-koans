@@ -42,7 +42,7 @@ The same fault may remain dormant until a particular input or environment trigge
 Without an expected result, a test cannot distinguish success from a plausible wrong answer.
 For a range from zero to ten, test zero, ten, and nearby invalid values.
 Keep the old failure case so later changes cannot silently restore the defect.
-High coverage can execute every branch while asserting the wrong expected outcomes.
+A discount test and a standard-shipping test exercise both branches. The discount amount could still be wrong unless an assertion checks the expected price.
 Integration checks whether separately working parts exchange data and handle errors correctly.
 First establish what the system should return; otherwise a red or green result is ambiguous.
 The test deliberately exercises the edge rather than only comfortable middle values.
