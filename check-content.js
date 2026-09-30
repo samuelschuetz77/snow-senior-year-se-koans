@@ -11,6 +11,7 @@ for (const file of ['algorithms', 'practicum', 'maintenance', 'frontend']) {
   require(`./data/details-${file}.js`);
 }
 require('./data/additional-frontend.js');
+require('./data/frontend-ts-vs-tsx.js');
 require('./data/additional-maintenance.js');
 require('./data/additional-practicum.js');
 require('./data/additional-algorithms.js');

@@ -2,7 +2,7 @@
 
 A small static study site for the published Fall 2026 reading lists in Advanced Algorithms, Software Practicum, Software Maintenance, and Frontend Development. Each reading opens one sentence at a time with one word missing. Correct answers advance automatically. Enter checks an answer; after five unsuccessful Enter presses on a koan, the missing word appears in the blank with an explanation below it. An optional Expound button starts with the current answer and reasoning, then connects it to up to two relevant earlier koans in that reading. Restart begins the current reading again. Progress stays in the browser's local storage.
 
-The site currently has 95 reading sets with 20–30 questions each (1,915 questions total). Every set includes a code question. The brief explanations stay under 40 words, and Expound is available only after the five-Enter reveal.
+The site currently has 96 reading sets with 20–30 questions each (1,942 questions total). Every set includes a code question. The brief explanations stay under 40 words, and Expound is available only after the five-Enter reveal.
 
 Question wording follows [CONTENT_STANDARDS.md](CONTENT_STANDARDS.md): blanks are authored in the sentences themselves, with meaningful verbs and other concepts appearing in varied positions.
 
@@ -11,7 +11,7 @@ Question wording follows [CONTENT_STANDARDS.md](CONTENT_STANDARDS.md): blanks ar
 - Advanced Algorithms: the locally available JEA, induction, linear programming, Big O, and data structures readings, plus the public Q# and Microsoft QFT pages. JEA §§12.1–12.3 are included once even though the schedule assigns them again on November 16.
 - Software Practicum: every SWEBOK chapter currently listed in the course outline (1–7, 10, 12–14, 16–18).
 - Software Maintenance: every WEWLC chapter currently posted as class prep (1–4 and 6–15). Chapter 5 is not on the posted list.
-- Frontend Development: the posted TypeScript and React research readings, split into focused topic sets.
+- Frontend Development: the posted TypeScript and React research readings, split into focused topic sets, plus a Sep 30 set from class discussion on when to use `.ts` versus `.tsx`.
 
 The Algorithms schedule also lists “Extra A” and “QC 1–6.” The actual Extra A source and exact O’Reilly book link are not present in the local reading archive. Their koans will be added when those sources are available; this site does not guess their contents. Schedule rows without assigned reading are omitted.
 
