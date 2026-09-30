@@ -70,10 +70,10 @@
   add('5', [
     q('A test oracle supplies the expected result for a particular ', 'case', '.', 'Without a trustworthy expectation, observing an output cannot tell whether behavior is correct. The oracle may come from requirements or independent calculation.', { accepts: ['test case'] }),
     q('A fault can exist in code without causing a ', 'visible', ' failure.', 'The affected path may not execute, or conditions may mask the defect. Tests need inputs that expose the faulty behavior.'),
-    q('A boundary test probes values just inside and outside an allowed ', 'range', '.', 'Rules often change at thresholds. Adjacent values help reveal inclusive versus exclusive comparisons and off-by-one errors.'),
+    q('Grouping inputs expected to behave alike is equivalence ', 'partitioning', '.', 'This technique divides the input domain into classes and selects representative cases from each. Boundary testing instead concentrates on values near the edges of those classes.'),
     q('Coverage reports execution, not the quality of ', 'assertions', '.', 'A test may visit every line while checking the wrong outcome. Inspect whether assertions can detect plausible mistakes.'),
-    q('Integration testing focuses on contracts between collaborating ', 'components', '.', 'Each unit can pass alone while their assumptions about data or timing disagree. The integration test exercises that interaction.'),
-    q('A regression test records an outcome that should survive future ', 'changes', '.', 'Once a defect is fixed or a feature established, the test protects that behavior when nearby code evolves.'),
+    q('Checking whether software meets a response-time target is ', 'performance', ' testing.', 'Performance testing measures speed against a stated requirement. Running a feature successfully does not show that it responds quickly enough under the expected workload.'),
+    q('A quick check that a new build works before deeper testing is a ', 'smoke', ' test.', 'Smoke tests check that key functions are operational and the build is testable. They catch basic build or environment failures before a longer test pass.'),
     q('A flaky test gives different results without a relevant code ', 'change', '.', 'Nondeterministic timing, shared state, or external services can cause it. Such failures weaken trust in the feedback.'),
     q('A test case needs setup, action, and an expected ', 'outcome', '.', 'The input and operation define what is exercised, while the oracle defines success. All three are needed for interpretable feedback.'),
     q('A property-based test checks a rule across many generated ', 'inputs', '.', 'It can reveal edge cases a few handpicked examples miss. The property itself still needs a sound oracle.'),
