@@ -92,6 +92,11 @@ if (!course) {
       ? Math.max(16, baseFontSize * (maxWidth - 20) / Math.max(textWidth, 1))
       : baseFontSize;
     input.style.fontSize = `${fontSize}px`;
+    const hintCursor = input.nextElementSibling;
+    if (hintCursor) {
+      hintCursor.textContent = input.placeholder;
+      hintCursor.style.fontSize = `${fontSize}px`;
+    }
     input.style.width = `${Math.min(maxWidth, Math.max(baseWidth, textWidth * fontSize / baseFontSize + 20))}px`;
   }
 
@@ -119,7 +124,10 @@ if (!course) {
     const input = element('input', { id: 'answer', type: 'text', autocomplete: 'off', autocapitalize: 'none', inputmode: 'text', 'aria-label': 'Missing word', 'aria-describedby': 'feedback' });
     input.spellcheck = false;
     if (koan.blankChars) input.style.width = `${koan.blankChars}ch`;
-    sentence.replaceChildren(document.createTextNode(koan.before), input, document.createTextNode(koan.after));
+    const answerField = element('span', { class: 'answer-field' });
+    const hintCursor = element('span', { class: 'hint-cursor', 'aria-hidden': 'true' });
+    answerField.append(input, hintCursor);
+    sentence.replaceChildren(document.createTextNode(koan.before), answerField, document.createTextNode(koan.after));
     input.dataset.baseWidth = String(input.getBoundingClientRect().width);
     input.dataset.baseFontSize = String(parseFloat(getComputedStyle(input).fontSize));
     fitInput(input);

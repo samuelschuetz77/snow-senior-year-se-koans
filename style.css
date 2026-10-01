@@ -26,7 +26,13 @@ a:hover { color:#555852; }
 .sentence input.wrong { border-color:var(--wrong); color:var(--wrong); }
 .sentence input.correct { border-color:var(--right); color:var(--right); }
 .sentence input::placeholder { color:#777973; opacity:1; }
-.sentence input.revealed { caret-color:transparent; }
+.sentence input.revealed:placeholder-shown { caret-color:transparent; }
+.answer-field { display:inline-block; position:relative; vertical-align:baseline; }
+.hint-cursor { display:none; position:absolute; top:0; left:50%; transform:translateX(-50%); color:transparent; white-space:pre; pointer-events:none; }
+input.revealed:placeholder-shown + .hint-cursor { display:block; }
+.hint-cursor::before { content:''; position:absolute; left:-3px; top:.175em; height:1em; border-left:2px solid var(--ink); animation:hint-blink 1s step-end infinite; }
+@keyframes hint-blink { 50% { opacity:0; } }
+@media(prefers-reduced-motion:reduce) { .hint-cursor::before { animation:none; } }
 .explanation { max-width:58ch; margin:20px 0 0; color:#62645f; font-size:clamp(14px,1.7vw,17px); line-height:1.45; letter-spacing:0; }
 .expound-toggle { margin:9px 0 0; padding:2px 0; border:0; background:transparent; color:#62645f; font-size:12px; text-decoration:underline; text-underline-offset:3px; }
 .expound-toggle:hover,.expound-toggle:focus-visible { color:var(--ink); }
