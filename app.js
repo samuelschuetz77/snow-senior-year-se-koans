@@ -158,6 +158,10 @@ if (!course) {
     }
   }
 
+  document.addEventListener('keydown', () => {
+    const input = sentence.querySelector('input.revealed');
+    if (input) input.classList.add('hint-dismissed');
+  });
   form.addEventListener('input', () => {
     const input = sentence.querySelector('input');
     input.classList.remove('wrong', 'revealed');

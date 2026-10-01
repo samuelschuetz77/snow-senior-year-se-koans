@@ -29,7 +29,7 @@ a:hover { color:#555852; }
 .sentence input.revealed:placeholder-shown { caret-color:transparent; }
 .answer-field { display:inline-block; position:relative; vertical-align:baseline; }
 .hint-cursor { display:none; position:absolute; top:0; left:50%; transform:translateX(-50%); color:transparent; white-space:pre; pointer-events:none; }
-input.revealed:placeholder-shown + .hint-cursor { display:block; }
+input.revealed:not(.hint-dismissed):placeholder-shown + .hint-cursor { display:block; }
 .hint-cursor::before { content:''; position:absolute; left:-3px; top:.175em; height:1em; border-left:2px solid var(--ink); animation:hint-blink 1s step-end infinite; }
 @keyframes hint-blink { 50% { opacity:0; } }
 @media(prefers-reduced-motion:reduce) { .hint-cursor::before { animation:none; } }
