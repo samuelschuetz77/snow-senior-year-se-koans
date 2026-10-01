@@ -16,46 +16,13 @@ function listPage(title, items, backHref) {
   if (backHref) app.append(element('a', { class: 'back', href: backHref }, '← All classes'));
   app.append(element('h1', {}, title));
   const nav = element('nav', { class: backHref ? 'reading-list' : 'course-list' });
-  const controls = element('div', { class: 'pagination' });
-  const previous = element('button', { type: 'button' }, 'Previous');
-  const position = element('span', { 'aria-live': 'polite' });
-  const next = element('button', { type: 'button' }, 'Next');
-  controls.append(previous, position, next);
-  app.append(nav, controls);
-  let page = 0;
-  let pageSize = items.length;
-
-  function renderPage() {
-    const height = window.visualViewport?.height ?? window.innerHeight;
-    pageSize = Math.min(items.length, Math.max(1, Math.floor((height - 190) / (window.innerWidth <= 600 ? 72 : 62))));
-    page = Math.min(page, Math.ceil(items.length / pageSize) - 1);
-    const draw = () => {
-      nav.replaceChildren();
-      for (const item of items.slice(page * pageSize, (page + 1) * pageSize)) {
-        const link = element('a', { href: item.href });
-        link.append(element('span', {}, item.title));
-        if (item.detail) link.append(element('small', {}, item.detail));
-        nav.append(link);
-      }
-      const pages = Math.ceil(items.length / pageSize);
-      controls.hidden = pages <= 1;
-      position.textContent = `${page + 1} / ${pages}`;
-      previous.disabled = page === 0;
-      next.disabled = page === pages - 1;
-    };
-    draw();
-    while (app.scrollHeight > app.clientHeight && pageSize > 1) {
-      pageSize -= 1;
-      page = Math.min(page, Math.ceil(items.length / pageSize) - 1);
-      draw();
-    }
+  for (const item of items) {
+    const link = element('a', { href: item.href });
+    link.append(element('span', {}, item.title));
+    if (item.detail) link.append(element('small', {}, item.detail));
+    nav.append(link);
   }
-
-  previous.addEventListener('click', () => { page -= 1; renderPage(); });
-  next.addEventListener('click', () => { page += 1; renderPage(); });
-  window.addEventListener('resize', renderPage);
-  window.visualViewport?.addEventListener('resize', renderPage);
-  renderPage();
+  app.append(nav);
 }
 
 if (!course) {
