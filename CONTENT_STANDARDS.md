@@ -16,4 +16,4 @@
 - Do not assemble expounds by concatenating prompts, short explanations, or earlier koans. Shared keywords are not evidence of a meaningful conceptual connection.
 - When an earlier idea helps, explain that idea and its relationship in the current paragraph. Do not append the earlier question or assume the learner remembers it.
 - Example numbers and scenarios must be clearly illustrative, not presented as requirements from the source.
-- Store reviewed prose in `expoundText`; the renderer preserves it and adds the source. Unreviewed entries retain only their current prompt and short explanation as a temporary fallback. That fallback is not a completed editorial rewrite.
+- Every koan must have its own reviewed prose in `expoundText`; the renderer preserves it and adds the source. Missing or duplicate expounds fail validation. Do not introduce a generated fallback.

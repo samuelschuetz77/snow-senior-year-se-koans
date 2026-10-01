@@ -15,6 +15,10 @@ require('./data/frontend-ts-vs-tsx.js');
 require('./data/additional-maintenance.js');
 require('./data/additional-practicum.js');
 require('./data/additional-algorithms.js');
+require('./data/expounds-frontend.js');
+require('./data/expounds-algorithms.js');
+require('./data/expounds-practicum.js');
+require('./data/expounds-maintenance.js');
 require('./data/expounds-operations.js');
 require('./data/expound.js');
 
@@ -22,6 +26,7 @@ const courses = window.KOAN_COURSES;
 assert.equal(courses.length, 4);
 const courseIds = new Set();
 const sentences = new Set();
+const authoredExpounds = new Set();
 let total = 0;
 let withCode = 0;
 let explanationWords = 0;
@@ -52,12 +57,13 @@ for (const course of courses) {
       const whyWords = koan.why.trim().split(/\s+/).length;
       const deepWords = koan.expound?.trim().split(/\s+/).length;
       assert(deepWords >= 25 && deepWords <= 180, `Expound length outside 25–180 words in ${course.id}/${set.id}: ${koan.before}`);
-      assert(koan.expoundText || koan.expound.startsWith(`${koan.before}${koan.answer}`), `Expound must start with its own koan in ${course.id}/${set.id}`);
+      const location = `${course.id}/${set.id}/${index}`;
+      assert(koan.expoundText?.trim(), `Missing authored expound: ${location}`);
+      assert(!authoredExpounds.has(koan.expoundText), `Duplicate authored expound: ${location}`);
+      authoredExpounds.add(koan.expoundText);
+      assert.equal(koan.expound, `${koan.expoundText} Source: ${set.source}.`, `Authored explanation was altered: ${location}`);
+      assert(!koan.expoundText.includes('\uFFFD'), `Invalid text encoding: ${location}`);
       assert.equal(koan.connections.length, 0, `Do not stitch earlier koans into ${course.id}/${set.id}`);
-      if (course.id === 'software-practicum' && set.id === '6') {
-        assert(koan.expoundText && koan.expoundText.trim().split(/\s+/).length >= 60, `Missing authored Operations explanation at ${index}`);
-        assert(koan.expound.startsWith(koan.expoundText), 'Authored explanation was replaced');
-      }
       assert(!/\s/.test(koan.answer), `Answer must be one word: ${koan.answer}`);
       assert(!koan.before.includes('____') && !koan.after.includes('____'), 'Literal blank outside input');
       assert(!/^[;—]/.test(koan.after.trim()), `Artificial continuation after blank in ${course.id}/${set.id}: ${koan.before}`);

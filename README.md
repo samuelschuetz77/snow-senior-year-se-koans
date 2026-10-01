@@ -1,6 +1,6 @@
 # Snow Senior Year SE Koans
 
-A small static study site for the published Fall 2026 reading lists in Advanced Algorithms, Software Practicum, Software Maintenance, and Frontend Development. Each reading opens one sentence at a time with one word missing. Correct answers advance automatically. Enter checks an answer; after five unsuccessful Enter presses on a koan, the missing word appears in the blank with an explanation below it. An optional Expound button shows further explanation after the answer reveal. The Operations reading has individually authored examples; other readings currently fall back to the completed sentence and short explanation pending editorial revision. Expounds never append automatically selected earlier koans. Restart begins the current reading again. Progress stays in the browser's local storage.
+A small static study site for the published Fall 2026 reading lists in Advanced Algorithms, Software Practicum, Software Maintenance, and Frontend Development. Each reading opens one sentence at a time with one word missing. Correct answers advance automatically. Enter checks an answer; after five unsuccessful Enter presses on a koan, the missing word appears in the blank with an explanation below it. An optional Expound button shows further explanation after the answer reveal. All 1,942 koans have individually authored expounds that explain the answer through connected reasoning, examples, and relevant distinctions. Expounds never append automatically selected earlier koans or use a generated fallback. Restart begins the current reading again. Progress stays in the browser's local storage.
 
 The site currently has 96 reading sets with 20–30 questions each (1,942 questions total). Every set includes a code question. The brief explanations stay under 40 words, and Expound is available only after the five-Enter reveal.
 
@@ -25,7 +25,7 @@ From this directory:
 python -m http.server 8765 --bind 127.0.0.1
 ```
 
-Open `http://127.0.0.1:8765/`. Run `node check-content.js` to verify question counts, explanations, duplicate sentences, and the code-question ratio in every set.
+Open `http://127.0.0.1:8765/`. Run `node check-content.js` to verify question counts, explanations, unique authored expounds, duplicate sentences, and the code-question ratio in every set.
 
 ## Publishing
 

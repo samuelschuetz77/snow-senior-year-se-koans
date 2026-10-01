@@ -51,7 +51,7 @@
     q("Removing the minimum often moves the last ", "item", " to the root.", 'Then sift it downward until parent-child order is restored. This touches at most one path through the heap.', { accepts: ["element", "leaf", "node", "entry"] }),
     q("A heap does not maintain sorted ", "order", " among siblings.", 'The heap property compares parents with children, not arbitrary pairs. Sorting requires more work than inspecting the heap array.', { accepts: ["ordering"] }),
     q("A priority queue chooses work by ", "priority", " rather than arrival order.", 'A heap is one implementation. It supports retrieving the best-priority item without keeping every item globally sorted.', { accepts: ["key", "importance", "rank"] }),
-    q('BFS gives minimum-edge paths only when edges have equal ', 'weight', '.', 'With different weights, fewer edges may cost more. A weighted shortest-path method is needed for minimum total weight.'),
+    q('BFS’s minimum-edge paths also minimize total cost when all edges have the same positive ', 'weight', '.', 'BFS always minimizes the number of edges in a reachable path. Equal positive weights make minimizing edge count equivalent to minimizing total weight.'),
     q('The root is the minimum because every parent is no larger than its ', 'children', '.', 'Repeated parent-child comparisons along a path show no descendant can be smaller than the root in a valid min-heap.', { code: 'heap = [2, 5, 3, 9, 7, 8]' })
   ]);
   add('jea-0-5', [
@@ -1364,7 +1364,7 @@
     q("Correctness needs both ", "implications", " even though the transformation runs in one direction.", 'Instances go from source to target, while logical equivalence of yes answers is established both ways.', { accepts: ["directions"] }),
     q("The reverse proof concerns only ", "target", " instances in the transformation’s image.", 'Those instances have special structure. Exploiting it can simplify decoding compared with arbitrary target instances.'),
     q("A construction that creates a target yes case from a source ", "no", " case is incorrect.", 'The target solver would return yes when the source answer is no. The reverse implication must prevent that.'),
-    q("A construction that blocks a source yes ", "witness", " creates a false negative.", 'The forward implication must show every source yes instance yields a target yes instance.', { accepts: ["certificate", "solution"] }),
+    q("Mapping a source instance with a ", "witness", " to a target with no solution creates a false negative.", 'The forward implication must show every source yes instance yields a target yes instance.', { accepts: ["certificate", "solution"] }),
     q('The transformed instance must obey the target problem’s formal input ', 'rules', '.', 'A malformed graph, formula, or threshold cannot be given to the hypothetical solver. Validity is part of the construction proof.'),
     q("A certificate ", "mapping", " explains why an original solution becomes a target solution.", 'For SAT, this may extend truth assignments to gadget variables. For graph problems, it may select corresponding vertices or edges.', { accepts: ["map", "translation"] }),
     q('The reverse certificate mapping decodes target structure into an original ', 'witness', '.', 'It demonstrates that the gadget cannot be satisfied by an unintended configuration with no source counterpart.'),

@@ -385,7 +385,7 @@
         q('In a vertex-disjoint path cover, every vertex has at most one chosen predecessor and one chosen ', 'successor', '.'),
         q("A DAG prevents chosen successor ", "links", " from forming a directed cycle."),
         q("Choosing a matching edge joins two path ", "pieces", " and reduces the path count by one.", { accepts: ["segments", "paths"] }),
-        q('For a DAG with V vertices and a matching of size M, the minimum disjoint path cover has V−M ', 'paths', '.')
+        q('For a DAG with V vertices and a maximum matching of size M in its bipartite construction, the minimum disjoint path cover has V−M ', 'paths', '.')
       ]),
       set('jea-11-6', 'JEA 11.6 · Baseball Elimination', 'Nov 9', 'Erickson, Algorithms §11.6', [
         q('To test whether a team can still win, distribute remaining game wins among its ', 'rivals', '.', { accepts: ['opponents'] }),
@@ -433,7 +433,7 @@
       set('jea-12-0', 'JEA 12.0 · NP-Hardness Revisited', 'Nov 16', 'Erickson, Algorithms ch. 12 introduction', [
         q("A hard problem may be easy to ", "verify", " even when no fast solving method is known.", { accepts: ["check", "confirm", "validate", "test", "certify"] }),
         q("Polynomial reductions transfer ", "hardness", " from a known source to a new target.", { accepts: ["difficulty"] }),
-        q("Showing one problem hard requires a ", "proof", " about all of its instances.", { accepts: ["argument"] }),
+        q("A reduction-based hardness claim needs a ", "proof", " covering every instance of the chosen source problem.", { accepts: ["argument"] }),
         q('An algorithm that solves an NP-hard target in polynomial time would solve every problem in ', 'NP', '.'),
         q("A reduction argument must preserve ", "yes", " answers in both directions.")
       ]),
@@ -486,7 +486,7 @@
         q("Measuring a qubit returns a ", "classical", " result."),
         q("A controlled gate acts on its target according to a ", "control", " qubit."),
         q("A value declared with ", "let", " cannot be reassigned."),
-        q('A mutable value is updated with the ', 'set', ' keyword.'),
+        q('The assigned Q# reference uses the ', 'set', ' keyword to update a mutable binding.'),
         q('A quantum program can run on a classical ', 'simulator', '.')
       ]),
       set('qft', 'Quantum Fourier Transform', 'Dec 4', 'Microsoft Learn, Implement the Quantum Fourier Transform in Q#', [
