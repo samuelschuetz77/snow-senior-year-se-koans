@@ -15,7 +15,7 @@ require('./data/frontend-ts-vs-tsx.js');
 require('./data/additional-maintenance.js');
 require('./data/additional-practicum.js');
 require('./data/additional-algorithms.js');
-require('./data/links-practicum.js');
+require('./data/expounds-operations.js');
 require('./data/expound.js');
 
 const courses = window.KOAN_COURSES;
@@ -52,11 +52,11 @@ for (const course of courses) {
       const whyWords = koan.why.trim().split(/\s+/).length;
       const deepWords = koan.expound?.trim().split(/\s+/).length;
       assert(deepWords >= 25 && deepWords <= 180, `Expound length outside 25–180 words in ${course.id}/${set.id}: ${koan.before}`);
-      assert(koan.expound.startsWith(`${koan.before}${koan.answer}`), `Expound must start with its own koan in ${course.id}/${set.id}`);
-      assert(koan.connections.length <= 2, `Too many earlier connections in ${course.id}/${set.id}`);
-      for (const connection of koan.connections) {
-        assert(connection.index < index, `Connection must point backward in ${course.id}/${set.id}`);
-        assert(connection.bridge.match(/[.!?]/g).length <= 2, `Long transition in ${course.id}/${set.id}`);
+      assert(koan.expoundText || koan.expound.startsWith(`${koan.before}${koan.answer}`), `Expound must start with its own koan in ${course.id}/${set.id}`);
+      assert.equal(koan.connections.length, 0, `Do not stitch earlier koans into ${course.id}/${set.id}`);
+      if (course.id === 'software-practicum' && set.id === '6') {
+        assert(koan.expoundText && koan.expoundText.trim().split(/\s+/).length >= 60, `Missing authored Operations explanation at ${index}`);
+        assert(koan.expound.startsWith(koan.expoundText), 'Authored explanation was replaced');
       }
       assert(!/\s/.test(koan.answer), `Answer must be one word: ${koan.answer}`);
       assert(!koan.before.includes('____') && !koan.after.includes('____'), 'Literal blank outside input');

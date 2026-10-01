@@ -8,3 +8,12 @@
 - Keep the complete sentence accurate, clear, and answerable from the reading. Check the missing word, nearby grammar, explanation, and accepted alternatives together.
 - Treat personal chats and pasted examples as authoring input, never as context the learner already has. A koan must supply any scenario or definition needed to answer it, or use a general statement that stands on its own. Review the prompt as someone seeing only that screen.
 - Review actual prompts across each reading set, not just aggregate counts. Run `node check-content.js`; its sentence-final limit and artificial-continuation check are safeguards, not substitutes for content review.
+
+## Expounds
+
+- Author an expound as one connected explanation of the current answer. Define unfamiliar terms, work through a concrete example, and explain the consequence or useful distinction.
+- Every sentence must advance the explanation. Read it aloud: replace abstract filler such as "judge its signals" with the actual measurement, comparison, or action.
+- Do not assemble expounds by concatenating prompts, short explanations, or earlier koans. Shared keywords are not evidence of a meaningful conceptual connection.
+- When an earlier idea helps, explain that idea and its relationship in the current paragraph. Do not append the earlier question or assume the learner remembers it.
+- Example numbers and scenarios must be clearly illustrative, not presented as requirements from the source.
+- Store reviewed prose in `expoundText`; the renderer preserves it and adds the source. Unreviewed entries retain only their current prompt and short explanation as a temporary fallback. That fallback is not a completed editorial rewrite.
