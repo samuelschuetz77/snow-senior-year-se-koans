@@ -131,7 +131,7 @@ if (!course) {
     input.dataset.baseWidth = String(input.getBoundingClientRect().width);
     input.dataset.baseFontSize = String(parseFloat(getComputedStyle(input).fontSize));
     fitInput(input);
-    if (!window.matchMedia('(pointer:coarse)').matches) input.focus({ preventScroll: true });
+    input.focus({ preventScroll: true });
     requestAnimationFrame(fitPlayer);
   }
 
@@ -158,9 +158,20 @@ if (!course) {
     }
   }
 
-  document.addEventListener('keydown', () => {
-    const input = sentence.querySelector('input.revealed');
-    if (input) input.classList.add('hint-dismissed');
+  document.addEventListener('keydown', event => {
+    const input = sentence.querySelector('input');
+    if (!input || input.disabled) return;
+    if (input.classList.contains('revealed')) input.classList.add('hint-dismissed');
+
+    // The whole koan screen accepts typing, even after a click or Tab moves focus.
+    // Leave browser shortcuts and composition events to their normal handlers.
+    if (event.key.length !== 1 || event.ctrlKey || event.metaKey || event.altKey || event.isComposing) return;
+    if (document.activeElement === input) return;
+    event.preventDefault();
+    if (sentence.hidden) expoundToggle.click();
+    input.focus({ preventScroll: true });
+    input.setRangeText(event.key, input.selectionStart, input.selectionEnd, 'end');
+    input.dispatchEvent(new Event('input', { bubbles: true }));
   });
   form.addEventListener('input', () => {
     const input = sentence.querySelector('input');
@@ -187,7 +198,7 @@ if (!course) {
       expound.textContent = set.koans[index].expound;
       expoundToggle.hidden = false;
       feedback.textContent = `Answer: ${set.koans[index].answer}. ${set.koans[index].why}`;
-      input.blur();
+      input.focus({ preventScroll: true });
       requestAnimationFrame(fitPlayer);
     }
   });
@@ -199,6 +210,7 @@ if (!course) {
     code.hidden = opening || !set.koans[index].code;
     expoundToggle.textContent = opening ? 'Back to koan' : 'Expound';
     expoundToggle.setAttribute('aria-expanded', String(opening));
+    if (!opening) sentence.querySelector('input')?.focus({ preventScroll: true });
     requestAnimationFrame(fitPlayer);
   });
   restart.addEventListener('click', () => {
