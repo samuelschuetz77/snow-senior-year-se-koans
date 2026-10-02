@@ -25,6 +25,10 @@ Write original, plain-language sentences rather than copying the source. Test on
 
 Check every sentence against its source. In particular, distinguish a known algorithm from a proved lower bound, a necessary condition from a sufficient one, and an implication from its converse. For reductions, state the arrow's direction and what an efficient transformation preserves. Re-read a sentence with each plausible alternative answer: either accept a genuine synonym or rewrite the sentence to make the intended answer clear. Avoid making the learner guess a short word already implied by grammar. If the answer is `no`, place the blank under `no`, with a two- or three-character underline.
 
+### Code-centric React track
+
+The user-requested code-centric track intentionally uses code in every koan, with snippets averaging about eight lines and capped at fifteen. It also includes code-completion prompts: `statement` supplies a complete sentence below the code, and exactly one `___` marker in `code` becomes the answer input. These prompts omit `before` and `after`; code answers preserve case and punctuation. The other prompts retain the usual sentence blank. Each of the ten sets has twenty koans, including two code blanks, with the same hint, explanation, Expound, and progress behavior as reading sets.
+
 ## Visual design and interaction contract
 
 The exercise page contains the current sentence, its inline blank text box, an optional small code snippet when the question needs it, and a very small Restart button at the bottom. Center the sentence and blank with generous empty space. Use an off-white background and near-black text. Use a plain sans-serif font. No cursive or decorative type.

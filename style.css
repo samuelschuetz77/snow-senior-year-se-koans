@@ -19,6 +19,7 @@ a:hover { color:#555852; }
 .reading-list small { color:var(--muted); font-size:12px; white-space:normal; }
 .player { position:fixed; top:var(--visual-top,0px); left:0; right:0; width:min(850px,calc(100% - 48px)); height:var(--visual-height,100dvh); margin:auto; display:grid; align-items:center; overflow:hidden; }
 .player-inner { width:100%; transform-origin:center; }
+.player { padding-bottom:48px; }
 .code-sample { max-width:100%; white-space:pre-wrap; overflow-wrap:anywhere; margin:0 0 26px; padding:18px 20px; border:1px solid var(--line); border-radius:3px; background:#eceae3; color:var(--ink); font:15px/1.5 Consolas,'Courier New',monospace; }
 .sentence { font-size:clamp(32px,4.5vw,52px); font-weight:500; line-height:1.35; letter-spacing:-.035em; }
 .sentence input { display:inline-block; vertical-align:baseline; width:10ch; max-width:calc(100vw - 48px); margin:0 3px; padding:0 4px 3px; border:0; border-bottom:2px solid var(--ink); border-radius:0; outline:none; background:transparent; color:var(--ink); font:inherit; line-height:inherit; letter-spacing:inherit; text-align:center; }
@@ -27,6 +28,11 @@ a:hover { color:#555852; }
 .sentence input.correct { border-color:var(--right); color:var(--right); }
 .sentence input::placeholder { color:#777973; opacity:1; }
 .sentence input.revealed:placeholder-shown { caret-color:transparent; }
+.code-sample input { width:8ch; max-width:100%; padding:0 2px; border:0; border-bottom:2px solid var(--ink); border-radius:0; background:transparent; color:inherit; font:inherit; text-align:center; }
+.code-sample input:focus { outline:2px solid var(--muted); outline-offset:2px; }
+.code-sample input.correct { color:var(--right); border-color:var(--right); }
+.code-sample input.wrong { color:var(--wrong); border-color:var(--wrong); }
+.code-sample input::placeholder { color:var(--muted); opacity:1; }
 .answer-field { display:inline-block; position:relative; vertical-align:baseline; }
 .hint-cursor { display:none; position:absolute; top:0; left:50%; transform:translateX(-50%); color:transparent; white-space:pre; pointer-events:none; }
 input.revealed:not(.hint-dismissed):placeholder-shown + .hint-cursor { display:block; }

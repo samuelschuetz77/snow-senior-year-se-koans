@@ -2,6 +2,7 @@ const app = document.querySelector('#app');
 const params = new URLSearchParams(location.search);
 const course = window.KOAN_COURSES.find(item => item.id === params.get('course'));
 const set = course?.sets.find(item => item.id === params.get('set'));
+const codeTrack = course?.id === 'frontend-development' && params.get('track') === 'code-centric';
 
 function element(tag, attributes = {}, text = '') {
   const node = document.createElement(tag);
@@ -10,10 +11,10 @@ function element(tag, attributes = {}, text = '') {
   return node;
 }
 
-function listPage(title, items, backHref) {
+function listPage(title, items, backHref, backLabel = '← All classes') {
   app.className = 'listing';
   document.body.classList.add('listing-page');
-  if (backHref) app.append(element('a', { class: 'back', href: backHref }, '← All classes'));
+  if (backHref) app.append(element('a', { class: 'back', href: backHref }, backLabel));
   app.append(element('h1', {}, title));
   const nav = element('nav', { class: backHref ? 'reading-list' : 'course-list' });
   for (const item of items) {
@@ -31,11 +32,17 @@ if (!course) {
     href: `?course=${encodeURIComponent(item.id)}`
   })));
 } else if (!set) {
-  listPage(course.title, course.sets.map(item => ({
+  const items = course.sets.filter(item => codeTrack ? item.track === 'code-centric' : !item.track).map(item => ({
     title: item.title,
     detail: item.due || '',
     href: `?course=${encodeURIComponent(course.id)}&set=${encodeURIComponent(item.id)}`
-  })), './');
+  }));
+  if (course.id === 'frontend-development' && !codeTrack) {
+    items.unshift({ title: 'Code-centric koans', detail: '10 sets · React day one to advanced', href: '?course=frontend-development&track=code-centric' });
+  }
+  listPage(codeTrack ? 'Code-centric koans' : course.title, items,
+    codeTrack ? '?course=frontend-development' : './',
+    codeTrack ? '← Frontend Development' : '← All classes');
 } else {
   document.title = `${set.title} · Snow Senior Year SE Koans`;
   app.className = 'player';
@@ -50,8 +57,8 @@ if (!course) {
   const expound = element('p', { class: 'expound', id: 'expound-text', hidden: '' });
   const feedback = element('div', { class: 'sr-only', id: 'feedback', 'aria-live': 'polite' });
   const restart = element('button', { class: 'restart', type: 'button' }, 'Restart');
-  form.append(label, sentence, explanation, expoundToggle, expound);
-  wrapper.append(code, form, feedback);
+  form.append(code, label, sentence, explanation, expoundToggle, expound);
+  wrapper.append(form, feedback);
   app.append(wrapper, restart);
 
   const progressVersion = course.id === 'software-practicum' && set.id === '5' ? 'v2' : 'v1';
@@ -66,7 +73,7 @@ if (!course) {
   function fitPlayer() {
     wrapper.style.transform = '';
     const height = window.visualViewport?.height ?? window.innerHeight;
-    const available = Math.max(100, height - 24);
+    const available = Math.max(100, height - 72);
     const scale = Math.min(1, available / Math.max(wrapper.scrollHeight, 1));
     wrapper.style.transform = `scale(${scale})`;
   }
@@ -127,7 +134,14 @@ if (!course) {
     const answerField = element('span', { class: 'answer-field' });
     const hintCursor = element('span', { class: 'hint-cursor', 'aria-hidden': 'true' });
     answerField.append(input, hintCursor);
-    sentence.replaceChildren(document.createTextNode(koan.before), answerField, document.createTextNode(koan.after));
+    if (koan.statement) {
+      const [beforeCode, afterCode] = koan.code.split('___');
+      code.replaceChildren(document.createTextNode(beforeCode), answerField, document.createTextNode(afterCode));
+      sentence.textContent = koan.statement;
+      input.setAttribute('aria-label', 'Missing code');
+    } else {
+      sentence.replaceChildren(document.createTextNode(koan.before), answerField, document.createTextNode(koan.after));
+    }
     input.dataset.baseWidth = String(input.getBoundingClientRect().width);
     input.dataset.baseFontSize = String(parseFloat(getComputedStyle(input).fontSize));
     fitInput(input);
@@ -137,10 +151,11 @@ if (!course) {
 
   function check(showWrong = false) {
     if (advancing || index === set.koans.length) return;
-    const input = sentence.querySelector('input');
+    const input = form.querySelector('input');
     const koan = set.koans[index];
-    const value = normalize(input.value);
-    const accepted = [koan.answer, ...(koan.accepts || [])].map(normalize);
+    const normalizeAnswer = koan.statement ? value => value.trim() : normalize;
+    const value = normalizeAnswer(input.value);
+    const accepted = [koan.answer, ...(koan.accepts || [])].map(normalizeAnswer);
     if (accepted.includes(value)) {
       advancing = true;
       input.classList.remove('wrong');
@@ -159,7 +174,7 @@ if (!course) {
   }
 
   document.addEventListener('keydown', event => {
-    const input = sentence.querySelector('input');
+    const input = form.querySelector('input');
     if (!input || input.disabled) return;
     if (input.classList.contains('revealed')) input.classList.add('hint-dismissed');
 
@@ -174,7 +189,7 @@ if (!course) {
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
   form.addEventListener('input', () => {
-    const input = sentence.querySelector('input');
+    const input = form.querySelector('input');
     input.classList.remove('wrong', 'revealed');
     fitInput(input);
     feedback.textContent = '';
@@ -187,7 +202,7 @@ if (!course) {
     if (advancing) return;
     enterCount += 1;
     if (enterCount >= 5) {
-      const input = sentence.querySelector('input');
+      const input = form.querySelector('input');
       input.value = '';
       input.classList.remove('wrong');
       input.classList.add('revealed');
@@ -210,7 +225,7 @@ if (!course) {
     code.hidden = opening || !set.koans[index].code;
     expoundToggle.textContent = opening ? 'Back to koan' : 'Expound';
     expoundToggle.setAttribute('aria-expanded', String(opening));
-    if (!opening) sentence.querySelector('input')?.focus({ preventScroll: true });
+    if (!opening) form.querySelector('input')?.focus({ preventScroll: true });
     requestAnimationFrame(fitPlayer);
   });
   restart.addEventListener('click', () => {
@@ -220,7 +235,7 @@ if (!course) {
     render();
   });
   window.addEventListener('resize', () => {
-    const input = sentence.querySelector('input');
+    const input = form.querySelector('input');
     if (input) fitInput(input, input.value || input.placeholder);
     syncViewport();
   });

@@ -20,9 +20,28 @@ require('./data/expounds-algorithms.js');
 require('./data/expounds-practicum.js');
 require('./data/expounds-maintenance.js');
 require('./data/expounds-operations.js');
+require('./data/frontend-code-centric.js');
 require('./data/expound.js');
 
 const courses = window.KOAN_COURSES;
+const codeSets = courses.find(course => course.id === 'frontend-development').sets.filter(set => set.track === 'code-centric');
+assert.equal(codeSets.length, 10, 'Code-centric track needs ten progressive sets');
+const snippetLengths = codeSets.flatMap(set => set.koans.map(koan => {
+  assert(koan.code, `Missing code in ${set.id}`);
+  assert.equal((koan.code.match(/___/g) || []).length, koan.statement ? 1 : 0,
+    `Expected exactly one code blank only for a code-completion koan in ${set.id}`);
+  if (koan.statement) assert(koan.statement.trim().endsWith('.'), `Missing complete statement in ${set.id}`);
+  const lines = koan.code.split('\n').length;
+  assert(lines >= 5 && lines <= 15, `Snippet outside 5–15 lines in ${set.id}`);
+  return lines;
+}));
+const averageLines = snippetLengths.reduce((sum, lines) => sum + lines, 0) / snippetLengths.length;
+assert(averageLines >= 7 && averageLines <= 9, `Expected about eight lines per snippet, got ${averageLines}`);
+for (const set of codeSets) {
+  const codeBlanks = set.koans.filter(koan => koan.statement).length;
+  assert(codeBlanks >= 2 && codeBlanks < set.koans.length, `Expected both code and statement blanks in ${set.id}`);
+}
+console.log(`Code-centric: ${codeSets.length} sets, ${snippetLengths.length} koans, ${averageLines.toFixed(1)} lines per snippet.`);
 assert.equal(courses.length, 4);
 const courseIds = new Set();
 const sentences = new Set();
@@ -52,7 +71,7 @@ for (const course of courses) {
       assert(setCodeRatio >= 0.03 && setCodeRatio <= 0.05, `Code ratio outside 3–5%: ${course.id}/${set.id}`);
     }
     for (const [index, koan] of set.koans.entries()) {
-      assert(koan.before && koan.after && koan.answer, `Incomplete koan in ${course.id}/${set.id}`);
+      assert(koan.answer && (koan.statement || (koan.before && koan.after)), `Incomplete koan in ${course.id}/${set.id}`);
       assert(koan.why && koan.why.trim().split(/\s+/).length < 40, `Missing or long explanation in ${course.id}/${set.id}: ${koan.before}`);
       const whyWords = koan.why.trim().split(/\s+/).length;
       const deepWords = koan.expound?.trim().split(/\s+/).length;
@@ -65,9 +84,9 @@ for (const course of courses) {
       assert(!koan.expoundText.includes('\uFFFD'), `Invalid text encoding: ${location}`);
       assert.equal(koan.connections.length, 0, `Do not stitch earlier koans into ${course.id}/${set.id}`);
       assert(!/\s/.test(koan.answer), `Answer must be one word: ${koan.answer}`);
-      assert(!koan.before.includes('____') && !koan.after.includes('____'), 'Literal blank outside input');
-      assert(!/^[;—]/.test(koan.after.trim()), `Artificial continuation after blank in ${course.id}/${set.id}: ${koan.before}`);
-      const sentence = `${koan.before}___${koan.after}`;
+      assert(!koan.before?.includes('____') && !koan.after?.includes('____'), 'Literal blank outside input');
+      assert(!/^[;—]/.test(koan.after?.trim() || ''), `Artificial continuation after blank in ${course.id}/${set.id}: ${koan.before}`);
+      const sentence = koan.statement || `${koan.before}___${koan.after}`;
       assert(!sentences.has(sentence), `Duplicate sentence: ${sentence}`);
       sentences.add(sentence);
       total += 1;
@@ -76,7 +95,7 @@ for (const course of courses) {
       expoundWords += deepWords;
       if (koan.code) withCode += 1;
       if (koan.code && !set.codeRatio) standardWithCode += 1;
-      if (/^[.!?]\s*$/.test(koan.after)) {
+      if (!koan.statement && /^[.!?]\s*$/.test(koan.after)) {
         terminalBlanks += 1;
         setTerminalBlanks += 1;
       }
