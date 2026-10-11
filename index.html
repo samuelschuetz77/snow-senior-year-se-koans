@@ -4,11 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f6f4ee">
+  <script src="themes.js?v=1"></script>
   <title>Snow Senior Year SE Koans</title>
-  <link rel="stylesheet" href="style.css?v=finance-1">
-  <link rel="stylesheet" href="expound-view.css?v=1">
+  <link rel="stylesheet" href="style.css?v=themes-1">
+  <link rel="stylesheet" href="expound-view.css?v=themes-1">
+  <link rel="stylesheet" href="themes.css?v=1">
 </head>
 <body>
+  <header class="theme-toolbar">
+    <label for="theme-select">Theme</label>
+    <select id="theme-select" aria-label="Color theme"></select>
+  </header>
+  <script>window.KoanThemes.mount();</script>
   <main id="app"></main>
   <script>window.KOAN_COURSES = [];</script>
   <script src="data/algorithms.js?v=accuracy-2"></script>
@@ -41,7 +48,7 @@
   <script src="data/corporate-finance.js?v=1"></script>
   <script src="data/expound.js?v=all-authored-7"></script>
   <script src="data/textbook-lessons.js?v=1"></script>
-  <script src="expound-view.js?v=1"></script>
+  <script src="expound-view.js?v=themes-1"></script>
   <script src="answer-utils.js?v=1"></script>
   <script src="app.js?v=illustrated-expounds-1"></script>
 </body>

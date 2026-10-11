@@ -9,7 +9,7 @@ body.playing.expound-open { position:static; overflow:visible; }
 .expound p { margin:0 0 18px; }
 .expound ol:not(.concept-flow) { padding-left:26px; }
 .expound li { margin:0 0 14px; padding-left:4px; }
-.concept-terms { padding:18px 22px; background:#eceae3; border-radius:6px; }
+.concept-terms { padding:18px 22px; background:var(--surface); border-radius:6px; }
 .concept-terms dt { font-weight:700; margin-top:12px; }
 .concept-terms dt:first-child { margin-top:0; }
 .concept-terms dd { margin:3px 0 0; }
@@ -17,18 +17,18 @@ body.playing.expound-open { position:static; overflow:visible; }
 .concept-diagram svg { display:block; width:100%; max-height:360px; }
 .concept-diagram .node-label { font:18px Arial,sans-serif; fill:var(--ink); }
 .concept-diagram .edge-label { font:17px Arial,sans-serif; fill:var(--ink); paint-order:stroke; stroke:var(--paper); stroke-width:5px; stroke-linejoin:round; }
-.concept-diagram figcaption { font-size:15px; line-height:1.5; color:#565c55; margin-top:16px; }
+.concept-diagram figcaption { font-size:15px; line-height:1.5; color:var(--muted); margin-top:16px; }
 .concept-flow { list-style:none; padding:0; margin:0; display:grid; gap:24px; }
-.concept-flow li { position:relative; padding:12px 16px; margin:0; background:#e5eae1; border:1px solid #bac4b5; border-radius:4px; }
+.concept-flow li { position:relative; padding:12px 16px; margin:0; background:var(--soft); border:1px solid var(--line); border-radius:4px; }
 .concept-flow li:not(:last-child)::after { content:'↓'; position:absolute; bottom:-28px; left:50%; line-height:24px; }
 .concept-flow strong,.concept-flow span { display:block; }
 .concept-flow span { font-size:16px; margin-top:4px; }
-.completed-koan { margin:24px 0; padding:16px 20px; border-left:4px solid #56734f; background:#e9eee5; }
+.completed-koan { margin:24px 0; padding:16px 20px; border-left:4px solid var(--accent); background:var(--soft); }
 .concept-check { margin:26px 0; padding:16px; border:1px solid var(--line); border-radius:4px; }
 .concept-check summary { cursor:pointer; font-weight:600; }
 .concept-check p { margin:14px 0 0; }
 .expound .concept-source { font-size:13px; color:var(--muted); }
-.concept-code { white-space:pre-wrap; overflow-wrap:anywhere; padding:16px; background:#eceae3; border-radius:4px; font:15px/1.6 Consolas,monospace; }
+.concept-code { white-space:pre-wrap; overflow-wrap:anywhere; padding:16px; background:var(--surface); border-radius:4px; font:15px/1.6 Consolas,monospace; }
 .expound-open.exhibit-open .player { margin-left:24px; }
 @media(max-width:800px) { .expound-open.exhibit-open .player { height:auto; margin:auto; padding-bottom:60vh; } }
 @media(max-width:600px) { .expound-open .expound { font-size:17px; } .concept-diagram { padding:10px; } .concept-diagram .edge-label { font-size:26px; } .concept-diagram .node-label { font-size:28px; } .concept-terms { padding:14px; } }

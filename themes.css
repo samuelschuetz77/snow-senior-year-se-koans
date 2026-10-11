@@ -1,0 +1,15 @@
+/* Reserve a top row so the theme control never covers lesson content. */
+:root { --toolbar-height:72px; }
+.theme-toolbar { position:fixed; top:0; left:0; right:0; min-height:var(--toolbar-height); z-index:5; display:flex; align-items:center; gap:10px; padding:12px max(16px,env(safe-area-inset-left)); background:var(--paper); color:var(--ink); }
+.theme-toolbar label { font-size:13px; font-weight:600; }
+.theme-toolbar select { max-width:calc(100vw - 100px); min-height:44px; padding:8px 30px 8px 12px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink); font-size:14px; cursor:pointer; }
+:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+.listing { padding-top:calc(var(--toolbar-height) + 24px); }
+.player { top:calc(var(--visual-top,0px) + var(--toolbar-height)); height:calc(var(--visual-height,100dvh) - var(--toolbar-height)); }
+.exhibit-panel { top:var(--toolbar-height); }
+.expound-open .player { padding-top:calc(var(--toolbar-height) + 24px); }
+.expound-open .expound-toggle { top:var(--toolbar-height); }
+@media(max-width:800px) {
+  .exhibit-open .player { height:calc((var(--visual-height,100dvh) - var(--toolbar-height)) * .45); }
+  .exhibit-panel { top:calc(var(--toolbar-height) + (100dvh - var(--toolbar-height)) * .45); }
+}

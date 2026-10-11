@@ -27,7 +27,7 @@
       svg.append(svgNode('title', { id: `${id}-title` }, data.title), svgNode('desc', { id: `${id}-desc` }, data.description));
       const defs = svgNode('defs');
       const marker = svgNode('marker', { id: `${id}-arrow`, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 6, markerHeight: 6, orient: 'auto-start-reverse' });
-      marker.append(svgNode('path', { d: 'M 0 0 L 10 5 L 0 10 z', fill: '#575e57' }));
+      marker.append(svgNode('path', { d: 'M 0 0 L 10 5 L 0 10 z', fill: 'var(--line)' }));
       defs.append(marker); svg.append(defs);
       for (const edge of data.edges) {
         const from = data.nodes.find(node => node.id === edge[0]);
@@ -35,7 +35,7 @@
         const dx = to.x - from.x, dy = to.y - from.y;
         const length = Math.hypot(dx, dy);
         const padding = Math.min(34, length / 3);
-        const attrs = { x1: from.x + dx / length * padding, y1: from.y + dy / length * padding, x2: to.x - dx / length * padding, y2: to.y - dy / length * padding, stroke: '#575e57', 'stroke-width': 2 };
+        const attrs = { x1: from.x + dx / length * padding, y1: from.y + dy / length * padding, x2: to.x - dx / length * padding, y2: to.y - dy / length * padding, stroke: 'var(--line)', 'stroke-width': 2 };
         if (edge[3]) attrs['marker-end'] = `url(#${id}-arrow)`;
         svg.append(svgNode('line', attrs));
         if (edge[2]) {
@@ -44,7 +44,7 @@
         }
       }
       for (const node of data.nodes) {
-        svg.append(svgNode('circle', { cx: node.x, cy: node.y, r: 30, fill: node.highlight ? '#dcebdc' : '#f6f4ee', stroke: '#575e57', 'stroke-width': 2 }));
+        svg.append(svgNode('circle', { cx: node.x, cy: node.y, r: 30, fill: node.highlight ? 'var(--soft)' : 'var(--paper)', stroke: 'var(--line)', 'stroke-width': 2 }));
         svg.append(svgNode('text', { x: node.x, y: node.y + 6, 'text-anchor': 'middle', class: 'node-label' }, node.label));
       }
       figure.append(svg);
