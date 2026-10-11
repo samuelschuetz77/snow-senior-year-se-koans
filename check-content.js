@@ -21,6 +21,7 @@ require('./data/expounds-practicum.js');
 require('./data/expounds-maintenance.js');
 require('./data/expounds-operations.js');
 require('./data/frontend-code-centric.js');
+require('./data/additional-koans.js');
 require('./data/expound.js');
 
 const courses = window.KOAN_COURSES;
@@ -42,7 +43,14 @@ for (const set of codeSets) {
   assert(codeBlanks >= 2 && codeBlanks < set.koans.length, `Expected both code and statement blanks in ${set.id}`);
 }
 console.log(`Code-centric: ${codeSets.length} sets, ${snippetLengths.length} koans, ${averageLines.toFixed(1)} lines per snippet.`);
-assert.equal(courses.length, 4);
+assert.equal(courses.length, 5);
+const otherKoans = courses.find(course => course.id === 'other-koans');
+assert(otherKoans?.books.length, 'Missing Other Koans textbooks');
+assert.equal(new Set(otherKoans.books.map(book => book.id)).size, otherKoans.books.length, 'Duplicate textbook IDs');
+for (const set of otherKoans.sets) {
+  assert(otherKoans.books.some(book => book.id === set.bookId), `Unknown textbook for ${set.id}`);
+  assert(set.sourceUrl?.startsWith('https://'), `Missing source URL for ${set.id}`);
+}
 const courseIds = new Set();
 const sentences = new Set();
 const authoredExpounds = new Set();

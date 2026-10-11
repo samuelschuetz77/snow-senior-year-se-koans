@@ -2,6 +2,7 @@ const app = document.querySelector('#app');
 const params = new URLSearchParams(location.search);
 const course = window.KOAN_COURSES.find(item => item.id === params.get('course'));
 const set = course?.sets.find(item => item.id === params.get('set'));
+const book = course?.books?.find(item => item.id === params.get('book'));
 const codeTrack = course?.id === 'frontend-development' && params.get('track') === 'code-centric';
 
 function element(tag, attributes = {}, text = '') {
@@ -31,18 +32,24 @@ if (!course) {
     title: item.title,
     href: `?course=${encodeURIComponent(item.id)}`
   })));
+} else if (!set && course.books && !book) {
+  listPage(course.title, course.books.map(item => ({
+    title: item.title,
+    detail: item.author,
+    href: `?course=${encodeURIComponent(course.id)}&book=${encodeURIComponent(item.id)}`
+  })), './', '← Home');
 } else if (!set) {
-  const items = course.sets.filter(item => codeTrack ? item.track === 'code-centric' : !item.track).map(item => ({
+  const items = course.sets.filter(item => book ? item.bookId === book.id : codeTrack ? item.track === 'code-centric' : !item.track).map(item => ({
     title: item.title,
     detail: item.due || '',
-    href: `?course=${encodeURIComponent(course.id)}&set=${encodeURIComponent(item.id)}`
+    href: `?course=${encodeURIComponent(course.id)}${book ? `&book=${encodeURIComponent(book.id)}` : ''}&set=${encodeURIComponent(item.id)}`
   }));
   if (course.id === 'frontend-development' && !codeTrack) {
     items.unshift({ title: 'Code-centric koans', detail: '10 sets · React day one to advanced', href: '?course=frontend-development&track=code-centric' });
   }
-  listPage(codeTrack ? 'Code-centric koans' : course.title, items,
-    codeTrack ? '?course=frontend-development' : './',
-    codeTrack ? '← Frontend Development' : '← All classes');
+  listPage(book ? book.title : codeTrack ? 'Code-centric koans' : course.title, items,
+    book ? `?course=${encodeURIComponent(course.id)}` : codeTrack ? '?course=frontend-development' : './',
+    book ? `← ${course.title}` : codeTrack ? '← Frontend Development' : '← All classes');
 } else {
   document.title = `${set.title} · Snow Senior Year SE Koans`;
   app.className = 'player';
