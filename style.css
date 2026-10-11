@@ -48,3 +48,25 @@ input.revealed:not(.hint-dismissed):placeholder-shown + .hint-cursor { display:b
 @media(max-width:600px) { .player { width:calc(100% - 36px); } .sentence { font-size:clamp(26px,8vw,38px); } .sentence input { width:8ch; } .code-sample { white-space:pre-wrap; overflow-wrap:anywhere; padding:12px; font-size:12px; } .reading-list a { display:block!important; } .reading-list small { display:block; margin-top:6px; } }
 @media(max-height:600px) { .sentence { font-size:clamp(24px,5vw,32px); } .code-sample { margin-bottom:16px; } }
 @media(pointer:coarse) { body.playing.typing .restart { display:none; } }
+
+.amount-help { font-size:13px; line-height:1.5; color:var(--muted); margin:14px 0 0; }
+.exhibit-toggle { border:1px solid var(--line); border-radius:4px; background:transparent; padding:8px 12px; margin:16px 0 0; color:var(--ink); font-size:14px; }
+.exhibit-panel { position:fixed; right:0; top:0; bottom:0; width:48%; z-index:3; padding:18px; background:var(--paper); border-left:1px solid var(--line); overflow:auto; }
+.exhibit-panel h2 { font-size:18px; margin:0 90px 12px 0; line-height:1.4; }
+.exhibit-panel a { display:inline-block; font-size:13px; margin-bottom:12px; }
+.exhibit-close { position:absolute; right:16px; top:18px; padding:6px 10px; border:1px solid var(--line); border-radius:4px; background:transparent; font-size:13px; }
+.exhibit-frame { display:block; width:100%; height:calc(100% - 100px); min-height:300px; border:1px solid var(--line); background:white; }
+.exhibit-transcript { margin:12px 0; font-size:14px; line-height:1.5; }
+.exhibit-transcript pre { white-space:pre-wrap; font:inherit; }
+.exhibit-open .player { right:48%; width:calc(52% - 48px); }
+.exhibit-open .sentence { font-size:clamp(24px,3vw,38px); }
+.exhibit-open .restart { left:26%; }
+@media(max-width:800px) {
+  .exhibit-panel { top:45%; width:100%; border-left:0; border-top:1px solid var(--line); padding:12px; }
+  .exhibit-open .player { right:0; width:calc(100% - 36px); height:calc(var(--visual-height,100dvh) * .45); padding-bottom:8px; }
+  .exhibit-open .sentence { font-size:24px; }
+  .exhibit-open .restart { display:none; }
+  .exhibit-frame { min-height:150px; height:calc(100% - 95px); }
+  .exhibit-panel h2 { font-size:15px; }
+  .exhibit-toggle { margin-top:8px; padding:5px 9px; }
+}

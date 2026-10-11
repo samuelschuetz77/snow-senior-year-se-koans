@@ -24,6 +24,8 @@ require('./data/frontend-code-centric.js');
 require('./data/additional-koans.js');
 require('./data/wengrow-volume-1-later.js');
 require('./data/wengrow-volume-2.js');
+require('./data/finance-exhibits.js');
+require('./data/corporate-finance.js');
 require('./data/expound.js');
 
 const courses = window.KOAN_COURSES;
@@ -55,7 +57,7 @@ for (const [bookId, first, last] of [['wengrow-python-volume-1', 12, 20], ['weng
 }
 for (const set of otherKoans.sets) {
   assert(otherKoans.books.some(book => book.id === set.bookId), `Unknown textbook for ${set.id}`);
-  assert(set.sourceUrl?.startsWith('https://'), `Missing source URL for ${set.id}`);
+  assert(set.sourceUrl?.startsWith('https://') || set.sourceLocal, `Missing source provenance for ${set.id}`);
 }
 const courseIds = new Set();
 const sentences = new Set();
@@ -77,9 +79,10 @@ for (const course of courses) {
     let setTerminalBlanks = 0;
     assert(!setIds.has(set.id), `Duplicate set ${course.id}/${set.id}`);
     setIds.add(set.id);
-    assert(set.source && set.due && set.koans.length >= 20 && set.koans.length <= 30, `Set needs 20–30 questions: ${course.id}/${set.id}`);
+    const validCount = set.questionCount ? set.koans.length === set.questionCount : set.koans.length >= 20 && set.koans.length <= 30;
+    assert(set.source && set.due && validCount, `Incorrect question count: ${course.id}/${set.id}`);
     const setCodeRatio = set.koans.filter(koan => koan.code).length / set.koans.length;
-    if (set.codeRatio) {
+    if (set.codeRatio !== undefined) {
       assert(Math.abs(setCodeRatio - set.codeRatio) <= 0.05, `Code ratio not near ${set.codeRatio}: ${course.id}/${set.id}`);
     } else {
       assert(setCodeRatio >= 0.03 && setCodeRatio <= 0.05, `Code ratio outside 3–5%: ${course.id}/${set.id}`);
@@ -104,11 +107,11 @@ for (const course of courses) {
       assert(!sentences.has(sentence), `Duplicate sentence: ${sentence}`);
       sentences.add(sentence);
       total += 1;
-      if (!set.codeRatio) standardTotal += 1;
+      if (set.codeRatio === undefined) standardTotal += 1;
       explanationWords += whyWords;
       expoundWords += deepWords;
       if (koan.code) withCode += 1;
-      if (koan.code && !set.codeRatio) standardWithCode += 1;
+      if (koan.code && set.codeRatio === undefined) standardWithCode += 1;
       if (!koan.statement && /^[.!?]\s*$/.test(koan.after)) {
         terminalBlanks += 1;
         setTerminalBlanks += 1;

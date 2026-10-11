@@ -1,0 +1,4 @@
+# Keep full source textbooks local; publish only our original exercises/exhibits.
+additional textbooks/**/*.pdf
+additional textbooks/**/extracted-*
+_site/

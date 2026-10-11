@@ -25,12 +25,16 @@ jobs:
         uses: actions/checkout@v6
       - name: Validate koans
         run: node check-content.js
+      - name: Validate finance calculations and exhibits
+        run: node check-finance.js
+      - name: Package public site
+        run: node scripts/package-site.js
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: _site
       - name: Deploy site
         id: deployment
         uses: actions/deploy-pages@v4

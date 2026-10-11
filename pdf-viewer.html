@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Koan PDF exhibit</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#dfdfda;color:#20211f;font:14px Arial,sans-serif}
+    header{position:sticky;top:0;padding:8px 12px;background:#f6f4ee;border-bottom:1px solid #cecec6;z-index:1;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    a{color:inherit}button{font:inherit;cursor:pointer}#pages{padding:8px;display:grid;gap:12px;justify-items:center}
+    article{background:white;box-shadow:0 1px 4px #0002;scroll-margin-top:55px}canvas{display:block;max-width:100%}
+    #status{padding:12px;margin:0}#status:empty{display:none}
+  </style>
+</head>
+<body>
+  <header><span>PDF exhibit</span><a href="#page=1">Page 1</a><a href="#page=2">Page 2</a><button id="zoom-in" aria-label="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out">−</button></header>
+  <p id="status" role="status">Loading PDF…</p>
+  <main id="pages" aria-label="PDF pages"></main>
+  <script type="module" src="pdf-viewer.js?v=2"></script>
+</body>
+</html>

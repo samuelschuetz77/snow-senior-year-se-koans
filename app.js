@@ -64,7 +64,19 @@ if (!course) {
   const expound = element('p', { class: 'expound', id: 'expound-text', hidden: '' });
   const feedback = element('div', { class: 'sr-only', id: 'feedback', 'aria-live': 'polite' });
   const restart = element('button', { class: 'restart', type: 'button' }, 'Restart');
-  form.append(code, label, sentence, explanation, expoundToggle, expound);
+  const amountHelp = element('p', { class: 'amount-help', id: 'amount-help', hidden: '' }, 'Enter dollars, rounded to the nearest cent. Press Enter to check.');
+  const exhibitToggle = element('button', { class: 'exhibit-toggle', type: 'button', 'aria-controls': 'exhibit-panel', 'aria-expanded': 'false', hidden: '' }, 'Show PDF exhibit');
+  const exhibitPanel = element('aside', { class: 'exhibit-panel', id: 'exhibit-panel', hidden: '', 'aria-label': 'Financial exhibit' });
+  const exhibitHeading = element('h2');
+  const exhibitLink = element('a', { target: '_blank', rel: 'noopener' }, 'Open PDF in a new tab');
+  const exhibitClose = element('button', { type: 'button', class: 'exhibit-close' }, 'Hide PDF');
+  const exhibitFrame = element('iframe', { class: 'exhibit-frame', title: 'Financial worksheet PDF' });
+  const exhibitText = element('details', { class: 'exhibit-transcript' });
+  const exhibitTextBody = element('pre');
+  exhibitText.append(element('summary', {}, 'Read exhibit as text'), exhibitTextBody);
+  exhibitPanel.append(exhibitHeading, exhibitClose, exhibitLink, exhibitFrame, exhibitText);
+  document.body.append(exhibitPanel);
+  form.append(code, label, sentence, amountHelp, exhibitToggle, explanation, expoundToggle, expound);
   wrapper.append(form, feedback);
   app.append(wrapper, restart);
 
@@ -77,10 +89,24 @@ if (!course) {
   let advanceTimer;
   const normalize = value => value.trim().toLocaleLowerCase().replace(/[.!?]+$/, '');
 
+  function showExhibit(open) {
+    exhibitPanel.hidden = !open;
+    document.body.classList.toggle('exhibit-open', open);
+    exhibitToggle.textContent = open ? 'Hide PDF exhibit' : 'Show PDF exhibit';
+    exhibitToggle.setAttribute('aria-expanded', String(open));
+    if (open) {
+      const page = set.koans[index].exhibitPage || 1;
+      const viewerUrl = `pdf-viewer.html?file=${encodeURIComponent(set.exhibit.url)}#page=${page}`;
+      if (exhibitFrame.getAttribute('src') !== viewerUrl) exhibitFrame.src = viewerUrl;
+      exhibitLink.href = `${set.exhibit.url}#page=${page}&view=FitH`;
+    }
+    requestAnimationFrame(fitPlayer);
+  }
+
   function fitPlayer() {
     wrapper.style.transform = '';
     const height = window.visualViewport?.height ?? window.innerHeight;
-    const available = Math.max(100, height - 72);
+    const available = Math.max(100, Math.min(height, app.clientHeight) - (exhibitPanel.hidden ? 72 : 24));
     const scale = Math.min(1, available / Math.max(wrapper.scrollHeight, 1));
     wrapper.style.transform = `scale(${scale})`;
   }
@@ -127,16 +153,39 @@ if (!course) {
     expound.hidden = true;
     expound.textContent = '';
     if (index === set.koans.length) {
+      showExhibit(false);
+      exhibitToggle.hidden = true;
+      amountHelp.hidden = true;
       code.hidden = true;
       sentence.textContent = 'Complete.';
       requestAnimationFrame(fitPlayer);
       return;
     }
     const koan = set.koans[index];
+    const currency = koan.answerType === 'currency';
+    amountHelp.hidden = !currency;
+    label.textContent = currency ? 'Missing amount in dollars' : 'Missing word';
+    exhibitToggle.hidden = !set.exhibit;
+    if (set.exhibit) {
+      exhibitHeading.textContent = set.exhibit.title;
+      exhibitTextBody.textContent = set.exhibit.transcript;
+      if (!exhibitPanel.hidden) showExhibit(true);
+    }
     code.hidden = !koan.code;
     code.textContent = koan.code || '';
     const input = element('input', { id: 'answer', type: 'text', autocomplete: 'off', autocapitalize: 'none', inputmode: 'text', 'aria-label': 'Missing word', 'aria-describedby': 'feedback' });
     input.spellcheck = false;
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Enter' && !event.isComposing) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+    if (currency) {
+      input.setAttribute('inputmode', 'decimal');
+      input.setAttribute('aria-label', 'Missing amount in dollars');
+      input.setAttribute('aria-describedby', 'amount-help feedback');
+    }
     if (koan.blankChars) input.style.width = `${koan.blankChars}ch`;
     const answerField = element('span', { class: 'answer-field' });
     const hintCursor = element('span', { class: 'hint-cursor', 'aria-hidden': 'true' });
@@ -163,7 +212,13 @@ if (!course) {
     const normalizeAnswer = koan.statement ? value => value.trim() : normalize;
     const value = normalizeAnswer(input.value);
     const accepted = [koan.answer, ...(koan.accepts || [])].map(normalizeAnswer);
-    if (accepted.includes(value)) {
+    const currency = koan.answerType === 'currency';
+    if (currency && !showWrong) return;
+    const cents = currency ? window.KOAN_ANSWERS.currencyCents(input.value) : null;
+    const correct = currency
+      ? cents !== null && cents === window.KOAN_ANSWERS.currencyCents(koan.answer)
+      : accepted.includes(value);
+    if (correct) {
       advancing = true;
       input.classList.remove('wrong');
       input.classList.add('correct');
@@ -176,11 +231,17 @@ if (!course) {
       }, 750);
     } else if (showWrong && value) {
       input.classList.add('wrong');
-      feedback.textContent = 'Try another word.';
+      feedback.textContent = currency ? 'Check the amount and try again.' : 'Try another word.';
     }
   }
 
   document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !exhibitPanel.hidden) {
+      showExhibit(false);
+      exhibitToggle.focus();
+      return;
+    }
+    if (exhibitPanel.contains(event.target) || (event.key === ' ' && event.target.closest('button, a, summary'))) return;
     const input = form.querySelector('input');
     if (!input || input.disabled) return;
     if (input.classList.contains('revealed')) input.classList.add('hint-dismissed');
@@ -228,6 +289,7 @@ if (!course) {
     const opening = expound.hidden;
     expound.hidden = !opening;
     sentence.hidden = opening;
+    amountHelp.hidden = opening || set.koans[index].answerType !== 'currency';
     explanation.hidden = opening;
     code.hidden = opening || !set.koans[index].code;
     expoundToggle.textContent = opening ? 'Back to koan' : 'Expound';
@@ -237,9 +299,15 @@ if (!course) {
   });
   restart.addEventListener('click', () => {
     clearTimeout(advanceTimer);
+    showExhibit(false);
     index = 0;
     localStorage.setItem(storageKey, '0');
     render();
+  });
+  exhibitToggle.addEventListener('click', () => showExhibit(exhibitPanel.hidden));
+  exhibitClose.addEventListener('click', () => {
+    showExhibit(false);
+    exhibitToggle.focus();
   });
   window.addEventListener('resize', () => {
     const input = form.querySelector('input');
@@ -260,4 +328,5 @@ if (!course) {
   window.visualViewport?.addEventListener('scroll', syncViewport);
   syncViewport();
   render();
+  if (set.exhibit && index < set.koans.length && params.get('exhibit') === 'open') showExhibit(true);
 }

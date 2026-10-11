@@ -10,7 +10,15 @@ Use this guide to turn **any supplied reading, notes, or source text** into a sm
 
 ## Write the koans
 
-Create 20–30 koans per reading set. Order them so one idea prepares for the next. Teach a concept before asking the learner to recall its name. Prioritize predictions, consequences, distinctions, and decision rules over isolated vocabulary. Include applications and boundary cases rather than repeating definitions to reach the count.
+Create 20–30 koans per reading set unless the user requests a different count. Order them so one idea prepares for the next. Teach a concept before asking the learner to recall its name. Prioritize predictions, consequences, distinctions, and decision rules over isolated vocabulary. Include applications and boundary cases rather than repeating definitions to reach the count.
+
+The general goal for every class is assignment readiness: a student who completes and understands the koans should be able to begin the assigned problems without reading the chapter first and perform well. Cover methods and assumptions as well as concepts. Start with component skills and finish with combined, multi-step applications and transfer to a new scenario. Audit coverage against the source and known assignment requirements; note gaps when assignments are unavailable.
+
+### Document-based finance track
+
+Corporate Finance chapters 1–5 have 35 questions each and six currency-answer problems per chapter. `answerType: 'currency'` uses a canonical amount with two decimal places; Enter submits the complete number. Ordinary dollar signs, valid thousands separators, decimal forms, negative signs, and accounting parentheses are accepted. Match to the nearest cent; reject malformed or partially typed numbers. Keep a short input instruction with the currency question.
+
+Each financial set links an original PDF worksheet through `exhibit` (`url`, `title`, `transcript`); each koan selects an `exhibitPage`. A Show/Hide PDF control stays available while solving or reading an expound. The PDF opens in an adjacent panel with a separate-tab link and an accessible text version of the same givens. Hide it on completion and reset it on Restart. Use `codeRatio: 0` for financial sets: a programming question is not required. Preserve the quiet player for other tracks.
 
 Each koan must have:
 

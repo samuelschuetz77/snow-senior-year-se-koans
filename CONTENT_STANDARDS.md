@@ -2,6 +2,12 @@
 
 **Never Fucking cut corners.** The blank should test a meaningful part of the idea, not merely satisfy a layout metric.
 
+## General learning goal
+
+Across all classes and textbooks, completing and understanding a koan sequence should prepare the student to start the assigned problems without first reading the chapter and perform well. Build toward assignment readiness, not vocabulary recognition. Ground coverage in the actual chapter and, when available, its assignments. Teach the component skills, interpret realistic documents and diagrams, combine substeps near the end, and include a fresh transfer problem. Explain formulas, units, timing, assumptions, and common errors. Record coverage gaps when the exact assignment is unavailable.
+
+Finance chapters 1–5 contain 35 koans each, including six currency calculations (17.1%). Early calculations teach substeps; later calculations combine them. Original PDF exhibits supply the relevant inputs without printing the answers. Currency prompts specify units and rounding, accept ordinary dollar formatting, and use Enter to submit so a correct numeric prefix cannot advance an unfinished answer. Financial sets use documents instead of mandatory programming snippets.
+
 - Write the question as one natural sentence. Put blanks in varied positions, including on verbs that express the reasoning or action. Keep some sentence-final blanks when the final concept is genuinely the best answer.
 - Do not append a semicolon, em dash, or second sentence just to make a final blank appear internal. Do not use a runtime script to relocate blanks or manufacture variety. Author `before`, `answer`, and `after` directly in the source data.
 - Before blanking a verb, list the verbs a learner could reasonably type. If several fit, either accept at least five of them or rewrite the koan so the blank is a noun (or another word with one clear answer). Use verb blanks only when the verb itself is the concept and few alternatives fit, and keep them to about 20% of a set or less.
