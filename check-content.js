@@ -23,6 +23,7 @@ require('./data/expounds-operations.js');
 require('./data/frontend-code-centric.js');
 require('./data/additional-koans.js');
 require('./data/wengrow-volume-1-later.js');
+require('./data/wengrow-volume-2.js');
 require('./data/expound.js');
 
 const courses = window.KOAN_COURSES;
@@ -48,6 +49,10 @@ assert.equal(courses.length, 5);
 const otherKoans = courses.find(course => course.id === 'other-koans');
 assert(otherKoans?.books.length, 'Missing Other Koans textbooks');
 assert.equal(new Set(otherKoans.books.map(book => book.id)).size, otherKoans.books.length, 'Duplicate textbook IDs');
+for (const [bookId, first, last] of [['wengrow-python-volume-1', 12, 20], ['wengrow-python-volume-2', 1, 13]]) {
+  const chapters = otherKoans.sets.filter(set => set.bookId === bookId).map(set => Number(set.title.match(/Chapter (\d+)$/)?.[1]));
+  assert.deepEqual(chapters, Array.from({ length: last - first + 1 }, (_, i) => first + i), `Missing or reordered chapters in ${bookId}`);
+}
 for (const set of otherKoans.sets) {
   assert(otherKoans.books.some(book => book.id === set.bookId), `Unknown textbook for ${set.id}`);
   assert(set.sourceUrl?.startsWith('https://'), `Missing source URL for ${set.id}`);
