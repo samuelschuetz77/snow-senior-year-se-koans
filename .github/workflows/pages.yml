@@ -25,6 +25,8 @@ jobs:
         uses: actions/checkout@v6
       - name: Validate koans
         run: node check-content.js
+      - name: Validate illustrated textbook lessons
+        run: node check-lessons.js
       - name: Validate finance calculations and exhibits
         run: node check-finance.js
       - name: Package public site

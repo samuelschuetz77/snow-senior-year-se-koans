@@ -27,6 +27,7 @@ require('./data/wengrow-volume-2.js');
 require('./data/finance-exhibits.js');
 require('./data/corporate-finance.js');
 require('./data/expound.js');
+require('./data/textbook-lessons.js');
 
 const courses = window.KOAN_COURSES;
 const codeSets = courses.find(course => course.id === 'frontend-development').sets.filter(set => set.track === 'code-centric');

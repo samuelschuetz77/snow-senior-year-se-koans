@@ -61,7 +61,7 @@ if (!course) {
   const sentence = element('div', { class: 'sentence' });
   const explanation = element('p', { class: 'explanation', hidden: '' });
   const expoundToggle = element('button', { class: 'expound-toggle', type: 'button', 'aria-controls': 'expound-text', 'aria-expanded': 'false', hidden: '' }, 'Expound');
-  const expound = element('p', { class: 'expound', id: 'expound-text', hidden: '' });
+  const expound = element('article', { class: 'expound', id: 'expound-text', hidden: '' });
   const feedback = element('div', { class: 'sr-only', id: 'feedback', 'aria-live': 'polite' });
   const restart = element('button', { class: 'restart', type: 'button' }, 'Restart');
   const amountHelp = element('p', { class: 'amount-help', id: 'amount-help', hidden: '' }, 'Enter dollars, rounded to the nearest cent. Press Enter to check.');
@@ -105,6 +105,7 @@ if (!course) {
 
   function fitPlayer() {
     wrapper.style.transform = '';
+    if (document.body.classList.contains('expound-open')) return;
     const height = window.visualViewport?.height ?? window.innerHeight;
     const available = Math.max(100, Math.min(height, app.clientHeight) - (exhibitPanel.hidden ? 72 : 24));
     const scale = Math.min(1, available / Math.max(wrapper.scrollHeight, 1));
@@ -141,6 +142,7 @@ if (!course) {
   }
 
   function render() {
+    document.body.classList.remove('expound-open');
     advancing = false;
     enterCount = 0;
     feedback.textContent = '';
@@ -241,7 +243,7 @@ if (!course) {
       exhibitToggle.focus();
       return;
     }
-    if (exhibitPanel.contains(event.target) || (event.key === ' ' && event.target.closest('button, a, summary'))) return;
+    if (document.body.classList.contains('expound-open') || exhibitPanel.contains(event.target) || (event.key === ' ' && event.target.closest('button, a, summary'))) return;
     const input = form.querySelector('input');
     if (!input || input.disabled) return;
     if (input.classList.contains('revealed')) input.classList.add('hint-dismissed');
@@ -278,7 +280,11 @@ if (!course) {
       fitInput(input, input.placeholder);
       explanation.textContent = set.koans[index].why;
       explanation.hidden = false;
-      expound.textContent = set.koans[index].expound;
+      if (typeof window.KOAN_EXPOUND_VIEW === 'function') {
+        window.KOAN_EXPOUND_VIEW(expound, set.koans[index], set);
+      } else {
+        expound.textContent = set.koans[index].expound;
+      }
       expoundToggle.hidden = false;
       feedback.textContent = `Answer: ${set.koans[index].answer}. ${set.koans[index].why}`;
       input.focus({ preventScroll: true });
@@ -287,6 +293,7 @@ if (!course) {
   });
   expoundToggle.addEventListener('click', () => {
     const opening = expound.hidden;
+    document.body.classList.toggle('expound-open', opening);
     expound.hidden = !opening;
     sentence.hidden = opening;
     amountHelp.hidden = opening || set.koans[index].answerType !== 'currency';
@@ -294,6 +301,7 @@ if (!course) {
     code.hidden = opening || !set.koans[index].code;
     expoundToggle.textContent = opening ? 'Back to koan' : 'Expound';
     expoundToggle.setAttribute('aria-expanded', String(opening));
+    if (opening) window.scrollTo(0, 0);
     if (!opening) form.querySelector('input')?.focus({ preventScroll: true });
     requestAnimationFrame(fitPlayer);
   });

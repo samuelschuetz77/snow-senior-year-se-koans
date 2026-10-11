@@ -48,6 +48,8 @@ Do not show a title, introduction, header, sidebar, chapter list, preview of upc
 3. Save the next question index in `localStorage` so refresh resumes the session.
 4. At the end, show only “Complete.” in the main area. The same small Restart button remains available at the bottom.
 
+For the Common-Sense Guide textbooks, Expound opens a readable, scrolling beginner lesson: define prerequisites and terminology, include an accessible diagram with a caption, trace a concrete example, connect it to the current koan, explain pitfalls, and offer a self-check. The learner should not need prior familiarity with the algorithm. Explicitly assign an authored concept lesson to each koan and preserve its unique `expoundText` application. Do not shrink full lessons to fit a single screen. The existing five-Enter reveal and Back to koan flow remain unchanged.
+
 Keep the page keyboard usable, give the input an accessible label, and announce nonvisual feedback with `aria-live`. Make it work on narrow screens. Avoid a backend or dependency installation for a simple static artifact.
 
 ## Build and verify

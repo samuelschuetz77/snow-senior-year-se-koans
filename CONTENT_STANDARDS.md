@@ -17,6 +17,8 @@ Finance chapters 1–5 contain 35 koans each, including six currency calculation
 
 ## Expounds
 
+- The Common-Sense Guide textbook expounds must teach from little or no prior experience. Each opens an explicitly assigned concept lesson with definitions, an accessible diagram, a worked example, pitfalls, and a self-check, followed by the current koan's own explanation and completed statement. Shared foundations are deliberately authored lessons, never keyword-generated connections or stitched earlier questions. Keep the short hint separate and let full lessons scroll at a readable font size.
+
 - Author an expound as one connected explanation of the current answer. Define unfamiliar terms, work through a concrete example, and explain the consequence or useful distinction.
 - Every sentence must advance the explanation. Read it aloud: replace abstract filler such as "judge its signals" with the actual measurement, comparison, or action.
 - Do not assemble expounds by concatenating prompts, short explanations, or earlier koans. Shared keywords are not evidence of a meaningful conceptual connection.

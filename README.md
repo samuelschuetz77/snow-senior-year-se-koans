@@ -27,6 +27,8 @@ Questions are original paraphrases. Source PDFs, Canvas pages, and personal assi
 
 ## Run locally
 
+All 440 Common-Sense Guide koans (Volume 1 chapters 12–20 and all 13 Volume 2 chapters) include illustrated beginner Expounds. After five unsuccessful Enter presses, select Expound for terminology, a diagram, a worked example, the current koan's explanation, pitfalls, and a self-check. The 28 explicitly assigned concept lessons live in `data/textbook-lessons.js`; full explanations scroll without shrinking the text. Run `node check-lessons.js` to verify coverage and diagram integrity.
+
 From this directory:
 
 ```powershell
