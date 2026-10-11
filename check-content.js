@@ -22,6 +22,7 @@ require('./data/expounds-maintenance.js');
 require('./data/expounds-operations.js');
 require('./data/frontend-code-centric.js');
 require('./data/additional-koans.js');
+require('./data/wengrow-volume-1-later.js');
 require('./data/expound.js');
 
 const courses = window.KOAN_COURSES;
