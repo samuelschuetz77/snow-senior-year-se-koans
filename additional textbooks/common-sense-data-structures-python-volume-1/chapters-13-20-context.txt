@@ -1,0 +1,18 @@
+Coverage for original koans, 2026-10-11
+
+Scope: Chapters 13–20, following Dynamic Programming (Chapter 12).
+Book: Jay Wengrow, A Common-Sense Guide to Data Structures and Algorithms in Python, Volume 1.
+O'Reilly base: https://learning.oreilly.com/library/view/a-common-sense-guide/9798888650776/
+
+Selected explanatory sections were reviewed through the signed-in browser. These notes and the koans do not archive chapter prose, diagrams, code, exercises, or solutions.
+
+13: f_0121 through f_0127. Partition guarantees versus complete sorting; balanced and extreme splits; quickselect ranks and one-branch recursion; sorting before adjacent duplicate scanning. Clarifications distinguish expected from worst-case costs and require explicit equality handling.
+14: f_0130, f_0131, f_0137, f_0139, f_0140. Linked nodes and endpoints; navigation versus relinking costs; singly versus doubly linked structures; queue endpoints. Original examples test singleton changes, predecessor requirements, and accidental cycles.
+15: f_0145, f_0146, f_0147, f_0148, f_0150. Whole-subtree ordering; height-dependent search; insertion order; deletion cases and successor reconnection; inorder traversal. Balance is not assumed for an ordinary BST.
+16: f_0155, f_0157, f_0159, f_0162. Heap order and completeness; insertion and root deletion; array indices. Original clarifications cover equal priorities, missing children, amortized array append, and arbitrary-key search.
+17: f_0168, f_0170, f_0171, f_0172, f_0174. Terminal markers; query-length cost; shared paths; completion collection and frequency metadata. Output cost, normalization, and branch-local path state are explicit clarifications.
+18: f_0179; selected opening explanatory passages of f_0182, f_0183, f_0186; f_0184. Direction, DFS, BFS, visited tracking, adjacency-list cost, weighted relaxation, predecessor paths. Full walkthroughs and implementations were not read. Nonnegative weights and efficient queue assumptions are explicit clarifications.
+19: f_0190, f_0191, f_0192. Auxiliary-space accounting, copies, time-space tradeoffs, active recursion frames. Additional original examples address aliases, peak lifetimes, output, multiple dimensions, and runtime limits.
+20: f_0196, f_0197; selected opening passages of f_0198, f_0199, f_0200; f_0201. Baselines, aspirational bounds, indexed joins, complement lookup, patterns versus proof, greedy reasoning, contiguous runs, frequency maps. Original examples and boundary cases replace the book's examples.
+
+These are focused source pointers and concept notes, not comprehensive chapter summaries. Reopen the relevant section for future source-specific questions. Public site data: data/wengrow-volume-1-later.js (160 original exercises).

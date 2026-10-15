@@ -1,0 +1,106 @@
+CHAPTER 12: DYNAMIC PROGRAMMING — KOAN CONTEXT
+
+PROVENANCE
+Book: A Common-Sense Guide to Data Structures and Algorithms in Python, Volume 1
+Author: Jay Wengrow
+Publisher: Pragmatic Bookshelf
+O'Reilly book identifier: 9798888650776
+Edition: Python, Volume 1; no numbered edition verified in the reader.
+Accessed: 2026-10-11 through the user's signed-in Chrome O'Reilly reader.
+Located through browser history; bookmark placement was not verified.
+Chapter: https://learning.oreilly.com/library/view/a-common-sense-guide/9798888650776/f_0112.xhtml
+
+COVERAGE AND SECTION LINKS
+Read the introduction and all six explanatory sections below through the
+ordinary reader. Exercises and appendix solutions were not read. Diagram
+pixels were not inspected; notes rely on the surrounding text and code.
+
+[A] Unnecessary Recursive Calls
+https://learning.oreilly.com/library/view/a-common-sense-guide/9798888650776/f_0113.xhtml
+[B] The Little Fix for Big O
+https://learning.oreilly.com/library/view/a-common-sense-guide/9798888650776/f_0114.xhtml
+[C] The Efficiency of Recursion
+https://learning.oreilly.com/library/view/a-common-sense-guide/9798888650776/f_0115.xhtml
+[D] Overlapping Subproblems
+https://learning.oreilly.com/library/view/a-common-sense-guide/9798888650776/f_0116.xhtml
+[E] Dynamic Programming Through Memoization
+https://learning.oreilly.com/library/view/a-common-sense-guide/9798888650776/f_0117.xhtml
+[F] Dynamic Programming Through Going Bottom-Up
+https://learning.oreilly.com/library/view/a-common-sense-guide/9798888650776/f_0118.xhtml
+Also read the short conclusion:
+https://learning.oreilly.com/library/view/a-common-sense-guide/9798888650776/f_0119.xhtml
+
+FOCUSED SOURCE SUMMARY
+Repeated recursive work is the central problem. The maximum-search example
+recalculates a suffix result; keeping that result in a local variable removes
+the duplicate work [A–C]. Fibonacci illustrates a different situation: distinct
+branches depend on some of the same smaller problems [D]. Memoization shares
+a dictionary across recursive calls, retrieving existing results and computing
+missing ones [E]. Bottom-up evaluation starts from known small results and
+builds toward the requested result [F]. Both Fibonacci improvements use a
+linear number of arithmetic steps in the chapter's model. Recursion still
+requires stack space, and memoization also stores results. The chapter weighs
+these costs against how naturally recursion expresses the solution [E–F].
+
+AUTHORING CLARIFICATIONS — INDEPENDENT ANALYSIS, NOT QUOTES FROM THE BOOK
+- Call count is not automatically runtime. Python list slicing copies elements.
+  In the improved maximum example, copying successively shorter suffixes takes
+  quadratic total work, despite a linear number of calls. Passing an index into
+  the same list avoids those repeated copies. Specify the cost model in koans.
+- Two recursive calls do not by themselves prove exponential runtime; subproblem
+  sizes and overlap matter. Binary search-style size reductions differ from
+  decrementing the input by one. Analyze the actual recurrence.
+- A memo hit can still enter a function. It avoids expanding that state again;
+  do not claim that every function invocation disappears or each state is
+  necessarily invoked only once.
+- Bottom-up DP needs a dependency-respecting order and reuse of subresults.
+  Merely replacing recursion with an arbitrary loop does not establish DP.
+- Linear arithmetic-step counts assume constant-cost arithmetic. Python's
+  arbitrarily large integers can make individual arithmetic operations costlier.
+- Memoization does not remove recursion-depth limits. Constant-count rolling
+  variables also do not mean constant bit storage when the integers grow.
+
+ORIGINAL EXAMPLES — NOT FROM THE TEXTBOOK
+
+1. Minimum tokens for a kiosk purchase
+Allowed token values are 1, 4, and 6. Let M(a) be the minimum tokens needed for
+amount a, with M(0)=0. For positive a, consider each permitted value c <= a
+and minimize 1 + M(a-c). Amount 8 needs two tokens (4+4); greedily choosing 6
+first needs three. Recursive branches revisit amounts, so cache by remaining
+amount for one fixed token set. Bottom-up processing visits amounts in ascending
+order. Changing the token set requires a fresh cache or a key that includes it.
+Teaching targets: state identity, shared cache, recurrence versus greedy choice.
+
+2. Counting routes through a small warehouse grid
+A robot moves only right or down through a 3-by-3 grid of cells, from the upper
+left cell to the lower right. There are six routes without obstacles. Blocking
+the center leaves two. Store a route count for each cell; a blocked cell has
+count zero, and an ordinary cell combines counts from its reachable predecessors.
+An out-of-bounds predecessor contributes zero; the unblocked start has count one.
+Teaching targets: a two-coordinate state, base cases, dependency order, and why
+a cache indexed only by row would conflate different subproblems.
+
+3. Planning nonadjacent maintenance windows
+Four consecutive optional windows have benefits [5, 2, 8, 6]; adjacent windows
+cannot both be selected. Define B(i) as the greatest benefit from the first i
+windows. B(0)=0, B(1)=5, and later states choose between skipping the latest
+window or taking it plus B(i-2). The best total is 13, using benefits 5 and 8.
+Only the previous two totals are needed to compute the optimal value. Recovering
+the chosen windows requires retaining decisions or doing additional reconstruction.
+Teaching targets: choices in a recurrence, rolling storage, value versus witness.
+
+KOAN IMPROVEMENT IDEAS
+Teach what the state represents before asking for the word memoization. Compare
+one locally reused result with a cache shared across branches. Ask learners to
+predict whether a repeated state expands or returns immediately. Use the kiosk
+example to distinguish DP from greedy choice, the grid to test cache keys, and
+maintenance windows to explain when old states can be discarded. Make every
+complexity claim explicit about call counts, slicing, arithmetic, and storage.
+
+NEXT USE
+Read ../oreilly-chapter-context-procedure.txt relative to this file,
+and koans/FRAMEWORK.md plus koans/CONTENT_STANDARDS.md before writing koans.
+Revisit the cited section for source-specific details; this focused note is
+not a chapter transcript. No existing koan set was selected or edited in this run.
+No source chapter files, screenshots, or book code listings were saved.
+

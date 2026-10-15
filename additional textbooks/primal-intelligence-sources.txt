@@ -1,0 +1,31 @@
+PRIMAL INTELLIGENCE — SOURCE AND RETRIEVAL GUIDE
+Author: Angus Fletcher
+Subtitle: You Are Smarter Than You Know
+Checked: 2026-10-10
+Status: Official public excerpt found; no verified open-access full-book PDF found.
+
+Official publisher excerpt:
+https://penguinrandomhousehighereducation.com/2025/10/15/excerpt-from-primal-intelligence/
+
+Publisher book page and Read Sample control:
+https://www.penguinrandomhouse.com/books/740110/primal-intelligence-by-angus-fletcher/
+
+The public excerpt is from the introduction. It is not evidence of access to
+later chapters. A public preview does not make the full book open access.
+
+PROMPT FOR A BROWSER-ENABLED AGENT
+Open the official excerpt above using your available Chrome/browser tools.
+Confirm the title, author, and visible section. Read it to produce a concise
+original concept summary for koan authoring. Attribute the author's theories
+as theories; do not present promotional claims as established scientific facts.
+Record the URL, section, access date, and coverage limitations. Add original
+illustrative scenarios, explicitly labeled as new examples rather than examples
+from Fletcher's text. Do not reproduce the excerpt or infer unread chapters.
+For a requested chapter outside the preview, report the source gap and use a
+user-provided chapter/file or an authorized accessible source.
+
+LOCAL OUTPUT
+Save chapter notes under primal-intelligence/ using a descriptive chapter name.
+Separate source-supported summary, original examples, koan ideas, and gaps.
+Read ../FRAMEWORK.md and ../CONTENT_STANDARDS.md relative to this guide's
+directory before authoring koans. Do not publish source ebook files.

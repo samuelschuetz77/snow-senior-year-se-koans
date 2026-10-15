@@ -1,0 +1,32 @@
+DATA MODELING MADE SIMPLE — SOURCE AND RETRIEVAL GUIDE
+Author: Steve Hoberman (the requested "Steve Hibernian" appears to mean Hoberman)
+Checked: 2026-10-10
+Status: No verified open-access full-book PDF found. Publisher offers a paid PDF.
+Edition: Confirm against the user's copy before mapping chapter numbers.
+
+Official publisher page, chapter/topic outline, and PDF purchase option:
+https://technicspub.com/data-modeling-made-simple/
+
+Print bundle page:
+https://technicspub.com/data-modeling-made-simple-print-version-with-free-pdf-instant-download/
+
+The "free PDF" in the print bundle is included with a purchase, not an
+open-access download. No purchase has been made and no PDF downloaded.
+
+PROMPT FOR A BROWSER-ENABLED AGENT
+Open the publisher page above using your available Chrome/browser tools.
+Confirm the title, author, and edition if shown. Use its outline to identify
+the requested topic, but do not treat that outline as the chapter text.
+If the user provides their purchased PDF, read the requested chapter locally.
+If the user already owns a publisher download, use the ordinary account/order
+download interface when authorized; let the user handle login if necessary.
+Do not buy anything merely because this guide lists a purchase link.
+If chapter text is unavailable, record that gap rather than inventing the
+book's definitions, diagrams, examples, or exercise answers.
+
+LOCAL OUTPUT
+Save notes under data-modeling-made-simple/ with the edition and chapter in
+the filename. Record source location, coverage, concise original summary,
+key distinctions, and original examples labeled as such. Read ../FRAMEWORK.md
+and ../CONTENT_STANDARDS.md relative to this guide's directory before writing
+koans. Keep purchased source files out of the public repository and website.
