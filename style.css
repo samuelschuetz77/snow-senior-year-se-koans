@@ -20,6 +20,18 @@ a:hover { color:var(--accent); }
 .player { position:fixed; top:var(--visual-top,0px); left:0; right:0; width:min(850px,calc(100% - 48px)); height:var(--visual-height,100dvh); margin:auto; display:grid; align-items:center; overflow:hidden; }
 .player-inner { width:100%; transform-origin:center; }
 .player { padding-bottom:48px; }
+.flow-diagram { width:min(100%,600px); margin:0 auto 28px; }
+.flow-diagram[hidden] { display:none; }
+.flow-diagram svg { display:block; width:100%; height:auto; }
+.flow-pipe { stroke:#a8aea6; stroke-width:12; stroke-linecap:round; }
+.flow-water { stroke:#34836e; stroke-width:5; stroke-linecap:round; }
+.flow-arrow { fill:#66756d; }
+.flow-arrow.flowing { fill:#276e5c; }
+.flow-node { fill:var(--paper); stroke:var(--ink); stroke-width:2; }
+.flow-node-label,.flow-label { fill:var(--ink); font:600 18px Arial,Helvetica,sans-serif; text-anchor:middle; }
+.flow-label { font-size:17px; }
+.flow-label-bg { fill:var(--paper); stroke:#c6c9c1; stroke-width:1; }
+.flow-diagram figcaption { color:var(--muted); font-size:13px; line-height:1.4; text-align:center; }
 .code-sample { max-width:100%; white-space:pre-wrap; overflow-wrap:anywhere; margin:0 0 26px; padding:18px 20px; border:1px solid var(--line); border-radius:3px; background:var(--surface); color:var(--ink); font:15px/1.5 Consolas,'Courier New',monospace; }
 .sentence { font-size:clamp(32px,4.5vw,52px); font-weight:500; line-height:1.35; letter-spacing:-.035em; }
 .sentence input { display:inline-block; vertical-align:baseline; width:10ch; max-width:calc(100vw - 48px); margin:0 3px; padding:0 4px 3px; border:0; border-bottom:2px solid var(--ink); border-radius:0; outline:none; background:transparent; color:var(--ink); font:inherit; line-height:inherit; letter-spacing:inherit; text-align:center; }
@@ -46,6 +58,7 @@ input.revealed:not(.hint-dismissed):placeholder-shown + .hint-cursor { display:b
 .restart { position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom)); transform:translateX(-50%); padding:6px 10px; border:0; background:transparent; color:var(--muted); font-size:11px; }
 .restart:hover,.restart:focus-visible { color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
 @media(max-width:600px) { .player { width:calc(100% - 36px); } .sentence { font-size:clamp(26px,8vw,38px); } .sentence input { width:8ch; } .code-sample { white-space:pre-wrap; overflow-wrap:anywhere; padding:12px; font-size:12px; } .reading-list a { display:block!important; } .reading-list small { display:block; margin-top:6px; } }
+@media(max-width:600px) { .flow-diagram { margin-bottom:18px; } .flow-diagram figcaption { font-size:11px; } }
 @media(max-height:600px) { .sentence { font-size:clamp(24px,5vw,32px); } .code-sample { margin-bottom:16px; } }
 @media(pointer:coarse) { body.playing.typing .restart { display:none; } }
 

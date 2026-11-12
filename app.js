@@ -55,6 +55,7 @@ if (!course) {
   app.className = 'player';
   document.body.classList.add('playing');
   const wrapper = element('div', { class: 'player-inner' });
+  const flowDiagram = element('figure', { class: 'flow-diagram' });
   const code = element('pre', { class: 'code-sample' });
   const form = element('form', { autocomplete: 'off' });
   const label = element('label', { class: 'sr-only', for: 'answer' }, 'Missing word');
@@ -76,11 +77,12 @@ if (!course) {
   exhibitText.append(element('summary', {}, 'Read exhibit as text'), exhibitTextBody);
   exhibitPanel.append(exhibitHeading, exhibitClose, exhibitLink, exhibitFrame, exhibitText);
   document.body.append(exhibitPanel);
-  form.append(code, label, sentence, amountHelp, exhibitToggle, explanation, expoundToggle, expound);
+  form.append(flowDiagram, code, label, sentence, amountHelp, exhibitToggle, explanation, expoundToggle, expound);
   wrapper.append(form, feedback);
   app.append(wrapper, restart);
 
-  const progressVersion = course.id === 'software-practicum' && set.id === '5' ? 'v2' : 'v1';
+  const progressVersion = course.id === 'software-practicum' && set.id === '5' ? 'v2'
+    : set.id === 'max-flow-code' ? 'v2' : 'v1';
   const storageKey = `snow-koans:${progressVersion}:${course.id}:${set.id}`;
   const saved = Number(localStorage.getItem(storageKey));
   let index = Number.isInteger(saved) && saved >= 0 && saved <= set.koans.length ? saved : 0;
@@ -88,6 +90,50 @@ if (!course) {
   let enterCount = 0;
   let advanceTimer;
   const normalize = value => value.trim().toLocaleLowerCase().replace(/[.!?]+$/, '');
+
+  function drawFlowDiagram(data) {
+    flowDiagram.replaceChildren();
+    flowDiagram.hidden = !data;
+    if (!data) return;
+    const ns = 'http://www.w3.org/2000/svg';
+    const svgItem = (tag, attributes, content = '') => {
+      const item = document.createElementNS(ns, tag);
+      for (const [key, value] of Object.entries(attributes)) item.setAttribute(key, value);
+      item.textContent = content;
+      return item;
+    };
+    const svg = svgItem('svg', { viewBox: '0 0 520 220', role: 'img', 'aria-label': data.description });
+    const nodes = new Map(data.nodes.map(([id, x, y]) => [id, { x, y }]));
+    for (const [from, to, label, flow] of data.edges) {
+      const a = nodes.get(from);
+      const b = nodes.get(to);
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const length = Math.hypot(dx, dy);
+      const ux = dx / length;
+      const uy = dy / length;
+      const x1 = a.x + ux * 25;
+      const y1 = a.y + uy * 25;
+      const x2 = b.x - ux * 27;
+      const y2 = b.y - uy * 27;
+      svg.append(svgItem('line', { x1, y1, x2, y2, class: 'flow-pipe' }));
+      if (flow) svg.append(svgItem('line', { x1, y1, x2, y2, class: 'flow-water' }));
+      const baseX = x2 - ux * 12;
+      const baseY = y2 - uy * 12;
+      const points = `${x2},${y2} ${baseX - uy * 6},${baseY + ux * 6} ${baseX + uy * 6},${baseY - ux * 6}`;
+      svg.append(svgItem('polygon', { points, class: flow ? 'flow-arrow flowing' : 'flow-arrow' }));
+      const labelX = (a.x + b.x) / 2 - uy * 15;
+      const labelY = (a.y + b.y) / 2 + ux * 15;
+      const labelWidth = String(label).length * 8 + 16;
+      svg.append(svgItem('rect', { x: labelX - labelWidth / 2, y: labelY - 15, width: labelWidth, height: 29, rx: 6, class: 'flow-label-bg' }));
+      svg.append(svgItem('text', { x: labelX, y: labelY + 5, class: 'flow-label' }, String(label)));
+    }
+    for (const [id, point] of nodes) {
+      svg.append(svgItem('circle', { cx: point.x, cy: point.y, r: 22, class: 'flow-node' }));
+      svg.append(svgItem('text', { x: point.x, y: point.y + 6, class: 'flow-node-label' }, id));
+    }
+    flowDiagram.append(svg, element('figcaption', {}, data.caption));
+  }
 
   function showExhibit(open) {
     exhibitPanel.hidden = !open;
@@ -158,12 +204,14 @@ if (!course) {
       showExhibit(false);
       exhibitToggle.hidden = true;
       amountHelp.hidden = true;
+      flowDiagram.hidden = true;
       code.hidden = true;
       sentence.textContent = 'Complete.';
       requestAnimationFrame(fitPlayer);
       return;
     }
     const koan = set.koans[index];
+    drawFlowDiagram(koan.diagram);
     const currency = koan.answerType === 'currency';
     amountHelp.hidden = !currency;
     label.textContent = currency ? 'Missing amount in dollars' : 'Missing word';
@@ -299,6 +347,7 @@ if (!course) {
     amountHelp.hidden = opening || set.koans[index].answerType !== 'currency';
     explanation.hidden = opening;
     code.hidden = opening || !set.koans[index].code;
+    flowDiagram.hidden = opening || !set.koans[index].diagram;
     expoundToggle.textContent = opening ? 'Back to koan' : 'Expound';
     expoundToggle.setAttribute('aria-expanded', String(opening));
     if (opening) window.scrollTo(0, 0);

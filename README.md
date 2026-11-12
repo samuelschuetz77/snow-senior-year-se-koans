@@ -17,6 +17,7 @@ Other Koans is available from the home page, organized by textbook and then chap
 The goal for every class is assignment readiness: understanding the koans should prepare a student to start the assigned problems without reading the chapter first and perform well. See [CONTENT_STANDARDS.md](CONTENT_STANDARDS.md), [FRAMEWORK.md](FRAMEWORK.md), and the finance [coverage audit](FINANCE_COVERAGE.md). Finance uses document exercises instead of mandatory programming snippets.
 
 - Advanced Algorithms: the locally available JEA, induction, linear programming, Big O, and data structures readings, plus the public Q# and Microsoft QFT pages. JEA §§12.1–12.3 are included once even though the schedule assigns them again on November 16.
+  The Max Flow practice set has seven pipe-diagram warmups and six plain-English algorithm questions before its code-focused questions on six implementations.
 - Software Practicum: every SWEBOK chapter currently listed in the course outline (1–7, 10, 12–14, 16–18).
 - Software Maintenance: every WEWLC chapter currently posted as class prep (1–4 and 6–15). Chapter 5 is not on the posted list.
 - Frontend Development: the posted TypeScript and React research readings, split into focused topic sets, plus a Sep 30 set from class discussion on when to use `.ts` versus `.tsx`.
