@@ -21,6 +21,7 @@ require('./data/expounds-practicum.js');
 require('./data/expounds-maintenance.js');
 require('./data/expounds-operations.js');
 require('./data/frontend-code-centric.js');
+require('./data/max-flow.js');
 require('./data/additional-koans.js');
 require('./data/wengrow-volume-1-later.js');
 require('./data/wengrow-volume-2.js');
