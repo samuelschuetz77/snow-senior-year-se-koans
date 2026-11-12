@@ -65,6 +65,9 @@ if (!course) {
   const expound = element('article', { class: 'expound', id: 'expound-text', hidden: '' });
   const feedback = element('div', { class: 'sr-only', id: 'feedback', 'aria-live': 'polite' });
   const restart = element('button', { class: 'restart', type: 'button' }, 'Restart');
+  const previous = set.id === 'max-flow-code'
+    ? element('button', { class: 'previous', type: 'button' }, 'Previous') : null;
+  if (previous) document.body.classList.add('max-flow-koan');
   const amountHelp = element('p', { class: 'amount-help', id: 'amount-help', hidden: '' }, 'Enter dollars, rounded to the nearest cent. Press Enter to check.');
   const exhibitToggle = element('button', { class: 'exhibit-toggle', type: 'button', 'aria-controls': 'exhibit-panel', 'aria-expanded': 'false', hidden: '' }, 'Show PDF exhibit');
   const exhibitPanel = element('aside', { class: 'exhibit-panel', id: 'exhibit-panel', hidden: '', 'aria-label': 'Financial exhibit' });
@@ -79,7 +82,7 @@ if (!course) {
   document.body.append(exhibitPanel);
   form.append(flowDiagram, code, label, sentence, amountHelp, exhibitToggle, explanation, expoundToggle, expound);
   wrapper.append(form, feedback);
-  app.append(wrapper, restart);
+  app.append(wrapper, ...(previous ? [previous] : []), restart);
 
   const progressVersion = course.id === 'software-practicum' && set.id === '5' ? 'v2'
     : set.id === 'max-flow-code' ? 'v3' : 'v1';
@@ -188,6 +191,7 @@ if (!course) {
   }
 
   function render() {
+    if (previous) previous.disabled = index === 0;
     document.body.classList.remove('expound-open');
     advancing = false;
     enterCount = 0;
@@ -359,6 +363,13 @@ if (!course) {
     showExhibit(false);
     index = 0;
     localStorage.setItem(storageKey, '0');
+    render();
+  });
+  previous?.addEventListener('click', () => {
+    if (index === 0) return;
+    clearTimeout(advanceTimer);
+    index -= 1;
+    localStorage.setItem(storageKey, String(index));
     render();
   });
   exhibitToggle.addEventListener('click', () => showExhibit(exhibitPanel.hidden));
