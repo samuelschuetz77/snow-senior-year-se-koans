@@ -82,7 +82,7 @@ if (!course) {
   app.append(wrapper, restart);
 
   const progressVersion = course.id === 'software-practicum' && set.id === '5' ? 'v2'
-    : set.id === 'max-flow-code' ? 'v2' : 'v1';
+    : set.id === 'max-flow-code' ? 'v3' : 'v1';
   const storageKey = `snow-koans:${progressVersion}:${course.id}:${set.id}`;
   const saved = Number(localStorage.getItem(storageKey));
   let index = Number.isInteger(saved) && saved >= 0 && saved <= set.koans.length ? saved : 0;
