@@ -4,11 +4,11 @@
   const q = (before, answer, after, why, section, expoundText, options = {}) =>
     ({ before, answer, after, why, section, expoundText, ...options });
   const diagram = (nodes, edges, caption, description) => ({ nodes, edges, caption, description });
-  const residualPair = (forward, back, caption) => diagram(
-    [['s', 80, 110], ['a', 440, 110]],
-    [['s', 'a', `send ${forward}`, 0, 13], ['a', 's', `undo ${back}`, 0, 13, 'reverse']],
+  const residualPair = (forward, back, caption, target = 'a') => diagram(
+    [['s', 80, 110], [target, 440, 110]],
+    [['s', target, `send ${forward}`, 0, 13], [target, 's', `undo ${back}`, 0, 13, 'reverse']],
     caption,
-    `Two straight arrows between s and a. The forward arrow can send ${forward} more units; the backward arrow can undo ${back} units of earlier flow.`
+    `Two straight arrows between s and ${target}. The forward arrow can send ${forward} more units; the backward arrow can undo ${back} units of earlier flow.`
   );
   const residualChain = (firstForward, firstBack, secondForward, secondBack, caption) => diagram(
     [['s', 65, 110], ['a', 260, 110], ['t', 455, 110]],
@@ -210,8 +210,8 @@
 
   // Keep the first code questions visual too: each diagram shows the residual
   // state described by the adjacent question, including flow that can be undone.
-  warmups[0].diagram = residualPair(4, 0, 'At zero flow, the pipe can send 4 more units; none can be undone.');
-  warmups[1].diagram = residualPair(4, 0, 'One pipe has capacity 4; no earlier flow can be undone yet.');
+  warmups[0].diagram = residualPair(4, 0, 'At zero flow, the pipe can send 4 more units; none can be undone.', 't');
+  warmups[1].diagram = residualPair(4, 0, 'One pipe has capacity 4; no earlier flow can be undone yet.', 't');
   warmups[2].diagram = residualChain(7, 0, 3, 0, 'Before sending flow, both backward arrows have room 0.');
   warmups[6].diagram = residualPair(3, 2, 'After sending 2 through capacity 5: send 3 more or undo the earlier 2.');
   const early = koans.filter(koan => ['Algorithm overview', 'Representation', 'Augmentation'].includes(koan.section));
