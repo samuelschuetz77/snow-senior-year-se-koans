@@ -59,7 +59,12 @@ if (!course) {
   const code = element('pre', { class: 'code-sample' });
   const form = element('form', { autocomplete: 'off' });
   const label = element('label', { class: 'sr-only', for: 'answer' }, 'Missing word');
+  const rememberNotice = element('p', { class: 'remember-notice', hidden: '' });
   const sentence = element('div', { class: 'sentence' });
+  const flowGuide = element('details', { class: 'flow-guide' });
+  flowGuide.append(element('summary', {}, 'Max flow in plain English'), element('p', {},
+    'Max flow asks how much can travel from the start node (source) to the end node (sink). Each directed pipe has a capacity: the most it can carry. Start with zero flow. Find a route whose pipes still have room. Send the smallest amount of room on that route. Reduce the forward room by that amount; increase the backward room so you can undo and reroute it later. Repeat: find a route, send the smallest room, update both directions. Stop when no route with room reaches the sink.'));
+  const flowDefinitions = element('aside', { class: 'flow-definitions', 'aria-label': 'Terms used in this question' });
   const explanation = element('p', { class: 'explanation', hidden: '' });
   const expoundToggle = element('button', { class: 'expound-toggle', type: 'button', 'aria-controls': 'expound-text', 'aria-expanded': 'false', hidden: '' }, 'Expound');
   const expound = element('article', { class: 'expound', id: 'expound-text', hidden: '' });
@@ -67,7 +72,10 @@ if (!course) {
   const restart = element('button', { class: 'restart', type: 'button' }, 'Restart');
   const previous = set.id === 'max-flow-code'
     ? element('button', { class: 'previous', type: 'button' }, 'Previous') : null;
+  const rememberButton = previous
+    ? element('button', { class: 'remember-button', type: 'button', 'aria-pressed': 'false' }, 'Remember: Off') : null;
   if (previous) document.body.classList.add('max-flow-koan');
+  if (previous) flowGuide.open = true;
   const amountHelp = element('p', { class: 'amount-help', id: 'amount-help', hidden: '' }, 'Enter dollars, rounded to the nearest cent. Press Enter to check.');
   const exhibitToggle = element('button', { class: 'exhibit-toggle', type: 'button', 'aria-controls': 'exhibit-panel', 'aria-expanded': 'false', hidden: '' }, 'Show PDF exhibit');
   const exhibitPanel = element('aside', { class: 'exhibit-panel', id: 'exhibit-panel', hidden: '', 'aria-label': 'Financial exhibit' });
@@ -80,9 +88,9 @@ if (!course) {
   exhibitText.append(element('summary', {}, 'Read exhibit as text'), exhibitTextBody);
   exhibitPanel.append(exhibitHeading, exhibitClose, exhibitLink, exhibitFrame, exhibitText);
   document.body.append(exhibitPanel);
-  form.append(flowDiagram, code, label, sentence, amountHelp, exhibitToggle, explanation, expoundToggle, expound);
+  form.append(rememberNotice, flowDiagram, code, label, sentence, flowGuide, flowDefinitions, amountHelp, exhibitToggle, explanation, expoundToggle, expound);
   wrapper.append(form, feedback);
-  app.append(wrapper, ...(previous ? [previous] : []), restart);
+  app.append(wrapper, ...(previous ? [previous, rememberButton] : []), restart);
 
   const progressVersion = course.id === 'software-practicum' && set.id === '5' ? 'v2'
     : set.id === 'max-flow-code' ? 'v3' : 'v1';
@@ -92,7 +100,23 @@ if (!course) {
   let advancing = false;
   let enterCount = 0;
   let advanceTimer;
+  const rememberKey = `${storageKey}:remember`;
+  let rememberEnabled = !!rememberButton && localStorage.getItem(rememberKey) === 'on';
+  let rememberPhase = 'normal';
+  let breakIndex = 0;
+  const memoryBreak = [
+    { before: 'In the familiar rhyme, roses are ', answer: 'red', after: '.', why: 'The rhyme begins “Roses are red.”' },
+    { before: 'In the same rhyme, violets are ', answer: 'blue', after: '.', why: 'The rhyme pairs violets with blue.' },
+    { before: 'A triangle has ', answer: 'three', after: ' sides.', why: 'A triangle has three sides and three corners.', accepts: ['3'] }
+  ];
+  const currentKoan = () => rememberPhase === 'break' ? memoryBreak[breakIndex] : set.koans[index];
   const normalize = value => value.trim().toLocaleLowerCase().replace(/[.!?]+$/, '');
+
+  function syncRememberButton() {
+    if (!rememberButton) return;
+    rememberButton.textContent = rememberEnabled ? 'Remember: On' : 'Remember: Off';
+    rememberButton.setAttribute('aria-pressed', String(rememberEnabled));
+  }
 
   function drawFlowDiagram(data) {
     flowDiagram.replaceChildren();
@@ -196,7 +220,8 @@ if (!course) {
   }
 
   function render() {
-    if (previous) previous.disabled = index === 0;
+    if (previous) previous.disabled = index === 0 && rememberPhase === 'normal';
+    syncRememberButton();
     document.body.classList.remove('expound-open');
     advancing = false;
     enterCount = 0;
@@ -209,6 +234,12 @@ if (!course) {
     expoundToggle.setAttribute('aria-expanded', 'false');
     expound.hidden = true;
     expound.textContent = '';
+    rememberNotice.hidden = rememberPhase === 'normal';
+    rememberNotice.textContent = rememberPhase === 'break'
+      ? `Memory break ${breakIndex + 1} of 3` : rememberPhase === 'recall'
+        ? 'Now answer the Max Flow question again.' : '';
+    flowGuide.hidden = !previous || rememberPhase === 'break';
+    flowDefinitions.hidden = !previous || rememberPhase === 'break';
     if (index === set.koans.length) {
       showExhibit(false);
       exhibitToggle.hidden = true;
@@ -219,7 +250,11 @@ if (!course) {
       requestAnimationFrame(fitPlayer);
       return;
     }
-    const koan = set.koans[index];
+    const koan = currentKoan();
+    if (previous && rememberPhase !== 'break') {
+      flowDefinitions.replaceChildren(...(koan.definitions || []).map(([term, meaning]) =>
+        element('span', {}, `${term}: ${meaning}`)));
+    }
     drawFlowDiagram(koan.diagram);
     const currency = koan.answerType === 'currency';
     amountHelp.hidden = !currency;
@@ -267,7 +302,7 @@ if (!course) {
   function check(showWrong = false) {
     if (advancing || index === set.koans.length) return;
     const input = form.querySelector('input');
-    const koan = set.koans[index];
+    const koan = currentKoan();
     const normalizeAnswer = koan.statement ? value => value.trim() : normalize;
     const value = normalizeAnswer(input.value);
     const accepted = [koan.answer, ...(koan.accepts || [])].map(normalizeAnswer);
@@ -284,8 +319,18 @@ if (!course) {
       input.disabled = true;
       feedback.textContent = 'Correct.';
       advanceTimer = setTimeout(() => {
-        index += 1;
-        localStorage.setItem(storageKey, String(index));
+        if (rememberEnabled && rememberButton && rememberPhase === 'normal') {
+          rememberPhase = 'break';
+          breakIndex = 0;
+        } else if (rememberPhase === 'break' && breakIndex < memoryBreak.length - 1) {
+          breakIndex += 1;
+        } else if (rememberPhase === 'break') {
+          rememberPhase = 'recall';
+        } else {
+          rememberPhase = 'normal';
+          index += 1;
+          localStorage.setItem(storageKey, String(index));
+        }
         render();
       }, 750);
     } else if (showWrong && value) {
@@ -330,20 +375,23 @@ if (!course) {
     enterCount += 1;
     if (enterCount >= 5) {
       const input = form.querySelector('input');
+      const koan = currentKoan();
       input.value = '';
       input.classList.remove('wrong');
       input.classList.add('revealed');
-      input.placeholder = set.koans[index].answer;
+      input.placeholder = koan.answer;
       fitInput(input, input.placeholder);
-      explanation.textContent = set.koans[index].why;
+      explanation.textContent = koan.why;
       explanation.hidden = false;
-      if (typeof window.KOAN_EXPOUND_VIEW === 'function') {
-        window.KOAN_EXPOUND_VIEW(expound, set.koans[index], set);
-      } else {
-        expound.textContent = set.koans[index].expound;
+      if (rememberPhase !== 'break') {
+        if (typeof window.KOAN_EXPOUND_VIEW === 'function') {
+          window.KOAN_EXPOUND_VIEW(expound, koan, set);
+        } else {
+          expound.textContent = koan.expound;
+        }
+        expoundToggle.hidden = false;
       }
-      expoundToggle.hidden = false;
-      feedback.textContent = `Answer: ${set.koans[index].answer}. ${set.koans[index].why}`;
+      feedback.textContent = `Answer: ${koan.answer}. ${koan.why}`;
       input.focus({ preventScroll: true });
       requestAnimationFrame(fitPlayer);
     }
@@ -366,16 +414,34 @@ if (!course) {
   restart.addEventListener('click', () => {
     clearTimeout(advanceTimer);
     showExhibit(false);
+    rememberPhase = 'normal';
+    breakIndex = 0;
     index = 0;
     localStorage.setItem(storageKey, '0');
     render();
   });
   previous?.addEventListener('click', () => {
-    if (index === 0) return;
+    if (index === 0 && rememberPhase === 'normal') return;
     clearTimeout(advanceTimer);
-    index -= 1;
+    rememberPhase = 'normal';
+    breakIndex = 0;
+    index = Math.max(0, index - 1);
     localStorage.setItem(storageKey, String(index));
     render();
+  });
+  rememberButton?.addEventListener('click', () => {
+    if (advancing) return;
+    rememberEnabled = !rememberEnabled;
+    localStorage.setItem(rememberKey, rememberEnabled ? 'on' : 'off');
+    if (!rememberEnabled && rememberPhase !== 'normal') {
+      rememberPhase = 'normal';
+      breakIndex = 0;
+      index += 1;
+      localStorage.setItem(storageKey, String(index));
+      render();
+    } else {
+      syncRememberButton();
+    }
   });
   exhibitToggle.addEventListener('click', () => showExhibit(exhibitPanel.hidden));
   exhibitClose.addEventListener('click', () => {
