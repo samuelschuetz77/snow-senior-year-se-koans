@@ -4,6 +4,19 @@
   const q = (before, answer, after, why, section, expoundText, options = {}) =>
     ({ before, answer, after, why, section, expoundText, ...options });
   const diagram = (nodes, edges, caption, description) => ({ nodes, edges, caption, description });
+  const residualPair = (forward, back, caption) => diagram(
+    [['s', 80, 110], ['a', 440, 110]],
+    [['s', 'a', `send ${forward}`, 0, 13], ['a', 's', `undo ${back}`, 0, 13, 'reverse']],
+    caption,
+    `Two straight arrows between s and a. The forward arrow can send ${forward} more units; the backward arrow can undo ${back} units of earlier flow.`
+  );
+  const residualChain = (firstForward, firstBack, secondForward, secondBack, caption) => diagram(
+    [['s', 65, 110], ['a', 260, 110], ['t', 455, 110]],
+    [['s', 'a', `send ${firstForward}`, 0, 13], ['a', 's', `undo ${firstBack}`, 0, 13, 'reverse'],
+      ['a', 't', `send ${secondForward}`, 0, 13], ['t', 'a', `undo ${secondBack}`, 0, 13, 'reverse']],
+    caption,
+    `Residual path s to a to t. The forward arrows can send ${firstForward} and ${secondForward} more units; the backward arrows can undo ${firstBack} and ${secondBack} units of earlier flow.`
+  );
 
   const warmups = [
     q('The vertex marked s is the ', 'source', ', where flow enters this network.',
@@ -48,7 +61,7 @@
     q('After sending 2 through a pipe of capacity 5, its forward residual room is ', '3', ' units.',
       'Subtract the current flow from capacity: five minus two leaves three.',
       'Pipe warmup',
-      'The label 2 / 5 means two units currently flow through a pipe that can carry five. Three more units could be sent in the same direction. The residual graph records that forward room as three and records two units of reverse room, allowing the current choice to be canceled or rerouted. This is the bridge from a pipe picture to the code’s residual[u][v] entries.',
+      'The label 2 / 5 means two units currently flow through a pipe that can carry five. Three more units could be sent in the same direction. The residual graph records that forward room as three and shows that two units of earlier flow could be undone. This is the bridge from a pipe picture to the code’s residual[u][v] entries.',
       { diagram: diagram([['s', 65, 110], ['a', 260, 110], ['t', 455, 110]],
         [['s', 'a', '2 / 5', 2], ['a', 't', '2 / 5', 2]],
         'Each label is current flow / capacity.', 'Two units flow from s to a and from a to t; each pipe has capacity five.') })
@@ -72,8 +85,8 @@
       'Algorithm overview',
       'A path qualifies only if every edge on it has positive residual room. Edmonds–Karp BFS chooses a route with the fewest edges. The iterative Ford–Fulkerson version uses a stack to pursue a recently found branch. Both then send the path bottleneck, update the same residual entries, and repeat. Their path choices and runtime guarantees differ, while the underlying flow problem stays the same.',
       { accepts: ['select', 'find'] }),
-    q('After finding a path, send its smallest edge room, then decrease forward room and increase ', 'reverse', ' room.',
-      'The minimum is the safe bottleneck; reverse room lets later rounds cancel or reroute that amount.',
+    q('After finding a path, send its smallest edge room, then subtract that amount going forward and add it to the ', 'backward', ' arrow.',
+      'The minimum is the safe bottleneck; the backward arrow records how much earlier flow can be undone.',
       'Algorithm overview',
       'Suppose a path has residual rooms five, two, and four. At most two units can be sent without exceeding an edge. Subtract two from each forward residual entry and add two to each reverse entry. The total flow value rises by two once, regardless of path length. The paired updates preserve a way to undo earlier flow if a later path needs a different arrangement.'),
     q('Repeat the search and update until no source-to-sink residual path remains; that stopping condition proves the flow is ', 'maximum', '.',
@@ -194,6 +207,37 @@
       'One feasible plan sends two units s-to-a-to-t, one s-to-a-to-b-to-t, and two s-to-b-to-t. All edge limits and conservation hold, so value five is achievable. The two edges entering t have capacities two and three, so their cut bounds every flow by five. Matching the feasible value to that cut proves optimality; both BFS and stack DFS should return five.',
       { code: 'capacity = {\n  "s": {"a": 4, "b": 2},\n  "a": {"t": 2, "b": 1},\n  "b": {"t": 3}\n}' })
   ];
+
+  // Keep the first code questions visual too: each diagram shows the residual
+  // state described by the adjacent question, including flow that can be undone.
+  warmups[0].diagram = residualPair(4, 0, 'At zero flow, the pipe can send 4 more units; none can be undone.');
+  warmups[1].diagram = residualPair(4, 0, 'One pipe has capacity 4; no earlier flow can be undone yet.');
+  warmups[2].diagram = residualChain(7, 0, 3, 0, 'Before sending flow, both backward arrows have room 0.');
+  warmups[6].diagram = residualPair(3, 2, 'After sending 2 through capacity 5: send 3 more or undo the earlier 2.');
+  const early = koans.filter(koan => ['Algorithm overview', 'Representation', 'Augmentation'].includes(koan.section));
+  const earlyDiagrams = [
+    residualChain(5, 0, 3, 0, 'The forward rooms limit what can reach the sink.'),
+    residualChain(5, 0, 3, 0, 'At zero flow, the original pipes can send their full capacities; there is nothing to undo.'),
+    residualChain(3, 2, 1, 2, 'After two units travel s → a → t, the residual graph shows both directions.'),
+    residualChain(3, 2, 1, 2, 'A search can send more along a solid arrow or undo flow along a dashed arrow.'),
+    residualPair(3, 2, 'Sending 2 on capacity 5 leaves 3 more to send and 2 that can be undone.'),
+    residualChain(0, 2, 0, 2, 'No positive forward path reaches t; backward edges only undo earlier flow.'),
+    residualPair(5, 0, 'The outer dictionary has node keys s and a; arrows show their neighbor entries.'),
+    residualPair(5, 0, 'residual[s][a] is the forward number; residual[a][s] is the backward number.'),
+    residualPair(5, 0, 'The original capacity stays 5 while these residual values can change.'),
+    residualPair(5, 0, 'The missing backward entry starts at zero because nothing can be undone yet.'),
+    diagram([['s', 80, 110], ['a', 440, 110]],
+      [['s', 'a', 'cap 5', 0, 13], ['a', 's', 'cap 2', 0, 13]],
+      'Both straight arrows are original edges here, so neither capacity is replaced by zero.',
+      'Original directed edge s to a has capacity five, and original edge a to s has capacity two.'),
+    residualChain(5, 0, 2, 0, 'The path can carry only the smaller forward room: 2.'),
+    residualPair(3, 2, 'After sending 2 on capacity 5, forward room is 3.'),
+    residualPair(3, 2, 'The backward arrow can undo the 2 units just sent.'),
+    residualChain(3, 2, 1, 2, 'Follow parents from t back to a and s to recover the forward path.'),
+    residualChain(3, 2, 1, 2, 'Two units sent along both edges increase total flow by 2 once.')
+  ];
+  if (early.length !== earlyDiagrams.length) throw new Error('Max Flow early diagram count mismatch');
+  early.forEach((koan, index) => { koan.diagram = earlyDiagrams[index]; });
 
   const set = {
     id: 'max-flow-code',

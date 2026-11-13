@@ -107,7 +107,7 @@ if (!course) {
     };
     const svg = svgItem('svg', { viewBox: '0 0 520 220', role: 'img', 'aria-label': data.description });
     const nodes = new Map(data.nodes.map(([id, x, y]) => [id, { x, y }]));
-    for (const [from, to, label, flow] of data.edges) {
+    for (const [from, to, label, flow, offset = 0, kind = 'forward'] of data.edges) {
       const a = nodes.get(from);
       const b = nodes.get(to);
       const dx = b.x - a.x;
@@ -115,18 +115,20 @@ if (!course) {
       const length = Math.hypot(dx, dy);
       const ux = dx / length;
       const uy = dy / length;
-      const x1 = a.x + ux * 25;
-      const y1 = a.y + uy * 25;
-      const x2 = b.x - ux * 27;
-      const y2 = b.y - uy * 27;
-      svg.append(svgItem('line', { x1, y1, x2, y2, class: 'flow-pipe' }));
+      const shiftX = -uy * offset;
+      const shiftY = ux * offset;
+      const x1 = a.x + ux * 25 + shiftX;
+      const y1 = a.y + uy * 25 + shiftY;
+      const x2 = b.x - ux * 27 + shiftX;
+      const y2 = b.y - uy * 27 + shiftY;
+      svg.append(svgItem('line', { x1, y1, x2, y2, class: kind === 'reverse' ? 'flow-pipe reverse' : 'flow-pipe' }));
       if (flow) svg.append(svgItem('line', { x1, y1, x2, y2, class: 'flow-water' }));
       const baseX = x2 - ux * 12;
       const baseY = y2 - uy * 12;
       const points = `${x2},${y2} ${baseX - uy * 6},${baseY + ux * 6} ${baseX + uy * 6},${baseY - ux * 6}`;
-      svg.append(svgItem('polygon', { points, class: flow ? 'flow-arrow flowing' : 'flow-arrow' }));
-      const labelX = (a.x + b.x) / 2 - uy * 15;
-      const labelY = (a.y + b.y) / 2 + ux * 15;
+      svg.append(svgItem('polygon', { points, class: kind === 'reverse' ? 'flow-arrow reverse' : flow ? 'flow-arrow flowing' : 'flow-arrow' }));
+      const labelX = (a.x + b.x) / 2 + shiftX - uy * 15;
+      const labelY = (a.y + b.y) / 2 + shiftY + ux * 15;
       const labelWidth = String(label).length * 8 + 16;
       svg.append(svgItem('rect', { x: labelX - labelWidth / 2, y: labelY - 15, width: labelWidth, height: 29, rx: 6, class: 'flow-label-bg' }));
       svg.append(svgItem('text', { x: labelX, y: labelY + 5, class: 'flow-label' }, String(label)));
@@ -135,7 +137,10 @@ if (!course) {
       svg.append(svgItem('circle', { cx: point.x, cy: point.y, r: 22, class: 'flow-node' }));
       svg.append(svgItem('text', { x: point.x, y: point.y + 6, class: 'flow-node-label' }, id));
     }
-    flowDiagram.append(svg, element('figcaption', {}, data.caption));
+    const caption = element('figcaption', {}, data.caption);
+    caption.append(element('span', { class: 'flow-glossary' },
+      'Room = residual capacity, the amount still available. Solid: send more. Dashed: undo earlier flow.'));
+    flowDiagram.append(svg, caption);
   }
 
   function showExhibit(open) {

@@ -24,14 +24,17 @@ a:hover { color:var(--accent); }
 .flow-diagram[hidden] { display:none; }
 .flow-diagram svg { display:block; width:100%; height:auto; }
 .flow-pipe { stroke:#a8aea6; stroke-width:12; stroke-linecap:round; }
+.flow-pipe.reverse { stroke:#8e9d94; stroke-width:5; stroke-dasharray:7 6; }
 .flow-water { stroke:#34836e; stroke-width:5; stroke-linecap:round; }
 .flow-arrow { fill:#66756d; }
 .flow-arrow.flowing { fill:#276e5c; }
+.flow-arrow.reverse { fill:#637b6a; }
 .flow-node { fill:var(--paper); stroke:var(--ink); stroke-width:2; }
 .flow-node-label,.flow-label { fill:var(--ink); font:600 18px Arial,Helvetica,sans-serif; text-anchor:middle; }
 .flow-label { font-size:17px; }
 .flow-label-bg { fill:var(--paper); stroke:#c6c9c1; stroke-width:1; }
 .flow-diagram figcaption { color:var(--muted); font-size:13px; line-height:1.4; text-align:center; }
+.flow-glossary { display:block; margin-top:5px; font-size:12px; }
 .code-sample { max-width:100%; white-space:pre-wrap; overflow-wrap:anywhere; margin:0 0 26px; padding:18px 20px; border:1px solid var(--line); border-radius:3px; background:var(--surface); color:var(--ink); font:15px/1.5 Consolas,'Courier New',monospace; }
 .sentence { font-size:clamp(32px,4.5vw,52px); font-weight:500; line-height:1.35; letter-spacing:-.035em; }
 .sentence input { display:inline-block; vertical-align:baseline; width:10ch; max-width:calc(100vw - 48px); margin:0 3px; padding:0 4px 3px; border:0; border-bottom:2px solid var(--ink); border-radius:0; outline:none; background:transparent; color:var(--ink); font:inherit; line-height:inherit; letter-spacing:inherit; text-align:center; }
