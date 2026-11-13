@@ -55,6 +55,9 @@ input.revealed:not(.hint-dismissed):placeholder-shown + .hint-cursor { display:b
 @keyframes hint-blink { 50% { opacity:0; } }
 @media(prefers-reduced-motion:reduce) { .hint-cursor::before { animation:none; } }
 .explanation { max-width:58ch; margin:20px 0 0; color:var(--muted); font-size:clamp(14px,1.7vw,17px); line-height:1.45; letter-spacing:0; }
+.continue-button { display:block; margin:16px auto 0; padding:8px 16px; border:1px solid var(--line); border-radius:4px; background:var(--surface); color:var(--ink); font-size:13px; }
+.continue-button:hover,.continue-button:focus-visible { border-color:var(--ink); }
+.continue-button[hidden] { display:none; }
 .remember-notice { margin:0 0 18px; color:var(--muted); font-size:13px; text-align:center; }
 .flow-guide { max-width:66ch; margin:20px auto 0; color:var(--muted); font-size:12px; line-height:1.45; }
 .flow-guide summary { cursor:pointer; text-align:center; text-decoration:underline; text-underline-offset:3px; }

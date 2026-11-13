@@ -66,6 +66,7 @@ if (!course) {
     'Max flow asks how much can travel from the start node (source) to the end node (sink). Each directed pipe has a capacity: the most it can carry. Start with zero flow. Find a route whose pipes still have room. Send the smallest amount of room on that route. Reduce the forward room by that amount; increase the backward room so you can undo and reroute it later. Repeat: find a route, send the smallest room, update both directions. Stop when no route with room reaches the sink.'));
   const flowDefinitions = element('aside', { class: 'flow-definitions', 'aria-label': 'Terms used in this question' });
   const explanation = element('p', { class: 'explanation', hidden: '' });
+  const continueButton = element('button', { class: 'continue-button', type: 'button', hidden: '' }, 'Continue');
   const expoundToggle = element('button', { class: 'expound-toggle', type: 'button', 'aria-controls': 'expound-text', 'aria-expanded': 'false', hidden: '' }, 'Expound');
   const expound = element('article', { class: 'expound', id: 'expound-text', hidden: '' });
   const feedback = element('div', { class: 'sr-only', id: 'feedback', 'aria-live': 'polite' });
@@ -88,7 +89,7 @@ if (!course) {
   exhibitText.append(element('summary', {}, 'Read exhibit as text'), exhibitTextBody);
   exhibitPanel.append(exhibitHeading, exhibitClose, exhibitLink, exhibitFrame, exhibitText);
   document.body.append(exhibitPanel);
-  form.append(rememberNotice, flowDiagram, code, label, sentence, flowGuide, flowDefinitions, amountHelp, exhibitToggle, explanation, expoundToggle, expound);
+  form.append(rememberNotice, flowDiagram, code, label, sentence, flowGuide, flowDefinitions, amountHelp, exhibitToggle, explanation, expoundToggle, expound, continueButton);
   wrapper.append(form, feedback);
   app.append(wrapper, ...(previous ? [previous, rememberButton] : []), restart);
 
@@ -229,15 +230,17 @@ if (!course) {
     sentence.hidden = false;
     explanation.hidden = true;
     explanation.textContent = '';
+    continueButton.hidden = true;
     expoundToggle.hidden = true;
     expoundToggle.textContent = 'Expound';
     expoundToggle.setAttribute('aria-expanded', 'false');
     expound.hidden = true;
     expound.textContent = '';
-    rememberNotice.hidden = rememberPhase === 'normal';
+    rememberNotice.hidden = !previous;
     rememberNotice.textContent = rememberPhase === 'break'
       ? `Memory break ${breakIndex + 1} of 3` : rememberPhase === 'recall'
-        ? 'Now answer the Max Flow question again.' : '';
+        ? `Question ${index + 1} of ${set.koans.length} · Answer it again from memory`
+        : `Question ${Math.min(index + 1, set.koans.length)} of ${set.koans.length} · ${set.koans[index]?.section || 'Complete'}`;
     flowGuide.hidden = !previous || rememberPhase === 'break';
     flowDefinitions.hidden = !previous || rememberPhase === 'break';
     if (index === set.koans.length) {
@@ -299,6 +302,23 @@ if (!course) {
     requestAnimationFrame(fitPlayer);
   }
 
+  function advanceKoan() {
+    clearTimeout(advanceTimer);
+    if (rememberEnabled && rememberButton && rememberPhase === 'normal') {
+      rememberPhase = 'break';
+      breakIndex = 0;
+    } else if (rememberPhase === 'break' && breakIndex < memoryBreak.length - 1) {
+      breakIndex += 1;
+    } else if (rememberPhase === 'break') {
+      rememberPhase = 'recall';
+    } else {
+      rememberPhase = 'normal';
+      index += 1;
+      localStorage.setItem(storageKey, String(index));
+    }
+    render();
+  }
+
   function check(showWrong = false) {
     if (advancing || index === set.koans.length) return;
     const input = form.querySelector('input');
@@ -318,21 +338,21 @@ if (!course) {
       input.classList.add('correct');
       input.disabled = true;
       feedback.textContent = 'Correct.';
-      advanceTimer = setTimeout(() => {
-        if (rememberEnabled && rememberButton && rememberPhase === 'normal') {
-          rememberPhase = 'break';
-          breakIndex = 0;
-        } else if (rememberPhase === 'break' && breakIndex < memoryBreak.length - 1) {
-          breakIndex += 1;
-        } else if (rememberPhase === 'break') {
-          rememberPhase = 'recall';
+      if (previous && rememberPhase !== 'break') {
+        explanation.textContent = koan.why;
+        explanation.hidden = false;
+        continueButton.hidden = false;
+        if (typeof window.KOAN_EXPOUND_VIEW === 'function') {
+          window.KOAN_EXPOUND_VIEW(expound, koan, set);
         } else {
-          rememberPhase = 'normal';
-          index += 1;
-          localStorage.setItem(storageKey, String(index));
+          expound.textContent = koan.expound;
         }
-        render();
-      }, 750);
+        expoundToggle.hidden = false;
+        continueButton.focus({ preventScroll: true });
+        requestAnimationFrame(fitPlayer);
+      } else {
+        advanceTimer = setTimeout(advanceKoan, 750);
+      }
     } else if (showWrong && value) {
       input.classList.add('wrong');
       feedback.textContent = currency ? 'Check the amount and try again.' : 'Try another word.';
@@ -369,6 +389,10 @@ if (!course) {
   });
   form.addEventListener('submit', event => {
     event.preventDefault();
+    if (advancing && !continueButton.hidden) {
+      advanceKoan();
+      return;
+    }
     if (advancing || index === set.koans.length) return;
     check(true);
     if (advancing) return;
@@ -396,6 +420,7 @@ if (!course) {
       requestAnimationFrame(fitPlayer);
     }
   });
+  continueButton.addEventListener('click', advanceKoan);
   expoundToggle.addEventListener('click', () => {
     const opening = expound.hidden;
     document.body.classList.toggle('expound-open', opening);
